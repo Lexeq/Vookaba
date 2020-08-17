@@ -1,0 +1,12 @@
+﻿@model IEnumerable<OakChan.Models.DB.Entities.Board>
+@{
+    ViewBag.Title = "Welcome";
+}
+<ul>
+    @foreach (var board in Model)
+    {
+        <li>
+            <a asp-controller="Board" asp-action="Index" asp-route-board="@board.Key">@($"{board.Key} - {board.Name}")</a>
+        </li>
+    }
+</ul>
