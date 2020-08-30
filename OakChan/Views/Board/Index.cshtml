@@ -1,0 +1,56 @@
+﻿@using System.Linq;
+@model OakChan.Models.DB.Entities.Board;
+@{
+    ViewBag.Title = "boardName";
+}
+@section Scripts{
+    <script src="~/scripts/acorn.js"></script>
+}
+
+<h2 class="board-name">@($"/{Model.Key}/ - {Model.Name}")</h2>
+
+<p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()">Создать тред</p>
+
+<div class="creation-form" id="form">
+    <div class="preview-container">
+        <div>
+            <img src="#" id="preview-img" class="preview-imgage" />
+        </div>
+    </div>
+    <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data"  asp-action="CreateThread" asp-controller="Board">
+        <input type="hidden" value="@Model.Key" name="boardKey" />
+        <div class="form-row theme-row">
+            <label for="theme">Тема</label>
+            <input name="theme" />
+        </div>
+        <div class="form-row">
+            <textarea class="form-control" rows="4" id="form-msg" name="text"></textarea>
+        </div>
+        <div class="form-row">
+            <div class="form-button">
+                <input class="hidden-input" id="post-img" type="file" name ="atachedImage" onchange="loadImagePreview(this.files)" />
+                <label for="post-img">Картинка </label>
+            </div>
+            <div class="form-button">
+                <input id="form-submit" class="hidden-input" type="submit"/>
+                <label for="form-submit">Создать </label>
+            </div>
+        </div>
+        <div class="form-row error-list" asp-validation-summary="All"></div>
+    </form>
+</div>
+<hr />
+<div class="threads-container">
+    @foreach (var thrd in Model.Threads)
+    {
+        <div class="thread" id="thread-@thrd.Id">
+            @foreach (var post in thrd.Posts)
+            {
+                <partial name="_PostView" model="post" />
+            }
+            <div>
+                <a href=@($"/{Model.Key}/{thrd.Id}")>В тред -></a>
+            </div>
+        </div>
+    }
+</div>

@@ -24,10 +24,10 @@ namespace OakChan.Models
                 {
                     new Post{
                         Id =rnd.Next(),
-                        CreationTime = DateTime.Now, 
+                        CreationTime = DateTime.Now,
                         Message = data.Text,
-                        Name = data.Name, 
-                        Subject = data.Subject, 
+                        Name = data.Name,
+                        Subject = data.Subject,
                         ThreadId = tid,
                         UserId = 42 }
                 }
@@ -54,7 +54,23 @@ namespace OakChan.Models
                     Key = b.Key,
                     Name = b.Name,
                     Threads = new[] {
-                        new Thread { Posts = new[] { new Post { Message = "111", Image = new Image { Id = 0, Type = "jpg" } } } },
+                        new Thread { 
+                            Id = 8,
+                            Posts = new[] {
+                                new Post { 
+                                    Message = "Oppost",
+                                    Image = new Image { Id = 0, Type = "jpg" } ,
+                                    Subject = "Test thread", Id = 32,
+                                    Name="OP", 
+                                    CreationTime = DateTime.Parse("12.02.2019 13:14"),
+                                    ThreadId = 8 },
+                                new Post { 
+                                    Message = "reply post",
+                                    Name ="Anon",
+                                    CreationTime = DateTime.Parse("12.02.2019 14:00"),
+                                    Id = 40,
+                                    ThreadId = 8 }
+                        }},
                         new Thread { Posts = new[] { new Post { Message = "222" } } },
                         new Thread { Posts = new[] { new Post { Message = "333" } } }}
                     .Union(threads.Where(t => t.BoardId == boardId))
