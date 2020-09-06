@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,7 +29,26 @@ namespace OakChan
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
             services.AddMvc();
-            services.AddSingleton<IBoardService, MockService>();
+            services.AddSingleton<MockService>();
+            services.AddSingleton<IBoardService>(services => services.GetService<MockService>());
+            services.AddSingleton<IUserService>(services => services.GetService<MockService>());
+
+            services.AddAuthentication()
+                .AddCookie(DeanonMiddleware.AuthenticationScheme, cookie =>
+                {
+                    cookie.Cookie.Name = "greeting";
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    name: "deanoned",
+                    policy =>
+                    {
+                        policy.RequireClaim(DeanonMiddleware.UidClaimName);
+                        policy.AuthenticationSchemes.Add(DeanonMiddleware.AuthenticationScheme);
+                    });
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -40,7 +60,9 @@ namespace OakChan
 
             app.UseStaticFiles();
             app.UseRouting();
-
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseDeanon();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

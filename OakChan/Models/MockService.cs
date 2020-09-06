@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.Models
 {
-    public class MockService : IBoardService
+    public class MockService : IBoardService, IUserService
     {
         private Random rnd = new Random();
         public List<Thread> threads = new List<Thread>();
@@ -69,5 +69,10 @@ namespace OakChan.Models
                 new Board() {Key = "b", Name = "Random"},
                 new Board() {Key = "pic", Name = "Pictures" },
                 new Board() {Key = "sky", Name = "Buy Skyrim" }});
+
+        public User CreateAnonymous()
+        {
+            return new User() { Id = rnd.Next() };
+        }
     }
 }
