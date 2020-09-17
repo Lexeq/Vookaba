@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +29,23 @@ namespace OakChan
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
-            services.AddMvc();
             services.AddSingleton<IBoardService, MockService>();
+
+            var mvcBuilder = services.AddMvc();
+
+            #region Localization
+
+            var supportedCultures = new[] { new CultureInfo("ru-ru") };
+            services.Configure<RequestLocalizationOptions>(o =>
+            {
+                o.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
+                o.SupportedCultures = supportedCultures;
+                o.SupportedUICultures = supportedCultures;
+            });
+
+            services.AddLocalization(o => o.ResourcesPath = "Resources\\Localization");
+            mvcBuilder.AddMvcLocalization();
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -39,6 +56,7 @@ namespace OakChan
             }
 
             app.UseStaticFiles();
+            app.UseRequestLocalization();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
