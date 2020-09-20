@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using OakChan.Models;
 using OakChan.Models.DB;
@@ -20,16 +21,19 @@ namespace OakChan
     public class Startup
     {
         public IConfiguration Configuration { get; }
+        public IWebHostEnvironment Environment { get; }
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
             services.AddSingleton<IBoardService, MockService>();
+            services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Environment.WebRootPath));
 
             var mvcBuilder = services.AddMvc();
 
@@ -54,13 +58,23 @@ namespace OakChan
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/error/HandleException/");
+            }
 
+            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseStaticFiles();
             app.UseRequestLocalization();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                  name: "error",
+                  pattern: "error/{action}/{statusCode?}",
+                  defaults: new { Controller = "Error" });
+
                 endpoints.MapControllerRoute(
                   name: "default",
                   pattern: "/",
