@@ -91,9 +91,9 @@ namespace OakChan
                    defaults: new { Controller = "Thread", Action = "Index" });
 
                 endpoints.MapControllerRoute(
-                    name:"boardAction",
-                    pattern:"{board:alpha}/{action}",
-                    defaults: new {Controller = "Board" });
+                    name: "boardAction",
+                    pattern: "{board:alpha}/{action}",
+                    defaults: new { Controller = "Board" });
 
                 endpoints.MapControllerRoute(
                     name: "threadAction",
