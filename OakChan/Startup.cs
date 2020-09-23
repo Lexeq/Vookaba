@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OakChan.Deanon;
 using OakChan.Models;
 using OakChan.Models.DB;
 using OakChan.Models.Interfces;
@@ -32,22 +32,13 @@ namespace OakChan
             services.AddSingleton<MockService>();
             services.AddSingleton<IBoardService>(services => services.GetService<MockService>());
             services.AddSingleton<IUserService>(services => services.GetService<MockService>());
-
+            
             services.AddAuthentication()
-                .AddCookie(DeanonMiddleware.AuthenticationScheme, cookie =>
-                {
-                    cookie.Cookie.Name = "greeting";
-                });
+                .AddDeanonCookie();
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(
-                    name: "deanoned",
-                    policy =>
-                    {
-                        policy.RequireClaim(DeanonMiddleware.UidClaimName);
-                        policy.AuthenticationSchemes.Add(DeanonMiddleware.AuthenticationScheme);
-                    });
+                options.AddDeanonPolicy();
             });
         }
 
