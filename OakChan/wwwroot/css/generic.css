@@ -1,0 +1,35 @@
+﻿.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+    text-align: center;
+    margin: 2rem;
+}
+
+.error-row {
+    margin: 0 0 5px 0;
+}
+
+.error-container__caption {
+    font-size: 3.5rem;
+}
+
+.error-container__description {
+    color: #8f8f8f;
+    font-size: 1.33rem;
+    font-weight: 200;
+    line-height: 75%;
+}
+
+.error-container__code {
+    font-weight: 400;
+    color: #da9305fd;
+}
+
+.error-container__image {
+    height: 180px;
+    max-height: 33vh;
+    min-height: 150px;
+}
