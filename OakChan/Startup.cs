@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using OakChan.Deanon;
 using OakChan.Models;
 using OakChan.Models.DB;
 using OakChan.Models.Interfces;
@@ -32,7 +33,17 @@ namespace OakChan
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
-            services.AddSingleton<IBoardService, MockService>();
+            services.AddSingleton<MockService>();
+            services.AddSingleton<IBoardService>(services => services.GetService<MockService>());
+            services.AddSingleton<IUserService>(services => services.GetService<MockService>());
+            
+            services.AddAuthentication()
+                .AddDeanonCookie();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddDeanonPolicy();
+            });
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Environment.WebRootPath));
 
             var mvcBuilder = services.AddMvc();
@@ -67,7 +78,9 @@ namespace OakChan
             app.UseStaticFiles();
             app.UseRequestLocalization();
             app.UseRouting();
-
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseDeanon();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
