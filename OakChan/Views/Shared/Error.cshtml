@@ -1,0 +1,24 @@
+﻿@using OakChan.ViewModels;
+@using Microsoft.Extensions.FileProviders
+
+@model ErrorViewModel
+
+@inject IFileProvider files
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/generic.css" />
+}
+
+<div class="error-container">
+    <div class="error-row error-container__caption">
+        <span class="error-container__code">@Model.Code</span>
+        <span> @Model.Title</span>
+    </div>
+    <div class="error-row error-container__description">@Model.Description</div>
+    @if (files.GetFileInfo(Model.ImagePath).Exists)
+    {
+        <div class="error-row">
+            <img class="error-container__image" src="@Model.ImagePath" />
+        </div>
+    }
+</div>
