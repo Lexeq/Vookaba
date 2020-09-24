@@ -15,6 +15,14 @@ namespace OakChan.Models
         public List<Thread> threads = new List<Thread>();
         public Task<Thread> CreateThreadAsync(string boardId, PostCreationData data)
         {
+
+            var id = rnd.Next();
+            var ms = new MemoryStream();
+            data.Image.Source.CopyTo(ms);
+            var ext = Path.GetExtension(data.Image.Name);
+            File.WriteAllBytes($"wwwroot/res/img/{id}.{ext}", ms.ToArray());
+            Image im = new Image { Hash = new byte[] { 10, 20, 30 }, Id = id, OriginalName = data.Image.Name, Type = ext, UploadDate = DateTime.Now };
+
             var tid = rnd.Next();
             var t = new Thread()
             {
@@ -23,16 +31,16 @@ namespace OakChan.Models
                 Posts = new List<Post>
                 {
                     new Post{
-                        Id =rnd.Next(),
+                        Id = rnd.Next(),
                         CreationTime = DateTime.Now,
                         Message = data.Text,
                         Name = data.Name,
                         Subject = data.Subject,
                         ThreadId = tid,
-                        UserId = 42 }
+                        UserId = 42 ,
+                        Image = im}
                 }
             };
-
 
             threads.Add(t);
             return Task.FromResult(t);
@@ -54,17 +62,17 @@ namespace OakChan.Models
                     Key = b.Key,
                     Name = b.Name,
                     Threads = new[] {
-                        new Thread { 
+                        new Thread {
                             Id = 8,
                             Posts = new[] {
-                                new Post { 
+                                new Post {
                                     Message = "Oppost",
                                     Image = new Image { Id = 0, Type = "jpg" } ,
                                     Subject = "Test thread", Id = 32,
-                                    Name="OP", 
+                                    Name="OP",
                                     CreationTime = DateTime.Parse("12.02.2019 13:14"),
                                     ThreadId = 8 },
-                                new Post { 
+                                new Post {
                                     Message = "reply post",
                                     Name ="Anon",
                                     CreationTime = DateTime.Parse("12.02.2019 14:00"),

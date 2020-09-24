@@ -20,7 +20,7 @@ namespace OakChan.Controllers
         private const int threadsPerPage = 10;
         private readonly IBoardService boardService;
         private readonly IStringLocalizer<BoardController> localizer;
-
+        
         public BoardController(IBoardService boardService, IStringLocalizer<BoardController> localizer)
         {
             this.boardService = boardService;
@@ -32,10 +32,12 @@ namespace OakChan.Controllers
             var b = await boardService.GetBoardPreviewAsync(board, 1, threadsPerPage);
             if (b == null)
             {
-                return View("Error", new ErrorViewModel {
+                return View("Error", new ErrorViewModel
+                {
                     Code = 404,
-                    Title =  localizer["Not found"], 
-                    Description = localizer["Board {0} does not exist.", board]});
+                    Title = localizer["Not found"],
+                    Description = localizer["Board {0} does not exist.", board]
+                });
             }
             return View(b);
         }
@@ -48,7 +50,12 @@ namespace OakChan.Controllers
             {
                 Name = name,
                 Subject = subject,
-                Text = text
+                Text = text,
+                Image = new ImageData
+                {
+                    Name = atachedImage.FileName,
+                    Source = atachedImage.OpenReadStream()
+                }
             });
 
             return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.Id });
