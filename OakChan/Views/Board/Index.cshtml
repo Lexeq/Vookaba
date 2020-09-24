@@ -1,13 +1,14 @@
-﻿@using System.Linq;
-@model OakChan.Models.DB.Entities.Board;
+﻿@using OakChan.ViewModels;
+@model BoardViewModel;
 @{
-    ViewBag.Title = "boardName";
+    ViewBag.Title = $"{Model.Board.Key} - Oak chan";
 }
 @section Scripts{
     <script src="~/scripts/acorn.js"></script>
+    <partial name="_ValidationScriptsPartial" />
 }
 
-<h2 class="board-name">@($"/{Model.Key}/ - {Model.Name}")</h2>
+<h2 class="board-name">@($"/{Model.Board.Key}/ - {Model.Board.Name}")</h2>
 
 <p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()">Создать тред</p>
 
@@ -17,22 +18,22 @@
             <img src="#" id="preview-img" class="preview-imgage" />
         </div>
     </div>
-    <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data"  asp-action="CreateThread" asp-controller="Board">
-        <input type="hidden" value="@Model.Key" name="boardKey" />
+    <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreateThread" asp-controller="Board">
+        <input type="hidden" value="@Model.Board.Key" asp-for="NewThreadData.Board" autocomplete="off" />
         <div class="form-row theme-row">
-            <label for="theme">Тема</label>
-            <input name="theme" />
+            <label asp-for="NewThreadData.Subject">Тема</label>
+            <input asp-for="NewThreadData.Subject" autocomplete="off" />
         </div>
         <div class="form-row">
-            <textarea class="form-control" rows="4" id="form-msg" name="text"></textarea>
+            <textarea class="form-control" rows="4" id="form-msg" asp-for="NewThreadData.Text"></textarea>
         </div>
         <div class="form-row">
             <div class="form-button">
-                <input class="hidden-input" id="post-img" type="file" name ="atachedImage" onchange="loadImagePreview(this.files)" />
+                <input class="hidden-input" id="post-img" type="file" asp-for="NewThreadData.AttachedImage" onchange="loadImagePreview(this.files)" />
                 <label for="post-img">Картинка </label>
             </div>
             <div class="form-button">
-                <input id="form-submit" class="hidden-input" type="submit"/>
+                <input id="form-submit" class="hidden-input" type="submit" />
                 <label for="form-submit">Создать </label>
             </div>
         </div>
@@ -41,7 +42,7 @@
 </div>
 <hr />
 <div class="threads-container">
-    @foreach (var thrd in Model.Threads)
+    @foreach (var thrd in Model.Board.Threads)
     {
         <div class="thread" id="thread-@thrd.Id">
             @foreach (var post in thrd.Posts)
@@ -49,7 +50,7 @@
                 <partial name="_PostView" model="post" />
             }
             <div>
-                <a href=@($"/{Model.Key}/{thrd.Id}")>В тред -></a>
+                <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thrd.Id">В тред</a>
             </div>
         </div>
     }

@@ -20,7 +20,7 @@ namespace OakChan.Controllers
         private const int threadsPerPage = 10;
         private readonly IBoardService boardService;
         private readonly IStringLocalizer<BoardController> localizer;
-        
+
         public BoardController(IBoardService boardService, IStringLocalizer<BoardController> localizer)
         {
             this.boardService = boardService;
@@ -39,26 +39,35 @@ namespace OakChan.Controllers
                     Description = localizer["Board {0} does not exist.", board]
                 });
             }
-            return View(b);
+            return View(new BoardViewModel { Board = b });
         }
 
         [HttpPost]
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
-        public async Task<IActionResult> CreateThreadAsync(string board, string subject, string text, string name, IFormFile atachedImage)
+        public async Task<IActionResult> CreateThreadAsync(BoardViewModel viewModel)
         {
-            var t = await boardService.CreateThreadAsync(board, new PostCreationData()
-            {
-                Name = name,
-                Subject = subject,
-                Text = text,
-                Image = new ImageData
-                {
-                    Name = atachedImage.FileName,
-                    Source = atachedImage.OpenReadStream()
-                }
-            });
+            var threadData = viewModel.NewThreadData;
 
-            return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.Id });
+            if (ModelState.IsValid)
+            {
+                var postData = new PostCreationData()
+                {
+                    Name = threadData.Name,
+                    Subject = threadData.Subject,
+                    Text = threadData.Text,
+                    Image = new ImageData
+                    {
+                        Name = threadData.AttachedImage.FileName,
+                        Source = threadData.AttachedImage.OpenReadStream()
+                    }
+                };
+
+                var t = await boardService.CreateThreadAsync(threadData.Board, postData);
+
+                return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.Id });
+            }
+
+            return RedirectToRoute("default");
         }
     }
 }
