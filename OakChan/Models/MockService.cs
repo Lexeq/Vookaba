@@ -45,7 +45,7 @@ namespace OakChan.Models
 
             if (b == null)
             {
-                return Task.FromException<Board>(new Exception($"Board {boardId} doesn't exist."));
+                return Task.FromResult<Board>(null);
             }
 
             return Task.FromResult(
