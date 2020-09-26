@@ -6,6 +6,6 @@ namespace OakChan.ViewModels
     {
         public Board Board { get; set; }
 
-        public NewThreadData NewThreadData { get; set; }
+        public OpPostViewModel OpPost { get; set; }
     }
 }

@@ -19,17 +19,17 @@
         </div>
     </div>
     <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreateThread" asp-controller="Board">
-        <input type="hidden" value="@Model.Board.Key" asp-for="NewThreadData.Board" autocomplete="off" />
+        <input type="hidden" value="@Model.Board.Key" asp-for="OpPost.Board" autocomplete="off" />
         <div class="form-row theme-row">
-            <label asp-for="NewThreadData.Subject">Тема</label>
-            <input asp-for="NewThreadData.Subject" autocomplete="off" />
+            <label asp-for="OpPost.Subject">Тема</label>
+            <input asp-for="OpPost.Subject" autocomplete="off" />
         </div>
         <div class="form-row">
-            <textarea class="form-control" rows="4" id="form-msg" asp-for="NewThreadData.Text"></textarea>
+            <textarea class="form-control" rows="4" id="form-msg" asp-for="OpPost.Text"></textarea>
         </div>
         <div class="form-row">
             <div class="form-button">
-                <input class="hidden-input" id="post-img" type="file" asp-for="NewThreadData.AttachedImage" onchange="loadImagePreview(this.files)" />
+                <input class="hidden-input" id="post-img" type="file" asp-for="OpPost.Image" onchange="loadImagePreview(this.files)" />
                 <label for="post-img">Картинка </label>
             </div>
             <div class="form-button">

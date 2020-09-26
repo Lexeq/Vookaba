@@ -39,35 +39,33 @@ namespace OakChan.Controllers
                     Description = localizer["Board {0} does not exist.", board]
                 });
             }
-            return View(new BoardViewModel { Board = b });
+            return View(new BoardViewModel { Board = b, OpPost = new OpPostViewModel { Board = b.Key } });
         }
 
         [HttpPost]
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
-        public async Task<IActionResult> CreateThreadAsync(BoardViewModel viewModel)
+        public async Task<IActionResult> CreateThreadAsync(OpPostViewModel opPost)
         {
-            var threadData = viewModel.NewThreadData;
-
             if (ModelState.IsValid)
             {
                 var postData = new PostCreationData()
                 {
-                    Name = threadData.Name,
-                    Subject = threadData.Subject,
-                    Text = threadData.Text,
+                    Name = opPost.Name,
+                    Subject = opPost.Subject,
+                    Text = opPost.Text,
                     Image = new ImageData
                     {
-                        Name = threadData.AttachedImage.FileName,
-                        Source = threadData.AttachedImage.OpenReadStream()
+                        Name = opPost.Image.FileName,
+                        Source = opPost.Image.OpenReadStream()
                     }
                 };
 
-                var t = await boardService.CreateThreadAsync(threadData.Board, postData);
+                var t = await boardService.CreateThreadAsync(opPost.Board, postData);
 
                 return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.Id });
             }
 
-            return RedirectToRoute("default");
+            return opPost.Board == null ? RedirectToRoute("default") : RedirectToRoute("board", new { opPost.Board });
         }
     }
 }
