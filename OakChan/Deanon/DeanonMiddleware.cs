@@ -12,20 +12,18 @@ namespace OakChan.Deanon
     public class DeanonMiddleware
     {
         private readonly RequestDelegate next;
-        private readonly IUserService users;
 
         private string _scheme;
         private string _claim;
 
-        public DeanonMiddleware(RequestDelegate next, IUserService users)
+        public DeanonMiddleware(RequestDelegate next)
         {
             this.next = next ?? throw new ArgumentNullException(nameof(next));
-            this.users = users ?? throw new ArgumentNullException(nameof(users));
             _scheme = DeanonDefaults.AuthenticationScheme;
             _claim = DeanonDefaults.UidClaimName;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IUserService users)
         {
             var authResult = await context.AuthenticateAsync(_scheme);
             if (!authResult.Succeeded)
