@@ -64,4 +64,8 @@ function loadImagePreview(files) {
 function switchFormVisibility() {
     let form = document.getElementById("form");
     form.style.display = form.style.display ? '' : 'block';
+    let switcher = document.getElementById("switcher");
+    let newText = switcher.dataset.switchedText;
+    switcher.dataset.switchedText = switcher.textContent;
+    switcher.textContent = newText;
 }

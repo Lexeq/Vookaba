@@ -10,7 +10,7 @@
 
 <h2 class="board-name">@($"/{Model.Board.Key}/ - {Model.Board.Name}")</h2>
 
-<p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()">Создать тред</p>
+<p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Create thread"]</p>
 
 <div class="creation-form" id="form">
     <div class="preview-container">
@@ -21,7 +21,7 @@
     <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreateThread" asp-controller="Board">
         <input type="hidden" value="@Model.Board.Key" asp-for="OpPost.Board" autocomplete="off" />
         <div class="form-row theme-row">
-            <label asp-for="OpPost.Subject">Тема</label>
+            <label asp-for="OpPost.Subject">@Localizer["Subject"]</label>
             <input asp-for="OpPost.Subject" autocomplete="off" />
         </div>
         <div class="form-row">
@@ -30,11 +30,11 @@
         <div class="form-row">
             <div class="form-button">
                 <input class="hidden-input" id="post-img" type="file" asp-for="OpPost.Image" onchange="loadImagePreview(this.files)" />
-                <label for="post-img">Картинка </label>
+                <label for="post-img">@Localizer["Image"]</label>
             </div>
             <div class="form-button">
                 <input id="form-submit" class="hidden-input" type="submit" />
-                <label for="form-submit">Создать </label>
+                <label for="form-submit">@Localizer["Create"]</label>
             </div>
         </div>
         <div class="form-row error-list" asp-validation-summary="All"></div>
@@ -50,7 +50,7 @@
                 <partial name="_PostView" model="post" />
             }
             <div>
-                <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thrd.Id">В тред</a>
+                <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thrd.Id">@Localizer["To thread"]</a>
             </div>
         </div>
     }
