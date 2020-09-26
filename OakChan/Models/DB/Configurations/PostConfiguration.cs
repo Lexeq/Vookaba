@@ -30,7 +30,7 @@ namespace OakChan.Models.DB.Configurations
                 .IsRequired()
                 .HasMaxLength(4096);
 
-            builder.HasOne<User>()
+            builder.HasOne<Anonymous>()
                 .WithMany()
                 .HasForeignKey(p => p.UserId)
                 .IsRequired();

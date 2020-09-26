@@ -37,7 +37,7 @@ namespace OakChan.Models
                         Name = data.Name,
                         Subject = data.Subject,
                         ThreadId = tid,
-                        UserId = 42 ,
+                        UserId =  new Guid(),
                         Image = im}
                 }
             };
@@ -95,9 +95,9 @@ namespace OakChan.Models
                 new Board() {Key = "pic", Name = "Pictures" },
                 new Board() {Key = "sky", Name = "Buy Skyrim" }});
 
-        public User CreateAnonymous()
+        public Task<Anonymous> CreateAnonymousAsync(string ip)
         {
-            return new User() { Id = rnd.Next() };
+            return Task.FromResult(new Anonymous() { Id = new Guid(), Created = DateTime.Now, IP = ip});
         }
 
         public Task<Thread> GetThreadAsync(string board, int thread)
@@ -127,7 +127,7 @@ namespace OakChan.Models
                 Name = post.Name,
                 Subject = post.Subject,
                 ThreadId = t.Id,
-                UserId = 42,
+                UserId = new Guid(),
                 Image = im
             };
 

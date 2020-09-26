@@ -30,7 +30,7 @@ namespace OakChan.Deanon
             var authResult = await context.AuthenticateAsync(_scheme);
             if (!authResult.Succeeded)
             {
-                var user = users.CreateAnonymous();
+                var user = await users.CreateAnonymousAsync(context.Connection.RemoteIpAddress.ToString());
 
                 var identity = new ClaimsIdentity(
                     claims: new[] { new Claim(_claim, user.Id.ToString()) },

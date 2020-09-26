@@ -17,7 +17,7 @@ namespace OakChan.Models.DB.Entities
 
         public string Message { get; set; }
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public Image Image { get; set; }
 
