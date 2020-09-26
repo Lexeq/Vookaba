@@ -8,12 +8,14 @@ using System.Threading.Tasks;
 
 namespace OakChan.Models.DB
 {
-    public class OakDbContext:DbContext
+    public class OakDbContext : DbContext
     {
         public OakDbContext() { }
 
         public OakDbContext(DbContextOptions options)
             : base(options) { }
+
+        public DbSet<Anonymous> Anonymous { get; set; }
 
         public DbSet<Post> Posts { get; set; }
 
