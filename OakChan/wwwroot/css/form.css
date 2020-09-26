@@ -1,0 +1,127 @@
+﻿.creation-form {
+    width: 80%;
+    max-width: 400px;
+    min-width: 200px;
+    margin: 0 auto;
+    display: none;
+}
+
+.posting-form {
+    position: relative;
+    top: -100px;
+    margin-bottom: -100px;
+}
+
+.form-row {
+    display: flex;
+    align-content: stretch;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
+.theme-row label {
+    max-width: 35%;
+    margin: 0 5px 0 0;
+}
+
+.theme-row input {
+    flex-grow: 1;
+}
+
+.form-row textarea {
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+    max-height: 18em;
+}
+
+.hidden-input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.form-button {
+    height: 25px;
+    width: 80px;
+}
+
+    .hidden-input:focus + label,
+    .form-button label:hover {
+        background: #91672c;
+        cursor: pointer;
+        color: white;
+    }
+
+    .form-button label {
+        background: white;
+        color: #71470c;
+        border: 2px solid #0066A2;
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 200;
+        height: 100%;
+        width: 100%;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+.preview-container {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    left: -110px;
+    top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    .preview-container div {
+        margin: 0 auto;
+        max-width: 100px;
+        max-height: 100px;
+    }
+
+.preview-imgage {
+    max-width: 100px;
+    max-height: 100px;
+    display: none;
+}
+
+.switcher {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: table;
+    margin: 0 auto 5px auto;
+    padding: 1px 10px;
+    border: 1px solid #fff0;
+}
+
+    .switcher:hover,
+    .switcher:focus {
+        border: 1px solid brown;
+    }
+
+.error-list ul {
+    padding: 0;
+}
+
+.error-list li {
+    list-style: none;
+    color: red;
+    margin: 3px 0 0;
+    font-size: 0.9em;
+}
+
+    .error-list li::before {
+        content: "- ";
+    }

@@ -36,6 +36,7 @@ namespace OakChan
             services.AddSingleton<MockService>();
             services.AddSingleton<IBoardService>(services => services.GetService<MockService>());
             services.AddSingleton<IUserService>(services => services.GetService<MockService>());
+            services.AddSingleton<IThreadService>(services => services.GetService<MockService>());
             
             services.AddAuthentication()
                 .AddDeanonCookie();

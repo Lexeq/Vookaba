@@ -9,12 +9,20 @@ using System.Threading.Tasks;
 
 namespace OakChan.Models
 {
-    public class MockService : IBoardService, IUserService
+    public class MockService : IBoardService, IUserService, IThreadService
     {
         private Random rnd = new Random();
         public List<Thread> threads = new List<Thread>();
         public Task<Thread> CreateThreadAsync(string boardId, PostCreationData data)
         {
+
+            var id = rnd.Next();
+            var ms = new MemoryStream();
+            data.Image.Source.CopyTo(ms);
+            var ext = Path.GetExtension(data.Image.Name);
+            File.WriteAllBytes($"wwwroot/res/img/{id}.{ext}", ms.ToArray());
+            Image im = new Image { Hash = new byte[] { 10, 20, 30 }, Id = id, OriginalName = data.Image.Name, Type = ext, UploadDate = DateTime.Now };
+
             var tid = rnd.Next();
             var t = new Thread()
             {
@@ -23,16 +31,16 @@ namespace OakChan.Models
                 Posts = new List<Post>
                 {
                     new Post{
-                        Id =rnd.Next(),
-                        CreationTime = DateTime.Now, 
+                        Id = rnd.Next(),
+                        CreationTime = DateTime.Now,
                         Message = data.Text,
-                        Name = data.Name, 
-                        Subject = data.Subject, 
+                        Name = data.Name,
+                        Subject = data.Subject,
                         ThreadId = tid,
-                        UserId = 42 }
+                        UserId = 42 ,
+                        Image = im}
                 }
             };
-
 
             threads.Add(t);
             return Task.FromResult(t);
@@ -45,7 +53,7 @@ namespace OakChan.Models
 
             if (b == null)
             {
-                return Task.FromException<Board>(new Exception($"Board {boardId} doesn't exist."));
+                return Task.FromResult<Board>(null);
             }
 
             return Task.FromResult(
@@ -54,7 +62,24 @@ namespace OakChan.Models
                     Key = b.Key,
                     Name = b.Name,
                     Threads = new[] {
-                        new Thread { Posts = new[] { new Post { Message = "111", Image = new Image { Id = 0, Type = "jpg" } } } },
+                        new Thread {
+                            Id = 8,
+                            BoardId = b.Key,
+                            Posts = new[] {
+                                new Post {
+                                    Message = "Oppost",
+                                    Image = new Image { Id = 0, Type = "jpg" } ,
+                                    Subject = "Test thread", Id = 32,
+                                    Name="OP",
+                                    CreationTime = DateTime.Parse("12.02.2019 13:14"),
+                                    ThreadId = 8 },
+                                new Post {
+                                    Message = "reply post",
+                                    Name ="Anon",
+                                    CreationTime = DateTime.Parse("12.02.2019 14:00"),
+                                    Id = 40,
+                                    ThreadId = 8 }
+                        }},
                         new Thread { Posts = new[] { new Post { Message = "222" } } },
                         new Thread { Posts = new[] { new Post { Message = "333" } } }}
                     .Union(threads.Where(t => t.BoardId == boardId))
@@ -73,6 +98,41 @@ namespace OakChan.Models
         public User CreateAnonymous()
         {
             return new User() { Id = rnd.Next() };
+        }
+
+        public Task<Thread> GetThreadAsync(string board, int thread)
+        {
+            return Task.FromResult(threads.FirstOrDefault(t => t.Id == thread));
+        }
+
+        public async Task<Post> CreatePostAsync(string board, int thread, PostCreationData post)
+        {
+            var t = await GetThreadAsync(board, thread);
+            Image im = null;
+
+            if (post.Image != null)
+            {
+                var id = rnd.Next();
+                var ms = new MemoryStream();
+                post.Image.Source.CopyTo(ms);
+                var ext = Path.GetExtension(post.Image.Name);
+                File.WriteAllBytes($"wwwroot/res/img/{id}.{ext}", ms.ToArray());
+                im = new Image { Hash = new byte[] { 10, 20, 30 }, Id = id, OriginalName = post.Image.Name, Type = ext, UploadDate = DateTime.Now };
+            }
+            var p = new Post
+            {
+                Id = rnd.Next(),
+                CreationTime = DateTime.Now,
+                Message = post.Text,
+                Name = post.Name,
+                Subject = post.Subject,
+                ThreadId = t.Id,
+                UserId = 42,
+                Image = im
+            };
+
+            t.Posts.Add(p);
+            return t.Posts.Last();
         }
     }
 }

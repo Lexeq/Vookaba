@@ -1,0 +1,85 @@
+﻿.post {
+    margin: 5px 5px 5px 20px;
+    padding: 3px;
+    border-radius: 0.25rem;
+    background: #e0a770;
+}
+
+.op-post {
+    margin: 0;
+    background: 0;
+}
+
+.post-message {
+    margin: 0 0 0 5px;
+    padding: 2px;
+    white-space: pre-line;
+}
+
+.post__images {
+    float: left;
+    margin: 5px 15px 0px 5px;
+}
+
+.post__image {
+    max-width: 15vw;
+    max-height: 15vh;
+    display: inline-block;
+    transition-duration: 0.15s;
+}
+
+.post__image--expanded {
+    max-width: 95vw;
+    max-height: 95vh;
+    transition-duration: 0.33s;
+}
+
+
+.post-message::after {
+    content: '';
+    clear: both;
+    display: block;
+}
+
+.op-post .post-title {
+    font-weight: bolder;
+}
+
+.postowner {
+    background: #e8b088;
+    border-left: 5px solid brown;
+}
+
+.post-reply {
+    border-left: 5px dashed blue;
+}
+
+.refma-body {
+    margin: 0px 0px 0px -0.7em;
+}
+
+.refma-span {
+    font-size: 0.75em;
+    margin: 0px 0px 0px 1em;
+}
+
+.post__number {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -ms-user-select: none;
+}
+
+.mnum:hover {
+    color: blue;
+}
+
+.mnum::before {
+    content: '№ ';
+}
+
+.highlighted {
+    border: 2px double rgb(150,20,200);
+}

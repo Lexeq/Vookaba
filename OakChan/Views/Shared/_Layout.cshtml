@@ -4,11 +4,15 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/css/generic.css" />
+    <link rel="stylesheet" href="~/css/Post.css" />
+    <link rel="stylesheet" href="~/css/Form.css" />
     @RenderSection("Styles", false)
 </head>
 <body>
     <div>
         @RenderBody()
     </div>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
