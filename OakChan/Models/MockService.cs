@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.Models
 {
-    public class MockService : IBoardService, IUserService
+    public class MockService : IBoardService, IUserService, IThreadService
     {
         private Random rnd = new Random();
         public List<Thread> threads = new List<Thread>();
@@ -64,6 +64,7 @@ namespace OakChan.Models
                     Threads = new[] {
                         new Thread {
                             Id = 8,
+                            BoardId = b.Key,
                             Posts = new[] {
                                 new Post {
                                     Message = "Oppost",
@@ -97,6 +98,41 @@ namespace OakChan.Models
         public User CreateAnonymous()
         {
             return new User() { Id = rnd.Next() };
+        }
+
+        public Task<Thread> GetThreadAsync(string board, int thread)
+        {
+            return Task.FromResult(threads.FirstOrDefault(t => t.Id == thread));
+        }
+
+        public async Task<Post> CreatePostAsync(string board, int thread, PostCreationData post)
+        {
+            var t = await GetThreadAsync(board, thread);
+            Image im = null;
+
+            if (post.Image != null)
+            {
+                var id = rnd.Next();
+                var ms = new MemoryStream();
+                post.Image.Source.CopyTo(ms);
+                var ext = Path.GetExtension(post.Image.Name);
+                File.WriteAllBytes($"wwwroot/res/img/{id}.{ext}", ms.ToArray());
+                im = new Image { Hash = new byte[] { 10, 20, 30 }, Id = id, OriginalName = post.Image.Name, Type = ext, UploadDate = DateTime.Now };
+            }
+            var p = new Post
+            {
+                Id = rnd.Next(),
+                CreationTime = DateTime.Now,
+                Message = post.Text,
+                Name = post.Name,
+                Subject = post.Subject,
+                ThreadId = t.Id,
+                UserId = 42,
+                Image = im
+            };
+
+            t.Posts.Add(p);
+            return t.Posts.Last();
         }
     }
 }
