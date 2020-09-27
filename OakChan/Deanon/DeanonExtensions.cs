@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 
 namespace OakChan.Deanon
 {
@@ -35,6 +37,20 @@ namespace OakChan.Deanon
                         policy.RequireClaim(DeanonDefaults.UidClaimName);
                         policy.AuthenticationSchemes.Add(DeanonDefaults.AuthenticationScheme);
                     });
+        }
+
+        public static async Task<Guid> GetAnonGuidAsync(this HttpContext context)
+        {
+            var authResult = await context.AuthenticateAsync(DeanonDefaults.AuthenticationScheme);
+            if (authResult.Succeeded)
+            {
+                var claim = authResult.Principal.FindFirst(DeanonDefaults.UidClaimName);
+                if (claim != null && Guid.TryParse(claim.Value, out var guid))
+                {
+                    return guid;
+                }
+            }
+            throw new DeanonException("Can't get Guid");
         }
     }
 }
