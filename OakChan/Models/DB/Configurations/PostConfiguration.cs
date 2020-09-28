@@ -18,7 +18,7 @@ namespace OakChan.Models.DB.Configurations
                 .IsRequired(true)
                 .HasDefaultValue("Аноним");
 
-            builder.HasOne<Thread>()
+            builder.HasOne(j=>j.Thread)
                 .WithMany(t => t.Posts)
                 .HasForeignKey(t => t.ThreadId)
                 .IsRequired();
@@ -27,7 +27,7 @@ namespace OakChan.Models.DB.Configurations
                 .IsRequired();
 
             builder.Property(p => p.Message)
-                .IsRequired()
+                .IsRequired(false)
                 .HasMaxLength(4096);
 
             builder.HasOne<Anonymous>()
