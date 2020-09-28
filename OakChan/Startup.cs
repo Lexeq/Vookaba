@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using OakChan.Attributes;
 using OakChan.Deanon;
 using OakChan.Models;
 using OakChan.Models.DB;
@@ -37,6 +39,8 @@ namespace OakChan
             services.AddSingleton<IBoardService>(services => services.GetService<MockService>());
             services.AddSingleton<IUserService>(services => services.GetService<MockService>());
             services.AddSingleton<IThreadService>(services => services.GetService<MockService>());
+
+            services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
             
             services.AddAuthentication()
                 .AddDeanonCookie();
