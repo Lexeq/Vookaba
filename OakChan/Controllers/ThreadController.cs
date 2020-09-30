@@ -48,7 +48,7 @@ namespace OakChan.Controllers
             var anonId = await HttpContext.GetAnonGuidAsync();
             if (ModelState.IsValid)
             {
-                await threads.CreatePostAsync(post.Board, post.Thread.Value, post.ToPostCreationData(anonId));
+                await threads.CreatePostAsync(post.Board, post.Thread.Value, await post.ToPostCreationData(anonId));
             }
 
             return (post.Board == null || post.Thread == null) ? RedirectToRoute("default") : RedirectToRoute("thread", new { post.Board, post.Thread }); ;

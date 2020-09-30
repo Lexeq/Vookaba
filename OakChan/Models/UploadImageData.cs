@@ -2,11 +2,11 @@
 
 namespace OakChan.Models
 {
-    public class ImageData
+    public class UploadImageData
     {
         public string Name { get; set; }
 
-        public Stream Source { get; set; }
+        public byte[] Data { get; set; }
     }
 
 }

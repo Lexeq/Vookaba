@@ -49,7 +49,7 @@ namespace OakChan.Controllers
             var anonId = await HttpContext.GetAnonGuidAsync();
             if (ModelState.IsValid)
             {
-                var postData = opPost.ToPostCreationData(anonId);
+                var postData = await opPost.ToPostCreationData(anonId);
 
                 var t = await boardService.CreateThreadAsync(opPost.Board, postData);
 
