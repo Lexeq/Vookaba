@@ -1,4 +1,4 @@
-﻿using OakChan.Models.Interfces;
+﻿using OakChan.Models.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

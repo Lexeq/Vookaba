@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using OakChan.Deanon;
 using OakChan.Models;
-using OakChan.Models.Interfces;
+using OakChan.Models.Interfaces;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers

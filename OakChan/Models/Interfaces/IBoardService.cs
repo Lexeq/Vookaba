@@ -3,7 +3,7 @@ using OakChan.Models.DB.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace OakChan.Models.Interfces
+namespace OakChan.Models.Interfaces
 {
     public interface IBoardService
     {

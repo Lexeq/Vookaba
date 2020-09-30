@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OakChan.Models;
-using OakChan.Models.Interfces;
+using OakChan.Models.Interfaces;
 
 namespace OakChan.Controllers
 {

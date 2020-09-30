@@ -17,7 +17,7 @@ using OakChan.Attributes;
 using OakChan.Deanon;
 using OakChan.Models;
 using OakChan.Models.DB;
-using OakChan.Models.Interfces;
+using OakChan.Models.Interfaces;
 
 namespace OakChan
 {

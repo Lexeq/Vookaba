@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OakChan.Models.Interfces
+namespace OakChan.Models.Interfaces
 {
     public interface IThreadService
     {

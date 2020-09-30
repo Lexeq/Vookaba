@@ -1,6 +1,6 @@
 ﻿using OakChan.Models.DB;
 using OakChan.Models.DB.Entities;
-using OakChan.Models.Interfces;
+using OakChan.Models.Interfaces;
 using System;
 using System.Threading.Tasks;
 
