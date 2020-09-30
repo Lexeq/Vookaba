@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.ViewModels
 {
-    public class OpPostViewModel
+    public class OpPostViewModel : IPostViewModel
     {
         [Required]
         public string Board { get; set; }

@@ -7,7 +7,7 @@ namespace OakChan.Models.Interfces
 {
     public interface IBoardService
     {
-        public Task<Board> GetBoardPreviewAsync(string boardId, int page, int threadsPerPage);
+        public Task<BoardPreview> GetBoardPreviewAsync(string boardId, int page, int threadsPerPage);
 
         public Task<Thread> CreateThreadAsync(string boardId, PostCreationData data);
 

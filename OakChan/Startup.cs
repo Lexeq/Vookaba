@@ -35,10 +35,6 @@ namespace OakChan
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
-            services.AddSingleton<MockService>();
-            services.AddSingleton<IBoardService>(services => services.GetService<MockService>());
-            services.AddSingleton<IUserService>(services => services.GetService<MockService>());
-            services.AddSingleton<IThreadService>(services => services.GetService<MockService>());
 
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
             

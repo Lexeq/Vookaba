@@ -4,7 +4,6 @@
     ViewBag.Title = $"{Model.Board.Key} - Oak chan";
 }
 @section Scripts{
-    <script src="~/scripts/acorn.js"></script>
     <partial name="_ValidationScriptsPartial" />
 }
 
@@ -15,7 +14,7 @@
 <div class="creation-form" id="form">
     <div class="preview-container">
         <div>
-            <img src="#" id="preview-img" class="preview-imgage" />
+            <img id="preview-img" class="preview-imgage" />
         </div>
     </div>
     <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreateThread" asp-controller="Board">
@@ -42,15 +41,15 @@
 </div>
 <hr />
 <div class="threads-container">
-    @foreach (var thrd in Model.Board.Threads)
+    @foreach (var thread in Model.Board.Threads)
     {
-        <div class="thread" id="thread-@thrd.Id">
-            @foreach (var post in thrd.Posts)
+        <div class="thread" id="thread-@thread.Id">
+            @foreach (var post in thread)
             {
                 <partial name="_PostView" model="post" />
             }
             <div>
-                <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thrd.Id">@Localizer["To thread"]</a>
+                <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thread.Id">@Localizer["To thread"]</a>
             </div>
         </div>
     }

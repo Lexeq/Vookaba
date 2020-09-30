@@ -3,8 +3,8 @@
     ViewData["Title"] = "Thread";
 }
 @section Scripts{
-    <script src="~/scripts/acorn.js"></script>
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/scripts/validation.js"></script>
 }
 
 <h1>Thread</h1>
@@ -12,14 +12,14 @@
 <div class="creation-form" id="form">
     <div class="preview-container">
         <div>
-            <img src="#" id="preview-img" class="preview-imgage" />
+            <img id="preview-img" class="preview-imgage" />
         </div>
     </div>
     <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreatePost" asp-controller="Thread">
         <input type="hidden" value="@Model.Thread.BoardId" asp-for="Post.Board" />
         <input type="hidden" value="@Model.Thread.Id" asp-for="Post.Thread" />
         <div class="form-row theme-row">
-            <label asp-for="Post.Subject">@Localizer["Subject"]</label>
+            <label asp-for="Post.Subject"></label>
             <input asp-for="Post.Subject"/>
         </div>
         <div class="form-row">

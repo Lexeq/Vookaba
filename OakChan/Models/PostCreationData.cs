@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OakChan.Models
 {
     public class PostCreationData
     {
+        public PostCreationData(Guid authorId)
+        {
+            Author = authorId;
+        }
+
         public string Subject { get; set; }
 
         public string Name { get; set; }
@@ -14,5 +16,7 @@ namespace OakChan.Models
         public string Text { get; set; }
 
         public ImageData Image { get; set; }
+
+        public Guid Author { get; private set; }
     }
 }

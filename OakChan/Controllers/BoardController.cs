@@ -46,19 +46,10 @@ namespace OakChan.Controllers
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
         public async Task<IActionResult> CreateThreadAsync(OpPostViewModel opPost)
         {
+            var anonId = await HttpContext.GetAnonGuidAsync();
             if (ModelState.IsValid)
             {
-                var postData = new PostCreationData()
-                {
-                    Name = opPost.Name,
-                    Subject = opPost.Subject,
-                    Text = opPost.Text,
-                    Image = new ImageData
-                    {
-                        Name = opPost.Image.FileName,
-                        Source = opPost.Image.OpenReadStream()
-                    }
-                };
+                var postData = opPost.ToPostCreationData(anonId);
 
                 var t = await boardService.CreateThreadAsync(opPost.Board, postData);
 
