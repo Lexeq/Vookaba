@@ -38,9 +38,10 @@
         <div class="form-row error-list" asp-validation-summary="All"></div>
     </form>
 </div>
-
-@foreach (var post in Model.Thread.Posts)
-{
-    <partial name="_PostView" model="post" />
-}
+<div class="thread">
+    @foreach (var post in Model.Thread.Posts)
+    {
+        <partial name="_PostView" model="post" />
+    }
+</div>
 

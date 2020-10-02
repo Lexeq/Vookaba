@@ -10,8 +10,9 @@ namespace OakChan.Models
     public class MediaStorage
     {
         private const string ThumbnailSuffix = "-min";
+        private const string MediaResourcesFolder = "res";
+        private const string ImagesFolder = "img";
 
-        private readonly string imagesFolder;
         private readonly string rootFolder;
 
 
@@ -22,24 +23,23 @@ namespace OakChan.Models
                 throw new ArgumentNullException(nameof(environment));
             }
             rootFolder = environment.WebRootPath;
-            imagesFolder = Path.Combine("res", "img");
         }
 
 
         public async Task<Image> AddImage(byte[] bytes, string name)
         {
             using Image im = Image.Load(bytes);
-            var imagePath = Path.Combine(rootFolder, imagesFolder, name);
-            var thumbPath = Path.Combine(rootFolder, imagesFolder, GetThumbnailName(name));
-            await im.SaveAsync(imagePath);
+            var imagePath = Path.Combine(rootFolder, MediaResourcesFolder, ImagesFolder, name);
+            var thumbPath = Path.Combine(rootFolder, MediaResourcesFolder, ImagesFolder, GetThumbnailName(name));
+            await File.WriteAllBytesAsync(imagePath, bytes);
             await CreateThumbnail(im).SaveAsync(thumbPath);
             return im;
         }
 
         public string GetImageRelativePath(string name)
-            => Path.Combine(imagesFolder, name);
+            => $"/{MediaResourcesFolder}/{ImagesFolder}/{name}";
         public string GetImageThumbnailRelativePath(string name)
-            => Path.Combine(imagesFolder, GetThumbnailName(name));
+            => GetImageRelativePath(GetThumbnailName(name));
 
         private string GetThumbnailName(string name)
             => Path.GetFileNameWithoutExtension(name) + ThumbnailSuffix + Path.GetExtension(name);

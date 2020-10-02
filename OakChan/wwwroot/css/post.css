@@ -2,7 +2,7 @@
     margin: 5px 5px 5px 20px;
     padding: 3px;
     border-radius: 0.25rem;
-    background: #e0a770;
+    background: #e0ca75;
 }
 
 .op-post {
@@ -10,57 +10,12 @@
     background: 0;
 }
 
-.post-message {
-    margin: 0 0 0 5px;
-    padding: 2px;
-    white-space: pre-line;
-}
-
-.post__images {
-    float: left;
-    margin: 5px 15px 0px 5px;
-}
-
-.post__image {
-    max-width: 15vw;
-    max-height: 15vh;
-    display: inline-block;
-    transition-duration: 0.15s;
-}
-
-.post__image--expanded {
-    max-width: 95vw;
-    max-height: 95vh;
-    transition-duration: 0.33s;
-}
-
-
-.post-message::after {
-    content: '';
-    clear: both;
-    display: block;
-}
-
-.op-post .post-title {
+.post__subject {
     font-weight: bolder;
 }
 
-.postowner {
-    background: #e8b088;
-    border-left: 5px solid brown;
-}
-
-.post-reply {
-    border-left: 5px dashed blue;
-}
-
-.refma-body {
-    margin: 0px 0px 0px -0.7em;
-}
-
-.refma-span {
-    font-size: 0.75em;
-    margin: 0px 0px 0px 1em;
+.post__author {
+    font-style: italic;
 }
 
 .post__number {
@@ -72,14 +27,76 @@
     -ms-user-select: none;
 }
 
-.mnum:hover {
-    color: blue;
+.post__details {
+    color: #301500;
 }
 
-.mnum::before {
-    content: '№ ';
+.post__images {
+    float: left;
+    margin: 5px 15px 0px 5px;
 }
 
-.highlighted {
-    border: 2px double rgb(150,20,200);
+.post__image-container {
+    display: inline-block;
+    transition-duration: 0.15s;
+    max-width: 175px;
+    min-width: 150px;
 }
+
+.post__image {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+
+
+.post__file-info {
+    font-size: 00.75em;
+}
+
+.post__file-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+    .post__file-name a {
+        color: #301500;
+        text-decoration: none;
+    }
+
+.post__file-size {
+    width: 100%;
+    max-width: 250px;
+    display: flex;
+    justify-content: space-between;
+    margin: 0px 0px 2px;
+}
+
+    .post__file-size span {
+        margin: 0px 5px 0px 0px;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .post__file-size .full-size {
+        min-width: 35px;
+        text-align: center;
+        flex-shrink: 0;
+        overflow: visible;
+        background-color: #d69428;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+.post__message {
+    margin: 0 0 0 5px;
+    padding: 2px;
+    white-space: pre-line;
+}
+
+    .post__message::after {
+        content: '';
+        clear: both;
+        display: block;
+    }
