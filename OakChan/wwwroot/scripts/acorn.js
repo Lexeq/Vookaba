@@ -3,6 +3,7 @@
     subscribeImageOnClick();
     subscribeFullSizeOnClick();
     subscribeReplyOnClick();
+    RefMap();
 }
 
 function subscribeFullSizeOnClick() {
@@ -51,6 +52,7 @@ function subscribeImageOnClick() {
         item.addEventListener('click', imLinkClick, false);
     }
 }
+
 
 function markOpPosts() {
     var threads = document.getElementsByClassName("thread");
@@ -105,4 +107,47 @@ function switchFormVisibility() {
     let newText = switcher.dataset.switchedText;
     switcher.dataset.switchedText = switcher.textContent;
     switcher.textContent = newText;
+}
+
+function RefMap() {
+    const maxRefs = 30;
+    let posts = document.getElementsByClassName("post");
+    for (let post of posts) {
+        let id = post.id.substring(1);
+        let msg = document.getElementById("m" + id);
+        let pattern = /&gt;&gt;(\d+)/g;
+        let newHtml = msg.innerHTML;
+        let refCount = 0;
+        let replaced = [];
+        let match;
+        while ((match = pattern.exec(msg.innerHTML)) && refCount < maxRefs) {
+            refCount++;
+            if (replaced.includes(match[1])) {
+                continue;
+            }
+            replaced.push(match[1]);
+
+            let rid = match[1]; //id поста на который ведет ссыла
+            let refPost = document.getElementById('p' + rid);
+            if (refPost) {
+                //добавляем negative-lookahead что-бы при совпадении >>1, не заменялись >>11, >>15, >>111 и т.д.
+                let replaceRegexp = new RegExp(match[0] + '(?!\\d)', 'g');
+                newHtml = newHtml.replaceAll(replaceRegexp, `<a class="ref-post" href="#p${rid}">${match[0]}</a>`);
+                let refmap = document.getElementById('refmap' + rid);
+                //создать список ссылок, если еще не создана
+                if (!refmap) {
+                    refmap = document.createElement('div');
+                    refmap.id = 'refmap' + rid;
+                    refmap.classList.add('refmap-body');
+                    refPost.appendChild(refmap);
+                }
+                //добавить ссылку в список
+                var sp = document.createElement('span');
+                sp.classList.add('refmap-span');
+                sp.innerHTML = `<a class="ref-post" href="#p${id}">>>${id}</a>`;
+                refmap.appendChild(sp);
+            }
+        }
+        msg.innerHTML = newHtml;
+    }
 }

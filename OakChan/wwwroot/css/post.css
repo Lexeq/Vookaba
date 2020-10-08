@@ -5,6 +5,11 @@
     background: #e0ca75;
 }
 
+    .post:target {
+        border: 2px solid #af8840;
+        background: #d5b484;
+    }
+
 .op-post {
     margin: 0;
     background: 0;
@@ -100,3 +105,17 @@
         clear: both;
         display: block;
     }
+
+.ref-post {
+    color: brown;
+}
+
+.refmap-body {
+    margin: 0px 0px 0px -0.7em;
+}
+
+.refmap-span {
+    font-size: 0.75em;
+    margin: 0px 0px 0px 0.55em;
+    font-style: italic;
+}
