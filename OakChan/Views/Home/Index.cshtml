@@ -1,12 +1,45 @@
-﻿@model IEnumerable<OakChan.Models.DB.Entities.Board>
+﻿@model OakChan.ViewModels.HomePageViewModel
 @{
-    ViewBag.Title = "Welcome";
+    ViewBag.Title = Localizer["Welcome"];
 }
-<ul>
-    @foreach (var board in Model)
-    {
-        <li>
-            <a asp-controller="Board" asp-action="Index" asp-route-board="@board.Key">@($"{board.Key} - {board.Name}")</a>
-        </li>
-    }
-</ul>
+
+@inject OakChan.Models.MediaStorage media
+<div class="logo">
+    <img class="logo-img" src="/images/logo.png" />
+</div>
+<div class="welcome text-center">
+    <div>@Localizer["Welcome"]</div>
+</div>
+
+<div class="board-list">
+    <div class="board-list__head">
+        <p>@Localizer["Boards list"]</p>
+    </div>
+    <ul class="board-list__list">
+        @foreach (var brd in Model.Boards)
+        {
+            <li><a href="\@brd.Key">@($"/{brd.Key}/ - {brd.Name}")</a></li>
+        }
+    </ul>
+</div>
+
+<div class="favorite-threads">
+    <div class="favorite-threads__head">
+        <span>@Localizer["Top threads"]</span>
+    </div>
+    <div class="favorite-threads__list">
+
+        @foreach (var thread in Model.TopThreads)
+        {
+            <div class="favorite-thread__item">
+                <a asp-route="thread" asp-route-board="@thread.BoardId" asp-route-thread="@thread.ThreadId">
+                    <p class="favorite-thread__caption">@Localizer["popular in /{0}/", thread.BoardId]</p>
+                    <div>
+                        <img class="favorite-thread__image" src="@(media.GetImageThumbnailRelativePath(thread.OpPost.Image.Name))" />
+                        <div  class="favorite-thread__message">@(thread.OpPost.Message)</div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

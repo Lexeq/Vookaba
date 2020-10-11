@@ -41,9 +41,10 @@ namespace OakChan
             services.AddScoped<IBoardService, DbBoardService>();
             services.AddScoped<IUserService, DbUserService>();
             services.AddScoped<IThreadService, DbThreadService>();
+            services.AddScoped<FavoriteThreadsService>();
 
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
-            
+
             services.AddAuthentication()
                 .AddDeanonCookie();
 
