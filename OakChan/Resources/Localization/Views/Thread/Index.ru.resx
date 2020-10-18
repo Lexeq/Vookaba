@@ -120,6 +120,9 @@
   <data name="Create" xml:space="preserve">
     <value>Создать</value>
   </data>
+  <data name="Go to home page" xml:space="preserve">
+    <value>Домашняя страница</value>
+  </data>
   <data name="Hide form" xml:space="preserve">
     <value>Скрыть форму</value>
   </data>

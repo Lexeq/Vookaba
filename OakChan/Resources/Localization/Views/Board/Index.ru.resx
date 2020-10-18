@@ -123,6 +123,9 @@
   <data name="Create thread" xml:space="preserve">
     <value>Создать тред</value>
   </data>
+  <data name="Go to home page" xml:space="preserve">
+    <value>Домашняя страница</value>
+  </data>
   <data name="Hide form" xml:space="preserve">
     <value>Скрыть форму</value>
   </data>
@@ -133,6 +136,9 @@
     <value>Тема</value>
   </data>
   <data name="To thread" xml:space="preserve">
-    <value>В тред</value>
+    <value>[В тред]</value>
+  </data>
+  <data name="{0} post omited, {1} with image." xml:space="preserve">
+    <value>Постов пропущено: {0}, с изображениями: {1}.</value>
   </data>
 </root>

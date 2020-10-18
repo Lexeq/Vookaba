@@ -98,3 +98,16 @@ hr {
     max-height: 33vh;
     min-height: 150px;
 }
+
+.navbar {
+    font-size: 1.15rem;
+}
+
+    .navbar a {
+        margin:0 10px 0 0;
+    }
+
+    .navbar img {
+        width: 1em;
+        height: 1em;
+    }

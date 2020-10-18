@@ -6,7 +6,13 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }
-
+<div class="navbar">
+    <a asp-route="default">
+        <img src="~/images/home.png" />
+        <span>@Localizer["Go to home page"]</span>
+    </a>
+</div>
+<hr />
 <h2 class="board-name">@($"/{Model.Board.Key}/ - {Model.Board.Name}")</h2>
 
 <p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Create thread"]</p>
@@ -44,13 +50,15 @@
     @foreach (var thread in Model.Board.Threads)
     {
         <div class="thread" id="thread-@thread.Id">
-            @foreach (var post in thread)
+            <partial name="_PostView" model="thread.First()" />
+            <div>
+                <span>@Localizer["{0} post omited, {1} with image.", thread.TotalPostsCount - thread.Count(), thread.PostsWithImageCount - thread.Count(p => p.ImageId != null)]</span>
+                <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thread.Id">@Localizer["To thread"]</a>
+            </div>
+            @foreach (var post in thread.Skip(1))
             {
                 <partial name="_PostView" model="post" />
             }
-            <div>
-                <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thread.Id">@Localizer["To thread"]</a>
-            </div>
         </div>
     }
 </div>
