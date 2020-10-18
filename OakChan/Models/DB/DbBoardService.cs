@@ -54,7 +54,7 @@ namespace OakChan.Models.DB
                 {
                     Thread = t,
                     PostsCount = t.Posts.Count(),
-                    imagesCount = t.Posts.Where(p => p.Image != null).Count(),
+                    ImagesCount = t.Posts.Where(p => p.Image != null).Count(),
                     OpPost = t.Posts.OrderBy(p => p.CreationTime).First(),
                     OpPic = t.Posts.OrderBy(p => p.CreationTime).Select(p => p.Image).First(),
                     RecentPosts = t.Posts.OrderByDescending(p => p.CreationTime).Take(RecentPostsCount),
@@ -77,6 +77,8 @@ namespace OakChan.Models.DB
                     Id = a.Thread.Id,
                     Board = a.Thread.BoardId,
                     OpPost = a.OpPost,
+                    TotalPostsCount = a.PostsCount,
+                    PostsWithImageCount = a.ImagesCount,
                     RecentPosts = a.RecentPosts
                         .Reverse()
                         .Skip(a.PostsCount > RecentPostsCount ? 0 : 1) //exclude op post from recent posts
