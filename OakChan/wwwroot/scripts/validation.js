@@ -25,3 +25,28 @@ jQuery.validator.addMethod('requiredor',
         }
         return value != null && value != '';
     });
+
+
+jQuery.validator.unobtrusive.adapters.addSingleVal('maxsize', 'size');
+
+jQuery.validator.addMethod('maxsize',
+    function (value, element, params) {
+        if (element.files.length > 0) {
+            return element.files.length == 1 && element.files[0].size <= params;
+        }
+        return true;
+    });
+
+
+jQuery.validator.unobtrusive.adapters.add('allowedFileTypes', ['types'], function (options) {
+    options.rules['allowedFileTypes'] = options.params.types.split('|');
+    if (options.message) {
+        options.messages['allowedFileTypes'] = options.message;
+    }
+});
+
+jQuery.validator.addMethod('allowedFileTypes',
+    function (value, element, params) {
+        let normalizedValue = value.toLowerCase();
+        return element.files.length == 0 || params.some(e => normalizedValue.endsWith(e))
+    });

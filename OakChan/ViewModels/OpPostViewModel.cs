@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
+using OakChan.Attributes;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OakChan.ViewModels
 {
@@ -14,16 +11,23 @@ namespace OakChan.ViewModels
 
         public int? Thread { get; set; }
 
-        [MaxLength(32)]
+        [Display(Name = "Subject")]
+        [MaxLength(32, ErrorMessage = "Subject max length is {1}.")]
         public string Subject { get; set; }
 
-        [MaxLength(32)]
+        [Display(Name = "Name")]
+        [MaxLength(32, ErrorMessage = "Name max length is {1}.")]
         public string Name { get; set; }
 
-        [Required, MaxLength(4096)]
+        [Display(Name = "Message")]
+        [Required(ErrorMessage = "Message is required.")]
+        [MaxLength(4096, ErrorMessage = "Message max length is {1}.")]
         public string Text { get; set; }
 
-        [Required]
+        [Display(Name = "Image")]
+        [Required(ErrorMessage = "Image is required.")]
+        [AllowTypes(".jpg", ".jpeg", ".png", ".gif", ErrorMessage = "File type not supported.")]
+        [MaxFileSize(1536 * 1024, ErrorMessage = "Max file size is {1}")]
         public IFormFile Image { get; set; }
     }
 }

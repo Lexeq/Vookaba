@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Localization;
+using System.Collections.Generic;
 
 namespace OakChan.Attributes
 {
@@ -13,9 +14,9 @@ namespace OakChan.Attributes
 
         public override void AddValidation(ClientModelValidationContext context)
         {
-            context.Attributes.Add("data-val", "true");
-            context.Attributes.Add("data-val-requiredor", GetErrorMessage(context));
-            context.Attributes.Add("data-val-requiredor-other", Attribute.OtherProperty);
+            context.Attributes["data-val"] = "true";
+            context.Attributes["data-val-requiredor"] = GetErrorMessage(context);
+            context.Attributes["data-val-requiredor-other"] = Attribute.OtherProperty;
         }
 
         public override string GetErrorMessage(ModelValidationContextBase validationContext)

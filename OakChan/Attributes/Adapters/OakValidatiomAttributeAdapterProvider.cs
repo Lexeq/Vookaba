@@ -9,11 +9,13 @@ namespace OakChan.Attributes
         ValidationAttributeAdapterProvider defaultProvider = new ValidationAttributeAdapterProvider();
         public IAttributeAdapter GetAttributeAdapter(ValidationAttribute attribute, IStringLocalizer stringLocalizer)
         {
-            if (attribute is RequiredOrAttribute requiredAttribute)
+            return attribute switch
             {
-                return new RequiredOrAdatpter(requiredAttribute, stringLocalizer);
-            }
-            return defaultProvider.GetAttributeAdapter(attribute, stringLocalizer);
+                RequiredOrAttribute requiredAttribute => new RequiredOrAdatpter(requiredAttribute, stringLocalizer),
+                MaxFileSizeAttribute maxFileSizeAttribute => new MaxFileSizeAttributeAdapter(maxFileSizeAttribute, stringLocalizer),
+                AllowTypesAttribute allowTypesAttribute => new AllowTypesAttributeAdapter(allowTypesAttribute, stringLocalizer),
+                _ => defaultProvider.GetAttributeAdapter(attribute, stringLocalizer)
+            };
         }
     }
 }

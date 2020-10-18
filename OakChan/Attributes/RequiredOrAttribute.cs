@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace OakChan.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property)]
     public sealed class RequiredOrAttribute : ValidationAttribute
     {
         private const string DefaultMessage = "At least one of the prorties must be set ({0} or {1}).";
@@ -23,10 +23,6 @@ namespace OakChan.Attributes
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            if (validationContext == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
             var property = validationContext.ObjectType.GetProperty(OtherProperty);
             if (property == null)
             {

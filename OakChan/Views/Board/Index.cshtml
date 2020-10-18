@@ -28,7 +28,7 @@
         </div>
         <div class="form-row">
             <div class="form-button">
-                <input class="hidden-input" id="post-img" type="file" asp-for="OpPost.Image" onchange="loadImagePreview(this.files)" />
+                <input class="hidden-input" id="post-img" accept=".gif,.jpg,.png,.jpeg" type="file" asp-for="OpPost.Image" onchange="loadImagePreview(this.files)" />
                 <label for="post-img">@Localizer["Image"]</label>
             </div>
             <div class="form-button">

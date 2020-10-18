@@ -121,13 +121,19 @@
     <value>Допустимые форматы: {1}.</value>
   </data>
   <data name="Image" xml:space="preserve">
-    <value>изображение</value>
+    <value>Изображение</value>
+  </data>
+  <data name="Image is required." xml:space="preserve">
+    <value>Необходимо прикрепить изображение.</value>
   </data>
   <data name="Max file size is {1}" xml:space="preserve">
     <value>Максимальный размер файла: {1}.</value>
   </data>
   <data name="Message" xml:space="preserve">
-    <value>сообщение</value>
+    <value>Сообщение</value>
+  </data>
+  <data name="Message is required." xml:space="preserve">
+    <value>Текст сообщения обязателен.</value>
   </data>
   <data name="Message max length is {1}." xml:space="preserve">
     <value>Максимальная длина собщения: {1}.</value>
@@ -143,8 +149,5 @@
   </data>
   <data name="Subject max length is {1}." xml:space="preserve">
     <value>Максимальная длина темы: {1}.</value>
-  </data>
-  <data name="{0} or {1} is required" xml:space="preserve">
-    <value>Требуется {0} или {1}</value>
   </data>
 </root>

@@ -4,10 +4,8 @@
 }
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/scripts/validation.js"></script>
 }
 
-<h1>Thread</h1>
 <p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
 <div class="creation-form" id="form">
     <div class="preview-container">
@@ -27,7 +25,7 @@
         </div>
         <div class="form-row">
             <div class="form-button">
-                <input class="hidden-input" id="post-img" type="file" asp-for="Post.Image" onchange="loadImagePreview(this.files)" />
+                <input class="hidden-input" id="post-img" accept=".gif,.jpg,.png,.jpeg" type="file" asp-for="Post.Image" onchange="loadImagePreview(this.files)" />
                 <label for="post-img">@Localizer["Image"] </label>
             </div>
             <div class="form-button">
