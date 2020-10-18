@@ -3,14 +3,14 @@
     subscribeImageOnClick();
     subscribeFullSizeOnClick();
     subscribeReplyOnClick();
-    RefMap();
+    buildRefMap();
 }
 
 function subscribeFullSizeOnClick() {
     function toFullSize(e) {
-        let container = e.target.parentNode.parentNode.parentNode;
-        let imgId = 'img' + container.id.substring(2);
-        let img = document.getElementById(imgId);
+        let id = e.target.id.substring(5);
+        let container = document.getElementById('ic' + id);
+        let img = document.getElementById('img' + id);
         img.style.maxHeight = "";
         img.src = img.parentNode.href;
         container.style.maxWidth = img.dataset.imgWidth + "px";
@@ -52,7 +52,6 @@ function subscribeImageOnClick() {
         item.addEventListener('click', imLinkClick, false);
     }
 }
-
 
 function markOpPosts() {
     var threads = document.getElementsByClassName("thread");
@@ -109,7 +108,7 @@ function switchFormVisibility() {
     switcher.textContent = newText;
 }
 
-function RefMap() {
+function buildRefMap() {
     const maxRefs = 30;
     let posts = document.getElementsByClassName("post");
     for (let post of posts) {
@@ -139,7 +138,7 @@ function RefMap() {
                     refmap = document.createElement('div');
                     refmap.id = 'refmap' + rid;
                     refmap.classList.add('refmap-body');
-                    refPost.appendChild(refmap);
+                    document.getElementById('m' + rid).after(refmap);
                 }
                 //добавить ссылку в список
                 var sp = document.createElement('span');

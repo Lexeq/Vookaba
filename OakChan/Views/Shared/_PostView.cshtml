@@ -26,7 +26,7 @@
                         <div class="post__file-size">
                             <span>@($"{img.Width}x{img.Height}")</span>
                             <span>@($"{img.Size/1024}{Localizer["KB"].Value}")</span>
-                            <span class="full-size">1:1</span>
+                            <span class="full-size" id=@($"scale{img.Name}")>1:1</span>
                         </div>
                     </div>
                     <a class="post__file-link" href="@fullPath">
