@@ -11,7 +11,11 @@
         background: #d5b484;
     }
 
-.op-post {
+.post-owned {
+    border-left: 3px solid brown;
+}
+
+.thread .post-container:first-of-type .post {
     margin: 0;
     background: 0;
 }
@@ -101,12 +105,6 @@
     white-space: pre-line;
 }
 
-    .post__message::after {
-        content: '';
-        clear: both;
-        display: block;
-    }
-
 .ref-post {
     color: brown;
 }
@@ -119,4 +117,24 @@
     font-size: 0.75em;
     margin: 0px 0px 0px 0.55em;
     font-style: italic;
+}
+
+.reclear::after,
+.post-body::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+
+.reclear .post-body::after {
+    display: none;
+}
+
+.to-thread {
+    margin-top: 1em;
+    color:#7e2020;
+}
+.to-thread a{
+    text-decoration:none;
+    color:crimson;
 }

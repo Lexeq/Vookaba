@@ -50,10 +50,15 @@
     @foreach (var thread in Model.Board.Threads)
     {
         <div class="thread" id="thread-@thread.Id">
-            <partial name="_PostView" model="thread.First()" />
-            <div>
-                <span>@Localizer["{0} post omited, {1} with image.", thread.TotalPostsCount - thread.Count(), thread.PostsWithImageCount - thread.Count(p => p.ImageId != null)]</span>
-                <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thread.Id">@Localizer["To thread"]</a>
+            <div class="reclear">
+                <partial name="_PostView" model="thread.First()" />
+                <div class="to-thread">
+                    @if (thread.TotalPostsCount - thread.Count() > 0)
+                    {
+                        <span>@Localizer["{0} post omited, {1} with image.", thread.TotalPostsCount - thread.Count(), thread.PostsWithImageCount - thread.Count(p => p.ImageId != null)]</span>
+                    }
+                    <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thread.Id">[@Localizer["To thread"]]</a>
+                </div>
             </div>
             @foreach (var post in thread.Skip(1))
             {

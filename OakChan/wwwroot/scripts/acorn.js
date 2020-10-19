@@ -1,5 +1,4 @@
 ﻿window.onload = () => {
-    markOpPosts();
     subscribeImageOnClick();
     subscribeFullSizeOnClick();
     subscribeReplyOnClick();
@@ -50,13 +49,6 @@ function subscribeImageOnClick() {
     let list = document.getElementsByClassName('post__file-link');
     for (let item of list) {
         item.addEventListener('click', imLinkClick, false);
-    }
-}
-
-function markOpPosts() {
-    var threads = document.getElementsByClassName("thread");
-    for (let i = 0; i < threads.length; i++) {
-        threads[i].children[0].children[0].classList.add("op-post");
     }
 }
 

@@ -136,7 +136,7 @@
     <value>Тема</value>
   </data>
   <data name="To thread" xml:space="preserve">
-    <value>[В тред]</value>
+    <value>Ответить</value>
   </data>
   <data name="{0} post omited, {1} with image." xml:space="preserve">
     <value>Постов пропущено: {0}, с изображениями: {1}.</value>
