@@ -138,6 +138,9 @@
   <data name="To thread" xml:space="preserve">
     <value>Ответить</value>
   </data>
+  <data name="{0} of {1}" xml:space="preserve">
+    <value>{0} из {1}</value>
+  </data>
   <data name="{0} post omited, {1} with image." xml:space="preserve">
     <value>Постов пропущено: {0}, с изображениями: {1}.</value>
   </data>

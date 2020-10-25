@@ -33,7 +33,7 @@ namespace OakChan.Models.DB
             return thread;
         }
 
-        public async Task<BoardPreview> GetBoardPreviewAsync(string boardId, int page, int threadsPerPage)
+        public async Task<BoardPreview> GetBoardPreviewAsync(string boardId, int threadsOffset, int threadsCount)
         {
             var b = await context.Boards.AsNoTracking()
                 .Where(b => b.Key == boardId)
@@ -48,8 +48,8 @@ namespace OakChan.Models.DB
             var queryResult = await context.Threads.AsNoTracking()
                 .Where(t => t.BoardId == boardId)
                 .OrderByDescending(t => t.Posts.Max(p => p.CreationTime))
-                .Skip((page - 1) * threadsPerPage)
-                .Take(threadsPerPage)
+                .Skip(threadsOffset)
+                .Take(threadsCount)
                 .Select(t => new
                 {
                     Thread = t,
@@ -92,7 +92,6 @@ namespace OakChan.Models.DB
             {
                 Key = b.Board.Key,
                 Name = b.Board.Name,
-                PageNumber = page,
                 Threads = threadsOnPage,
                 TotalThreadsCount = b.ThreadsCount
             };

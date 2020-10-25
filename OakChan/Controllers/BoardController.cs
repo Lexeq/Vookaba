@@ -27,19 +27,28 @@ namespace OakChan.Controllers
             this.localizer = localizer;
         }
 
-        public async Task<IActionResult> Index(string board)
+        public async Task<IActionResult> Index(string board, int page = 1)
         {
-            var b = await boardService.GetBoardPreviewAsync(board, 1, threadsPerPage);
+            if (page < 1)
+            {
+                return NotFound();
+            }
+            var b = await boardService.GetBoardPreviewAsync(board, (page - 1) * threadsPerPage, threadsPerPage);
             if (b == null)
             {
-                return View("Error", new ErrorViewModel
-                {
-                    Code = 404,
-                    Title = localizer["Not found"],
-                    Description = localizer["Board {0} does not exist.", board]
-                });
+                return BoardNotExist(board);
             }
-            return View(new BoardViewModel { Board = b, OpPost = new OpPostViewModel { Board = b.Key } });
+            if (page != 1 && b.Threads.Count() == 0)
+            {
+                return NotFound();
+            }
+            return View(new BoardViewModel
+            {
+                Board = b,
+                OpPost = new OpPostViewModel { Board = b.Key },
+                PageNumber = page,
+                TotalPages = (int)Math.Ceiling((double)b.TotalThreadsCount / threadsPerPage)
+            });
         }
 
         [HttpPost]
@@ -58,5 +67,13 @@ namespace OakChan.Controllers
 
             return opPost.Board == null ? RedirectToRoute("default") : RedirectToRoute("board", new { opPost.Board });
         }
+
+        private ViewResult BoardNotExist(string board) =>
+            View("Error", new ErrorViewModel
+            {
+                Code = 404,
+                Title = localizer["Not found"],
+                Description = localizer["Board {0} does not exist.", board]
+            });
     }
 }
