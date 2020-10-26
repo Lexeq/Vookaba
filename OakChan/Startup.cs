@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using OakChan.Attributes;
 using OakChan.Deanon;
 using OakChan.Models;
@@ -66,7 +67,7 @@ namespace OakChan
                 o.SupportedUICultures = supportedCultures;
             });
 
-            services.AddLocalization(o => o.ResourcesPath = "Resources\\Localization");
+            services.AddLocalization(o => o.ResourcesPath = "resources/localization");
             mvcBuilder.AddMvcLocalization();
             #endregion
         }
