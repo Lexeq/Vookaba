@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
@@ -70,6 +71,11 @@ namespace OakChan
             services.AddLocalization(o => o.ResourcesPath = "resources/localization");
             mvcBuilder.AddMvcLocalization();
             #endregion
+
+            services.Configure<ForwardedHeadersOptions>(o =>
+            {
+                o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -83,6 +89,7 @@ namespace OakChan
                 app.UseExceptionHandler("/error/HandleException/");
             }
 
+            app.UseForwardedHeaders();
             app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseStaticFiles();
             app.UseRequestLocalization();
