@@ -339,3 +339,4 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 OakChan/wwwroot/res/img
+/OakChan/.config/dotnet-tools.json
