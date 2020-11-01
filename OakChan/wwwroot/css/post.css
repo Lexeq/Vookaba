@@ -18,6 +18,7 @@
 .thread .post-container:first-of-type .post {
     margin: 0;
     background: 0;
+    border: none;
 }
 
 .post__subject {
@@ -134,7 +135,7 @@
     margin-top: 1em;
     color:#7e2020;
 }
-.to-thread a{
-    text-decoration:none;
-    color:crimson;
-}
+    .to-thread a{
+        text-decoration:none;
+        color:crimson;
+    }
