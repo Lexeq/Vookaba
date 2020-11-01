@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using OakChan.Deanon;
 using OakChan.Models;
 using OakChan.Models.Interfaces;
@@ -16,11 +17,15 @@ namespace OakChan.Controllers
     {
         private readonly IThreadService threads;
         private readonly IStringLocalizer<ThreadController> localizer;
+        private readonly ILogger<ThreadController> logger;
 
-        public ThreadController(IThreadService threads, IStringLocalizer<ThreadController> localizer)
+        public ThreadController(IThreadService threads,
+            IStringLocalizer<ThreadController> localizer,
+            ILogger<ThreadController> logger)
         {
             this.threads = threads;
             this.localizer = localizer;
+            this.logger = logger;
         }
 
         public async Task<IActionResult> Index(string board, int thread)
@@ -50,8 +55,12 @@ namespace OakChan.Controllers
             {
                 await threads.CreatePostAsync(post.Board, post.Thread.Value, await post.ToPostCreationData(anonId));
             }
-
-            return (post.Board == null || post.Thread == null) ? RedirectToRoute("default") : RedirectToRoute("thread", new { post.Board, post.Thread }); ;
+            else
+            {
+                logger.LogWarning("Bad request. " +
+                    string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
+            }
+            return (post == null || post.Board == null || post.Thread == null) ? BadRequest() : (IActionResult)RedirectToRoute("thread", new { post.Board, post.Thread }); ;
         }
     }
 }

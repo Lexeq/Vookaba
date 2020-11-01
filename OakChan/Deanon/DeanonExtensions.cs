@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -49,7 +50,13 @@ namespace OakChan.Deanon
                 {
                     return guid;
                 }
+                else
+                {
+                    var logger = context.RequestServices.GetService<ILoggerFactory>().CreateLogger(nameof(DeanonExtensions));
+                    logger.LogWarning($"Fail to get usid. Claim is null: {claim == null}. Value is {claim?.Value}");
+                }
             }
+
             throw new DeanonException("Can't get Guid");
         }
     }
