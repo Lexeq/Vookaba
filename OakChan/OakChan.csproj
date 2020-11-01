@@ -3,7 +3,15 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>28e0283f-8b16-4662-aa51-96b2bb52056f</UserSecretsId>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\res\img\**" />
+    <Content Remove="wwwroot\res\img\**" />
+    <EmbeddedResource Remove="wwwroot\res\img\**" />
+    <None Remove="wwwroot\res\img\**" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />

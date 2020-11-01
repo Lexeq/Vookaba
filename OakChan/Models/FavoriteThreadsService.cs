@@ -10,18 +10,18 @@ namespace OakChan.Models
 
         public FavoriteThreadsService(OakDbContext context)
         {
-            this.context = context;
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public TopThredInfo[] GetMostPopularPerBoard(int limit)
+        public TopThredInfo[] GetMostPopularThreadOnBoard(int boardsLimit)
         {
-            if (limit < 1)
+            if (boardsLimit < 1)
             {
-                throw new ArgumentException($"{nameof(limit)} must be greater then 0.", nameof(limit));
+                throw new ArgumentException($"{nameof(boardsLimit)} must be greater then 0.", nameof(boardsLimit));
             }
             var toptop = context.Boards
                 .SelectMany(b => b.Threads.OrderByDescending(t => t.Posts.Count()).Take(1))
-                .OrderByDescending(t=>t.Posts.Count())
+                .OrderByDescending(t => t.Posts.Count())
                 .Take(3)
                 .Select(t => new
                 {

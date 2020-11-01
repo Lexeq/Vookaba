@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http.Features;
+﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OakChan.ViewModels;
@@ -29,24 +21,21 @@ namespace OakChan.Controllers
 
         public IActionResult HandleException()
         {
-            if(!IsRequestFromExceptionMiddleware)
+            if (!IsRequestFromExceptionMiddleware)
             {
                 return ErrorView(404);
             }
             var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            logger.LogError(exceptionFeature.Error, $"An error has occured. Path: {exceptionFeature.Path}. Querry: {HttpContext.Request.QueryString}.");
+            logger.LogError(exceptionFeature.Error, $"An error has occured. Path: {exceptionFeature.Path}. Query: {HttpContext.Request.QueryString}.");
             return ErrorView(HttpContext.Response.StatusCode);
         }
 
         private IActionResult ErrorView(int statusCode) =>
-            ErrorView(new ErrorViewModel
+            this.ErrorView(new ErrorViewModel
             {
                 Code = statusCode,
                 Title = localizer[GetStatusCodeDescription(statusCode)]
             });
-
-        private IActionResult ErrorView(ErrorViewModel viewModel) =>
-            View("Error", viewModel);
 
         private string GetStatusCodeDescription(int code) =>
            code switch

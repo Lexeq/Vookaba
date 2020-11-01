@@ -42,6 +42,11 @@ namespace OakChan.Deanon
 
         public static async Task<Guid> GetAnonGuidAsync(this HttpContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
             var authResult = await context.AuthenticateAsync(DeanonDefaults.AuthenticationScheme);
             if (authResult.Succeeded)
             {

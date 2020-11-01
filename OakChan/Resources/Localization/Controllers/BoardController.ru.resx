@@ -123,4 +123,7 @@
   <data name="Not found" xml:space="preserve">
     <value>Не найдено</value>
   </data>
+  <data name="Page {0} does not exist on board /{1}/." xml:space="preserve">
+    <value>Страница {0} не существует на доске /{1}/.</value>
+  </data>
 </root>

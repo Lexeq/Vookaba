@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -9,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OakChan.Deanon;
-using OakChan.Models;
-using OakChan.Models.DB.Entities;
 using OakChan.Models.Interfaces;
 using OakChan.ViewModels;
 
@@ -34,18 +31,14 @@ namespace OakChan.Controllers
 
         public async Task<IActionResult> Index(string board, int page = 1)
         {
-            if (page < 1)
-            {
-                return NotFound();
-            }
-            var b = await boardService.GetBoardPreviewAsync(board, (page - 1) * threadsPerPage, threadsPerPage);
+            var b = await boardService.GetBoardPreviewAsync(board, (Math.Max(0, page - 1)) * threadsPerPage, threadsPerPage);
             if (b == null)
             {
-                return BoardNotExist(board);
+                return BoardDoesNotExist(board);
             }
-            if (page != 1 && b.Threads.Count() == 0)
+            if (page < 1 || (page != 1 && b.Threads.Count() == 0))
             {
-                return NotFound();
+                return PageNotFound(board, page);
             }
             return View(new BoardViewModel
             {
@@ -74,17 +67,29 @@ namespace OakChan.Controllers
             {
                 logger.LogWarning("Bad request. " +
                     string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
-                
+
                 return (opPost == null || opPost.Board == null) ? BadRequest() : (IActionResult)RedirectToRoute("board", new { opPost.Board });
             }
         }
 
-        private ViewResult BoardNotExist(string board) =>
-            View("Error", new ErrorViewModel
+        private ViewResult BoardDoesNotExist(string board)
+        {
+            return this.ErrorView(new ErrorViewModel
             {
                 Code = 404,
                 Title = localizer["Not found"],
                 Description = localizer["Board {0} does not exist.", board]
             });
+        }
+
+        private IActionResult PageNotFound(string board, int page)
+        {
+            return this.ErrorView(new ErrorViewModel
+            {
+                Code = 404,
+                Title = localizer["Not found"],
+                Description = localizer["Page {0} does not exist on board /{1}/.", page, board]
+            });
+        }
     }
 }

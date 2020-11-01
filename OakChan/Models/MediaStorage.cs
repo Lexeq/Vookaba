@@ -38,13 +38,14 @@ namespace OakChan.Models
 
         public string GetImageRelativePath(string name)
             => $"/{MediaResourcesFolder}/{ImagesFolder}/{name}";
+
         public string GetImageThumbnailRelativePath(string name)
             => GetImageRelativePath(GetThumbnailName(name));
 
         private string GetThumbnailName(string name)
             => Path.GetFileNameWithoutExtension(name) + ThumbnailSuffix + Path.GetExtension(name);
 
-        public Image CreateThumbnail(Image image)
+        private Image CreateThumbnail(Image image)
         {
             const int thumbnailMaxSize = 240;
             var thumbSource = image.Frames.Count > 1 ? image.Frames.ExportFrame(0) : image;

@@ -24,7 +24,7 @@ namespace OakChan.Controllers
             var vm = new HomePageViewModel
             {
                 Boards = await boardService.GetBoardsAsync(),
-                TopThreads = stat.GetMostPopularPerBoard(3)
+                TopThreads = stat.GetMostPopularThreadOnBoard(3)
             };
 
             return View(vm);
