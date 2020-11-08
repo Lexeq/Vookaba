@@ -46,7 +46,7 @@
     </form>
 </div>
 <hr />
-<div class="threads-container">
+<div class="threads-container" data-board="@Model.Board.Key">
     @foreach (var thread in Model.Board.Threads)
     {
         <div class="thread" id="thread-@thread.Id">

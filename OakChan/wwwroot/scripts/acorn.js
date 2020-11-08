@@ -54,17 +54,28 @@ function subscribeImageOnClick() {
 
 function subscribeReplyOnClick() {
     let elms = document.getElementsByClassName('post__number');
-    for (let i = 0; i < elms.length; i++) {
-        elms[i].onclick = () => reply(elms[i]);
+    for (let postNumber of elms) {
+        let container = postNumber.closest('.threads-container');
+        postNumber.onclick = container ?
+            () => goToTheThread(container.dataset.board, getThreadId(postNumber), postNumber.dataset.pid) :
+            () => reply(postNumber.dataset.pid);
+    }
+
+    let getThreadId = function (element) {
+        return element.closest('.thread').id.substring(7);
+    }
+
+    let goToTheThread = function (b, t, p) {
+        window.location.href = `${t}/#p${p}`;
     }
 }
 
-function reply(e) {
+function reply(postId) {
     let input = document.getElementById('form-msg');
-    let text = '>>' + e.dataset.pid + ' ';
+    let text = '>>' + postId + ' ';
     let sel = window.getSelection();
 
-    if (sel && sel.anchorNode == sel.focusNode && sel.anchorNode == document.getElementById("m" + e.dataset.pid).childNodes[1].firstChild) {
+    if (sel && sel.anchorNode == sel.focusNode && document.getElementById("m" + postId).contains(sel.anchorNode)) {
         text += document.getSelection();
     }
     text += '\n';
