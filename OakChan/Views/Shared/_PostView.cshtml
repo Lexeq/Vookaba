@@ -13,7 +13,7 @@
 }
 
 <div class="post-container" id="@($"pc{Model.Id}")">
-    <div id="@($"p{Model.Id}")" class="@($"post{(usid == Model.UserId? " post-owned" :"")}")">
+    <div id="@($"p{Model.Id}")" class="post@(usid == Model.UserId ? " post-owned" : "")@(Model.Image != null ? " post-withimage" : "")">
 
         <div class="post-details">
             <span class="post__subject">#@Model.Subject</span>
@@ -53,10 +53,9 @@
             </div>
         }
 
-        <div class="post-body">
-            <div class="post__message" id="@($"m{Model.Id}")" data-pid="@($"{Model.Id}")">
-                <text>@Model.Message</text>
-            </div>
+        <div class="post__message" id="@($"m{Model.Id}")" data-pid="@($"{Model.Id}")">
+            <text>@Model.Message</text>
         </div>
+
     </div>
 </div>

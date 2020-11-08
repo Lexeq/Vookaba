@@ -4,6 +4,7 @@
     border-radius: 0.25rem;
     background: #e0ca75;
     max-width: 80vw;
+    display: inline-block;
 }
 
     .post:target {
@@ -20,6 +21,12 @@
     background: 0;
     border: none;
 }
+
+.thread .post-container:first-of-type .post .post__message{
+        white-space: pre-line;
+        overflow: unset;
+        max-height: none;
+    }
 
 .post__subject {
     font-weight: bolder;
@@ -101,9 +108,15 @@
     }
 
 .post__message {
-    margin: 0 0 0 5px;
+    margin: .75em 0 .75px 1.25em;
     padding: 2px;
-    white-space: pre-line;
+    overflow: auto;
+    max-height: 400px;
+    white-space: normal;
+}
+
+.post-withimage {
+    min-width: 400px;
 }
 
 .ref-post {
@@ -118,6 +131,7 @@
     font-size: 0.75em;
     margin: 0px 0px 0px 0.55em;
     font-style: italic;
+    display: inline-block;
 }
 
 .reclear::after,
@@ -133,9 +147,10 @@
 
 .to-thread {
     margin-top: 1em;
-    color:#7e2020;
+    color: #7e2020;
 }
-    .to-thread a{
-        text-decoration:none;
-        color:crimson;
+
+    .to-thread a {
+        text-decoration: none;
+        color: crimson;
     }

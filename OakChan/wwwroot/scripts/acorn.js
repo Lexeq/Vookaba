@@ -76,7 +76,7 @@ function reply(postId) {
     let sel = window.getSelection();
 
     if (sel && sel.anchorNode == sel.focusNode && document.getElementById("m" + postId).contains(sel.anchorNode)) {
-        text += document.getSelection();
+        text += '\n' + document.getSelection();
     }
     text += '\n';
     if (document.getElementById('form').style.display == '') {
