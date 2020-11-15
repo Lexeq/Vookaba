@@ -10,7 +10,7 @@ namespace OakChan.ViewModels
 {
     public static class PostViewModelExtensions
     {
-        public static async Task<PostCreationData> ToPostCreationData(this IPostViewModel post, Guid anonId)
+        public static async Task<PostCreationData> ToPostCreationData(this IPostFormViewModel post, Guid anonId)
         {
             byte[] imageBytes = null;
             if (post.Image != null)

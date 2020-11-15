@@ -12,6 +12,6 @@ namespace OakChan.ViewModels
     {
         public Thread Thread { get; set; }
 
-        public PostViewModel Post { get; set; }
+        public PostFormViewModel Post { get; set; }
     }
 }

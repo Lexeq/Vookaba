@@ -43,7 +43,7 @@ namespace OakChan.Controllers
             return View(new BoardViewModel
             {
                 Board = b,
-                OpPost = new OpPostViewModel { Board = b.Key },
+                OpPost = new OpPostFormViewModel { Board = b.Key },
                 PageNumber = page,
                 TotalPages = (int)Math.Ceiling((double)b.TotalThreadsCount / threadsPerPage)
             });
@@ -51,7 +51,7 @@ namespace OakChan.Controllers
 
         [HttpPost]
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
-        public async Task<IActionResult> CreateThreadAsync(OpPostViewModel opPost)
+        public async Task<IActionResult> CreateThreadAsync(OpPostFormViewModel opPost)
         {
             if (ModelState.IsValid)
             {

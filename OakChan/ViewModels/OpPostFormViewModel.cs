@@ -4,12 +4,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OakChan.ViewModels
 {
-    public class PostViewModel : IPostViewModel
+    public class OpPostFormViewModel : IPostFormViewModel
     {
         [Required]
         public string Board { get; set; }
 
-        [Required]
         public int? Thread { get; set; }
 
         [Display(Name = "Subject")]
@@ -21,13 +20,14 @@ namespace OakChan.ViewModels
         public string Name { get; set; }
 
         [Display(Name = "Message")]
-        [RequiredOr(nameof(Image), ErrorMessage = "{0} or {1} is required")]
+        [Required(ErrorMessage = "Message is required.")]
         [MaxLength(4096, ErrorMessage = "Message max length is {1}.")]
         public string Text { get; set; }
 
         [Display(Name = "Image")]
+        [Required(ErrorMessage = "Image is required.")]
         [AllowTypes(".jpg", ".jpeg", ".png", ".gif", ErrorMessage = "File type not supported.")]
-        [MaxFileSize(1 * 1024 * 1024, ErrorMessage = "Max file size is {1}")]
+        [MaxFileSize(1536 * 1024, ErrorMessage = "Max file size is {1}")]
         public IFormFile Image { get; set; }
     }
 }

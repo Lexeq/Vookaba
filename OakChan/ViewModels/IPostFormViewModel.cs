@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.ViewModels
 {
-    public interface IPostViewModel
+    public interface IPostFormViewModel
     {
         public string Board { get; }
 

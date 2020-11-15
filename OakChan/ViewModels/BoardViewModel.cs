@@ -7,7 +7,7 @@ namespace OakChan.ViewModels
     {
         public BoardPreview Board { get; set; }
 
-        public OpPostViewModel OpPost { get; set; }
+        public OpPostFormViewModel OpPost { get; set; }
         
         public int PageNumber { get; set; }
 
