@@ -1,5 +1,5 @@
-﻿using OakChan.DAL.Entities;
-using OakChan.Models.DB.Entities;
+﻿using OakChan.DAL;
+using OakChan.DAL.Entities;
 using System;
 using System.IO;
 using System.Threading.Tasks;

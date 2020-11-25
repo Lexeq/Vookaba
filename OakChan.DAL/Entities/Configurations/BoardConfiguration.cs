@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OakChan.Models.DB.Entities;
 
 namespace OakChan.DAL.Entities.Configurations
 {

@@ -1,5 +1,4 @@
 ﻿using OakChan.DAL.Entities;
-using OakChan.Models.DB.Entities;
 
 namespace OakChan.Models
 {

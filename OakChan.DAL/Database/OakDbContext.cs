@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OakChan.DAL.Entities;
-using OakChan.Models.DB.Entities;
 using System.Reflection;
 
 namespace OakChan.DAL.Database

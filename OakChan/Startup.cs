@@ -16,6 +16,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OakChan.Attributes;
+using OakChan.DAL;
 using OakChan.DAL.Database;
 using OakChan.Deanon;
 using OakChan.Models;

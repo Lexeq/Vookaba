@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OakChan.Models
+namespace OakChan.DAL
 {
     public class MediaStorage
     {

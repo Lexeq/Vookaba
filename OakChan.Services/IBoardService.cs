@@ -1,6 +1,5 @@
 ﻿using OakChan.DAL.Entities;
 using OakChan.Models;
-using OakChan.Models.DB.Entities;
 using OakChan.Services.DTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;

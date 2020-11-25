@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OakChan.DAL.Database;
 using OakChan.DAL.Entities;
-using OakChan.Models.DB;
-using OakChan.Models.DB.Entities;
-using OakChan.Models.Interfaces;
 using OakChan.Services;
 using OakChan.Services.DTO;
 using System;

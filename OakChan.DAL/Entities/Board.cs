@@ -1,7 +1,6 @@
-﻿using OakChan.DAL.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace OakChan.Models.DB.Entities
+namespace OakChan.DAL.Entities
 {
     public class Board
     {
