@@ -1,4 +1,5 @@
 using System.Globalization;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -14,6 +15,7 @@ using OakChan.DAL;
 using OakChan.DAL.Database;
 using OakChan.Deanon;
 using OakChan.Services;
+using OakChan.Services.Mapping;
 
 namespace OakChan
 {
@@ -32,7 +34,7 @@ namespace OakChan
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
             services.AddSingleton<MediaStorage>(
-                svc=> new MediaStorage(svc.GetService<IWebHostEnvironment>().WebRootPath));
+                svc => new MediaStorage(svc.GetService<IWebHostEnvironment>().WebRootPath));
 
             services.AddScoped<PostCreator>();
             services.AddScoped<IBoardService, DbBoardService>();
@@ -71,6 +73,15 @@ namespace OakChan
             {
                 o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
             });
+
+            //Mapping
+            var mapperConfiguration = new MapperConfiguration(cfg =>
+            {
+                cfg.DisableConstructorMapping();
+                cfg.AddProfile<ServicesMapProfile>();
+            });
+            mapperConfiguration.AssertConfigurationIsValid();
+            services.AddSingleton(mapperConfiguration.CreateMapper());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
