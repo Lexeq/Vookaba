@@ -1,9 +1,9 @@
 ﻿using OakChan.DAL.Database;
-using OakChan.Models.DB;
+using OakChan.Services.DTO;
 using System;
 using System.Linq;
 
-namespace OakChan.Models
+namespace OakChan.Services
 {
     public class FavoriteThreadsService
     {

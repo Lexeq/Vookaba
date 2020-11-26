@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace OakChan.Models
+﻿namespace OakChan.Services.DTO
 {
     public class UploadImageData
     {

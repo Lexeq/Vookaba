@@ -1,10 +1,9 @@
 ﻿using OakChan.DAL.Database;
 using OakChan.DAL.Entities;
-using OakChan.Models.Interfaces;
 using System;
 using System.Threading.Tasks;
 
-namespace OakChan.Models.DB
+namespace OakChan.Services
 {
     public class DbUserService : IUserService
     {

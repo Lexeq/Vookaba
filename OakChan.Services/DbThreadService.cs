@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OakChan.DAL.Database;
 using OakChan.DAL.Entities;
-using OakChan.Models.Interfaces;
+using OakChan.Services.DTO;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OakChan.Models.DB
+namespace OakChan.Services
 {
     public class DbThreadService : IThreadService
     {

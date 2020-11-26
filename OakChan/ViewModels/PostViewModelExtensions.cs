@@ -1,9 +1,6 @@
-﻿using Newtonsoft.Json.Converters;
-using OakChan.Models;
+﻿using OakChan.Services.DTO;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OakChan.ViewModels

@@ -1,5 +1,6 @@
 ﻿using OakChan.DAL.Entities;
 using OakChan.Models;
+using OakChan.Services.DTO;
 using System.Collections.Generic;
 
 namespace OakChan.ViewModels

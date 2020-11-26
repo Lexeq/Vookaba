@@ -1,10 +1,11 @@
 ﻿using OakChan.DAL;
 using OakChan.DAL.Entities;
+using OakChan.Services.DTO;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace OakChan.Models.DB
+namespace OakChan.Services
 {
     public class PostCreator
     {

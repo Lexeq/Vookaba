@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OakChan.Models
+namespace OakChan.Services.DTO
 {
     public class PostCreationData
     {

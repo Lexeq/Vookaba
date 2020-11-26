@@ -1,6 +1,6 @@
 ﻿using OakChan.DAL.Entities;
 
-namespace OakChan.Models
+namespace OakChan.Services.DTO
 {
     public class TopThredInfo
     {

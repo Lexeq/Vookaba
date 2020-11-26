@@ -1,7 +1,7 @@
 ﻿using OakChan.DAL.Entities;
 using System.Threading.Tasks;
 
-namespace OakChan.Models.Interfaces
+namespace OakChan.Services
 {
     public interface IUserService
     {
