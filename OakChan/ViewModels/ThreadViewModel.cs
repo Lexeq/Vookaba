@@ -1,17 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using OakChan.Models.DB.Entities;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace OakChan.ViewModels
 {
     public class ThreadViewModel
     {
-        public Thread Thread { get; set; }
+        public string Board { get; set; }
+
+        public int Id { get; set; }
 
         public PostFormViewModel Post { get; set; }
+
+        public IEnumerable<PostViewModel> Posts { get; set; }
+
     }
 }

@@ -1,10 +1,6 @@
 ﻿using OakChan.Models.DB.Entities;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization.Formatters;
-using System.Threading.Tasks;
 
 namespace OakChan.Models
 {
@@ -13,8 +9,6 @@ namespace OakChan.Models
         public int Id { get; set; }
 
         public string Board { get; set; }
-
-        public int PostCount { get; set; }
 
         public Post OpPost { get; set; }
 

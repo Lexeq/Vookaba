@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -40,9 +39,20 @@ namespace OakChan.Controllers
             {
                 return PageNotFound(board, page);
             }
+
             return View(new BoardViewModel
             {
-                Board = b,
+                Key = b.Key,
+                Name = b.Name,
+                ThreadsOnPage = b.Threads.Select(t => new ThreadPreviewViewModel
+                {
+                    ThreadId = t.Id,
+                    PostsCount = t.TotalPostsCount,
+                    PostsWithImageCount = t.PostsWithImageCount,
+                    OpPost = PostViewModel.CreatePostViewModel(t.OpPost,board),
+                    RecentPosts = t.RecentPosts?.Select(x => PostViewModel.CreatePostViewModel(x, board))
+                }),
+                TotalThreadsCount = b.TotalThreadsCount,
                 OpPost = new OpPostFormViewModel { Board = b.Key },
                 PageNumber = page,
                 TotalPages = (int)Math.Ceiling((double)b.TotalThreadsCount / threadsPerPage)

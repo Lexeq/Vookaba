@@ -40,9 +40,12 @@ namespace OakChan.Controllers
                     Description = localizer["Thread not found."]
                 });
             }
+
             return View(new ThreadViewModel
             {
-                Thread = t
+                Board = board,
+                Id = t.Id,
+                Posts = t.Posts.Select(p => PostViewModel.CreatePostViewModel(p, board))
             });
         }
 

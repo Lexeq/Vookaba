@@ -1,7 +1,6 @@
-﻿@using OakChan.ViewModels;
-@model BoardViewModel;
+﻿@model OakChan.ViewModels.BoardViewModel;
 @{
-    ViewBag.Title = $"{Model.Board.Key} - Oak chan";
+    ViewBag.Title = $"{Model.Key} - Oak chan";
 }
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
@@ -13,7 +12,7 @@
     </a>
 </div>
 <hr />
-<h2 class="board-name">@($"/{Model.Board.Key}/ - {Model.Board.Name}")</h2>
+<h2 class="board-name">@($"/{Model.Key}/ - {Model.Name}")</h2>
 
 <p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Create thread"]</p>
 
@@ -24,7 +23,7 @@
         </div>
     </div>
     <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreateThread" asp-controller="Board">
-        <input type="hidden" value="@Model.Board.Key" asp-for="OpPost.Board" autocomplete="off" />
+        <input type="hidden" value="@Model.Key" asp-for="OpPost.Board" autocomplete="off" />
         <div class="form-row theme-row">
             <label asp-for="OpPost.Subject">@Localizer["Subject"]</label>
             <input asp-for="OpPost.Subject" autocomplete="off" />
@@ -46,21 +45,21 @@
     </form>
 </div>
 <hr />
-<div class="threads-container" data-board="@Model.Board.Key">
-    @foreach (var thread in Model.Board.Threads)
+<div class="threads-container" data-board="@Model.Key">
+    @foreach (var thread in Model.ThreadsOnPage)
     {
-        <div class="thread" id="thread-@thread.Id">
+        <div class="thread" id="thread-@thread.ThreadId">
             <div class="reclear">
-                <partial name="_PostView" model="thread.First()" />
+                <partial name="_PostView" model="thread.OpPost" />
                 <div class="to-thread">
-                    @if (thread.TotalPostsCount - thread.Count() > 0)
+                    @if (thread.PostsCount - thread.RecentPosts.Count() - 1> 0)
                     {
-                        <span>@Localizer["{0} post omited, {1} with image.", thread.TotalPostsCount - thread.Count(), thread.PostsWithImageCount - thread.Count(p => p.ImageId != null)]</span>
+                        <span>@Localizer["{0} post omited, {1} with image.", thread.PostsCount - thread.RecentPosts.Count() - 1, thread.PostsWithImageCount - thread.RecentPosts.Count(p => p.HasImage) - 1]</span>
                     }
-                    <a asp-route="thread" asp-route-board="@Model.Board.Key" asp-route-thread="@thread.Id">[@Localizer["To thread"]]</a>
+                    <a asp-route="thread" asp-route-board="@Model.Key" asp-route-thread="@thread.ThreadId">[@Localizer["To thread"]]</a>
                 </div>
             </div>
-            @foreach (var post in thread.Skip(1))
+            @foreach (var post in thread.RecentPosts)
             {
                 <partial name="_PostView" model="post" />
             }
@@ -78,20 +77,20 @@
         @if (Model.PageNumber > 4)
         {
             <span class="page-link page-first" title="@Localizer["first page"]">
-                <a asp-route="board" asp-route-board="@Model.Board.Key" asp-route-page="1">&lt;&lt;</a>
+                <a asp-route="board" asp-route-board="@Model.Key" asp-route-page="1">&lt;&lt;</a>
             </span>
         }
         @if (Model.PageNumber > 1)
         {
             <span class="page-link" title="@Localizer["previous page"]">
-                <a asp-route="board" asp-route-board="@Model.Board.Key" asp-route-page="@(Model.PageNumber - 1)">&lt;</a>
+                <a asp-route="board" asp-route-board="@Model.Key" asp-route-page="@(Model.PageNumber - 1)">&lt;</a>
             </span>
         }
 
         @for (int i = Math.Max(1, Model.PageNumber - 3); i <= Math.Min(Model.PageNumber + 3, Model.TotalPages); i++)
         {
             <span class="@($"page-link{(i == Model.PageNumber ? " page-current" : "")}")">
-                <a asp-route="board" asp-route-board="@Model.Board.Key" asp-route-page="@i">
+                <a asp-route="board" asp-route-board="@Model.Key" asp-route-page="@i">
                     <text> @i </text>
                 </a>
             </span>
@@ -99,13 +98,13 @@
         @if (Model.PageNumber != Model.TotalPages)
         {
             <span class="page-link" title="@Localizer["next page"]">
-                <a asp-route="board" asp-route-board="@Model.Board.Key" asp-route-page="@(Model.PageNumber + 1)">&gt;</a>
+                <a asp-route="board" asp-route-board="@Model.Key" asp-route-page="@(Model.PageNumber + 1)">&gt;</a>
             </span>
         }
         @if (Model.PageNumber + 4 < Model.TotalPages)
         {
             <span class="page-link page-last" title="@Localizer["last page"]">
-                <a asp-route="board" asp-route-board="@Model.Board.Key" asp-route-page="@Model.TotalPages">&gt;&gt;</a>
+                <a asp-route="board" asp-route-board="@Model.Key" asp-route-page="@Model.TotalPages">&gt;&gt;</a>
             </span>
         }
     </div>

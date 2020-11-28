@@ -37,7 +37,8 @@ namespace OakChan
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
-            services.AddSingleton<MediaStorage>();
+            services.AddSingleton<MediaStorage>(
+                svc=> new MediaStorage(svc.GetService<IWebHostEnvironment>().WebRootPath));
 
             services.AddScoped<PostCreator>();
             services.AddScoped<IBoardService, DbBoardService>();

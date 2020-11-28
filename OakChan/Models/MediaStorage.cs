@@ -15,16 +15,10 @@ namespace OakChan.Models
 
         private readonly string rootFolder;
 
-
-        public MediaStorage(IWebHostEnvironment environment)
+        public MediaStorage(string rootPath)
         {
-            if (environment == null)
-            {
-                throw new ArgumentNullException(nameof(environment));
-            }
-            rootFolder = environment.WebRootPath;
+            rootFolder = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
         }
-
 
         public async Task<Image> AddImage(byte[] bytes, string name)
         {

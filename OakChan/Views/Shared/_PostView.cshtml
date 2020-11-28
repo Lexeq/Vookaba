@@ -1,4 +1,4 @@
-﻿@model OakChan.Models.DB.Entities.Post
+﻿@model OakChan.ViewModels.PostViewModel
 @inject OakChan.Models.MediaStorage media
 @{
     Guid usid;
@@ -12,50 +12,45 @@
     }
 }
 
-<div class="post-container" id="@($"pc{Model.Id}")">
-    <div id="@($"p{Model.Id}")" class="post@(usid == Model.UserId ? " post-owned" : "")@(Model.Image != null ? " post-withimage" : "")">
+
+<div class="post-container" id="@($"pc{Model.Number}")">
+    <div id="@($"p{Model.Number}")" class="post@(usid == Model.AuthorId ? " post-owned" : "")@(Model.HasImage ? " post-withimage" : "")">
 
         <div class="post-details">
             <span class="post__subject">#@Model.Subject</span>
-            <span class="post__author">@Model.Name</span>
-            <span class="post__date">@Model.CreationTime.ToString("ddd d'/'MM'/'yy HH':'mm':'ss")</span>
-            <span class="post__number" data-pid="@Model.Id">@($"№{Model.Id}")</span>
+            <span class="post__author">@Model.AuthorName</span>
+            <span class="post__date">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss")</span>
+            <span class="post__number" data-pid="@Model.Number"><a asp-route="thread" asp-route-board="@Model.Board" asp-route-thread="@Model.Thread" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a></span>
         </div>
 
-        @if (Model.Image != null)
+        @if (Model.HasImage)
         {
-            var img = Model.Image;
-            var fullPath = media.GetImageRelativePath(Model.Image.Name);
-            var thumbPath = media.GetImageThumbnailRelativePath(Model.Image.Name);
-
             <div class="post__images">
-                <div id="@($"ic{img.Name}")" class="post__image-container">
-                    <div class="post__file-info" id="@($"fi{Model.Id}-{img.Id}")">
+                <div id="@($"ic{Model.Image.Name}")" class="post__image-container">
+                    <div class="post__file-info" id="@($"fi{Model.Number}-{Model.Image.Id}")">
                         <div class="post__file-name">
-                            <a href="@fullPath">@($">{img.OriginalName}")</a>
+                            <a href="@Model.Image.Path">@($">{Model.Image.OriginalName}")</a>
                         </div>
                         <div class="post__file-size">
-                            <span>@($"{img.Width}x{img.Height}")</span>
-                            <span>@($"{img.Size/1024}{Localizer["KB"].Value}")</span>
-                            <span class="full-size" id=@($"scale{img.Name}")>1:1</span>
+                            <span>@($"{Model.Image.Width}x{Model.Image.Height}")</span>
+                            <span>@($"{Model.Image.Size/1024}{Localizer["KB"].Value}")</span>
+                            <span class="full-size" id=@($"scale{Model.Image.Name}")>1:1</span>
                         </div>
                     </div>
-                    <a class="post__file-link" href="@fullPath">
-                        <img id="@($"img{img.Name}")"
+                    <a class="post__file-link" href="@Model.Image.Path">
+                        <img id="@($"img{Model.Image.Name}")"
                              class="post__image"
-                             src="@thumbPath"
+                             src="@Model.Image.ThumbPath"
                              data-img-width="@Model.Image.Width"
                              data-img-height="@Model.Image.Height"
-                             data-img-thumb="@thumbPath"
+                             data-img-thumb="@Model.Image.ThumbPath"
                              loading="lazy" />
                     </a>
                 </div>
             </div>
         }
 
-        <div class="post__message" id="@($"m{Model.Id}")" data-pid="@($"{Model.Id}")">
-            <text>@Model.Message</text>
-        </div>
+        <div class="post__message" id="@($"m{Model.Number}")" data-pid="@($"{Model.Number}")">@Model.Message</div>
 
     </div>
 </div>

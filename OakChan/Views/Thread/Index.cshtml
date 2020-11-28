@@ -11,7 +11,7 @@
         <img src="~/images/home.png" />
         <span>@Localizer["Go to home page"]</span>
     </a>
-    <a asp-route="board" asp-route-board="@Model.Thread.BoardId">@($"/{Model.Thread.BoardId}/")</a>
+    <a asp-route="board" asp-route-board="@Model.Board">@($"/{Model.Board}/")</a>
 </div>
 <hr />
 <p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
@@ -22,8 +22,8 @@
         </div>
     </div>
     <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreatePost" asp-controller="Thread">
-        <input type="hidden" value="@Model.Thread.BoardId" asp-for="Post.Board" />
-        <input type="hidden" value="@Model.Thread.Id" asp-for="Post.Thread" />
+        <input type="hidden" value="@Model.Board" asp-for="Post.Board" />
+        <input type="hidden" value="@Model.Id" asp-for="Post.Thread" />
         <div class="form-row theme-row">
             <label asp-for="Post.Subject"></label>
             <input asp-for="Post.Subject"/>
@@ -45,7 +45,7 @@
     </form>
 </div>
 <div class="thread">
-    @foreach (var post in Model.Thread.Posts)
+    @foreach (var post in Model.Posts)
     {
         <partial name="_PostView" model="post" />
     }
