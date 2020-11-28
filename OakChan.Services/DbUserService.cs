@@ -1,5 +1,7 @@
-﻿using OakChan.DAL.Database;
+﻿using AutoMapper;
+using OakChan.DAL.Database;
 using OakChan.DAL.Entities;
+using OakChan.Services.DTO;
 using System;
 using System.Threading.Tasks;
 
@@ -8,24 +10,27 @@ namespace OakChan.Services
     public class DbUserService : IUserService
     {
         private readonly OakDbContext context;
+        private readonly IMapper mapper;
 
-        public DbUserService(OakDbContext context)
+        public DbUserService(OakDbContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
         }
 
-        public async Task<Anonymous> CreateAnonymousAsync(string ip)
+        public async Task<UserDto> CreateAnonymousAsync(string ip)
         {
             var anon = new Anonymous
             {
-                Created = DateTime.Now,
+                Created = DateTime.UtcNow,
                 Id = Guid.NewGuid(),
                 IP = ip
             };
 
             context.Anonymous.Add(anon);
             await context.SaveChangesAsync();
-            return anon;
+            var user = mapper.Map<UserDto>(anon);
+            return user;
         }
     }
 }

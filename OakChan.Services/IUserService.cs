@@ -1,10 +1,10 @@
-﻿using OakChan.DAL.Entities;
+﻿using OakChan.Services.DTO;
 using System.Threading.Tasks;
 
 namespace OakChan.Services
 {
     public interface IUserService
     {
-        public Task<Anonymous> CreateAnonymousAsync(string ip);
+        public Task<UserDto> CreateAnonymousAsync(string ip);
     }
 }

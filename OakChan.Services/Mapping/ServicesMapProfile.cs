@@ -8,7 +8,7 @@ namespace OakChan.Services.Mapping
     {
         public ServicesMapProfile()
         {
-           
+            CreateMap<Anonymous, UserDto>();
         }
     }
 }
