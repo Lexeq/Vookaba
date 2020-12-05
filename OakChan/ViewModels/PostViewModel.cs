@@ -1,4 +1,4 @@
-﻿using OakChan.Models.DB.Entities;
+﻿using OakChan.DAL.Entities;
 using System;
 using System.IO;
 

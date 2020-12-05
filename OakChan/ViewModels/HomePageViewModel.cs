@@ -1,9 +1,7 @@
-﻿using OakChan.Models;
-using OakChan.Models.DB.Entities;
-using System;
+﻿using OakChan.DAL.Entities;
+using OakChan.Models;
+using OakChan.Services.DTO;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace OakChan.ViewModels
 {
