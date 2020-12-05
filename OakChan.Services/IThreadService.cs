@@ -6,7 +6,7 @@ namespace OakChan.Services
 {
     public interface IThreadService
     {
-        public Task<Thread> GetThreadAsync(string board, int thread);
+        public Task<ThreadDto> GetThreadAsync(string boardId, int threadId);
 
         public Task<Post> CreatePostAsync(string board, int thread, PostCreationData post);
     }

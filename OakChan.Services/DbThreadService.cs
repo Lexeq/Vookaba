@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 using OakChan.DAL.Database;
 using OakChan.DAL.Entities;
 using OakChan.Services.DTO;
@@ -11,11 +13,13 @@ namespace OakChan.Services
     public class DbThreadService : IThreadService
     {
         private readonly OakDbContext context;
+        private readonly IMapper mapper;
         private readonly PostCreator postCreator;
 
-        public DbThreadService(OakDbContext context, PostCreator postCreator)
+        public DbThreadService(OakDbContext context, IMapper mapper, PostCreator postCreator)
         {
             this.context = context;
+            this.mapper = mapper;;
             this.postCreator = postCreator;
         }
 
@@ -34,15 +38,15 @@ namespace OakChan.Services
             return post;
         }
 
-        public async Task<Thread> GetThreadAsync(string board, int thread)
+        public async Task<ThreadDto> GetThreadAsync(string boardId, int threadId)
         {
-            var t = await context.Threads.AsNoTracking()
-                .Where(t => t.BoardId == board && t.Id == thread)
+            var thread = await context.Threads.AsNoTracking()
+                .Where(t => t.BoardId == boardId && t.Id == threadId)
                 .Include(t => t.Posts)
                 .ThenInclude(p => p.Image)
                 .FirstOrDefaultAsync();
 
-            return t;
+            return mapper.Map<ThreadDto>(thread);
         }
     }
 }

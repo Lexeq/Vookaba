@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OakChan.Deanon;
 using OakChan.Services;
+using OakChan.Services.DTO;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
@@ -17,14 +19,17 @@ namespace OakChan.Controllers
         private const int threadsPerPage = 10;
         private readonly IBoardService boardService;
         private readonly IStringLocalizer<BoardController> localizer;
+        private readonly IMapper mapper;
         private readonly ILogger<BoardController> logger;
 
         public BoardController(IBoardService boardService,
             IStringLocalizer<BoardController> localizer,
+            IMapper mapper,
             ILogger<BoardController> logger)
         {
             this.boardService = boardService;
             this.localizer = localizer;
+            this.mapper = mapper;
             this.logger = logger;
         }
 
@@ -49,8 +54,9 @@ namespace OakChan.Controllers
                     ThreadId = t.Id,
                     PostsCount = t.TotalPostsCount,
                     PostsWithImageCount = t.PostsWithImageCount,
-                    OpPost = PostViewModel.CreatePostViewModel(t.OpPost,board),
-                    RecentPosts = t.RecentPosts?.Select(x => PostViewModel.CreatePostViewModel(x, board))
+                    OpPost = mapper.Map<PostViewModel>(
+                        mapper.Map<PostDto>(t.OpPost), opt => opt.AfterMap((o, v) => v.Board = board)),
+                    RecentPosts = mapper.Map<PostViewModel[]>(mapper.Map<PostDto[]>(t.RecentPosts))
                 }),
                 TotalThreadsCount = b.TotalThreadsCount,
                 OpPost = new OpPostFormViewModel { Board = b.Key },

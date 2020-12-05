@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
@@ -16,20 +17,23 @@ namespace OakChan.Controllers
         private readonly IThreadService threads;
         private readonly IStringLocalizer<ThreadController> localizer;
         private readonly ILogger<ThreadController> logger;
+        private readonly IMapper mapper;
 
         public ThreadController(IThreadService threads,
             IStringLocalizer<ThreadController> localizer,
-            ILogger<ThreadController> logger)
+            ILogger<ThreadController> logger,
+            IMapper mapper)
         {
             this.threads = threads;
             this.localizer = localizer;
             this.logger = logger;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index(string board, int thread)
         {
-            var t = await threads.GetThreadAsync(board, thread);
-            if (t == null)
+            var threadDto = await threads.GetThreadAsync(board, thread);
+            if (threadDto == null)
             {
                 return View("Error", new ErrorViewModel
                 {
@@ -39,12 +43,15 @@ namespace OakChan.Controllers
                 });
             }
 
-            return View(new ThreadViewModel
-            {
-                Board = board,
-                Id = t.Id,
-                Posts = t.Posts.Select(p => PostViewModel.CreatePostViewModel(p, board))
-            });
+            var vm = mapper.Map<ThreadViewModel>(threadDto,
+                opt => opt.AfterMap((a, b) =>
+                {
+                    foreach (var p in b.Posts)
+                    {
+                        p.Board = board;
+                    }
+                }));
+            return View(vm);
         }
 
         [HttpPost]

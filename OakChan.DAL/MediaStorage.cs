@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.DAL
 {
-    public class MediaStorage
+    public class MediaStorage : IAttachmentsStorage
     {
         private const string ThumbnailSuffix = "-min";
         private const string MediaResourcesFolder = "res";
@@ -29,11 +29,11 @@ namespace OakChan.DAL
             return im;
         }
 
-        public string GetImageRelativePath(string name)
+        public string GetImageLinkByName(string name)
             => $"/{MediaResourcesFolder}/{ImagesFolder}/{name}";
 
-        public string GetImageThumbnailRelativePath(string name)
-            => GetImageRelativePath(GetThumbnailName(name));
+        public string GetThumbnailLinkByName(string name)
+            => GetImageLinkByName(GetThumbnailName(name));
 
         private string GetThumbnailName(string name)
             => Path.GetFileNameWithoutExtension(name) + ThumbnailSuffix + Path.GetExtension(name);

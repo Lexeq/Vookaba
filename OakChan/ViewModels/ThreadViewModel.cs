@@ -4,9 +4,9 @@ namespace OakChan.ViewModels
 {
     public class ThreadViewModel
     {
-        public string Board { get; set; }
+        public string BoardId { get; set; }
 
-        public int Id { get; set; }
+        public int ThreadId { get; set; }
 
         public PostFormViewModel Post { get; set; }
 
