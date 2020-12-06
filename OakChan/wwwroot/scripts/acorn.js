@@ -56,17 +56,12 @@ function subscribeReplyOnClick() {
     let elms = document.getElementsByClassName('post__number');
     for (let postNumber of elms) {
         let container = postNumber.closest('.threads-container');
-        postNumber.onclick = container ?
-            () => goToTheThread(container.dataset.board, getThreadId(postNumber), postNumber.dataset.pid) :
-            () => reply(postNumber.dataset.pid);
-    }
-
-    let getThreadId = function (element) {
-        return element.closest('.thread').id.substring(7);
-    }
-
-    let goToTheThread = function (b, t, p) {
-        window.location.href = `${t}/#p${p}`;
+        if (!container) {
+            postNumber.onclick = () => {
+                reply(postNumber.dataset.pid);
+                return false;
+            }
+        }
     }
 }
 
