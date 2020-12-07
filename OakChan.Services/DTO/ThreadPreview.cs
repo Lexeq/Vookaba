@@ -1,33 +1,19 @@
-﻿using OakChan.DAL.Entities;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace OakChan.Services.DTO
 {
-    public class ThreadPreview : IEnumerable<Post>
+    public class ThreadPreviewDto
     {
-        public int Id { get; set; }
+        public int ThreadId { get; set; }
 
         public string Board { get; set; }
 
-        public Post OpPost { get; set; }
+        public PostDto OpPost { get; set; }
 
         public int TotalPostsCount { get; set; }
 
         public int PostsWithImageCount { get; set; }
 
-        public IEnumerable<Post> RecentPosts { get; set; }
-
-        public IEnumerator<Post> GetEnumerator()
-        {
-            yield return OpPost;
-            foreach (var post in RecentPosts)
-            {
-                yield return post;
-            }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator();
+        public IEnumerable<PostDto> RecentPosts { get; set; }
     }
 }

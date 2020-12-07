@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using OakChan.DAL.Database;
 using OakChan.DAL.Entities;
 using OakChan.Services.DTO;
@@ -14,11 +15,13 @@ namespace OakChan.Services
         private const int RecentPostsCount = 2;
 
         private readonly OakDbContext context;
+        private readonly IMapper mapper;
         private readonly PostCreator postCreator;
 
-        public DbBoardService(OakDbContext context, PostCreator postCreator)
+        public DbBoardService(OakDbContext context, IMapper mapper, PostCreator postCreator)
         {
             this.context = context;
+            this.mapper = mapper;
             this.postCreator = postCreator;
         }
 
@@ -33,23 +36,34 @@ namespace OakChan.Services
             return thread;
         }
 
-        public async Task<BoardPreview> GetBoardPreviewAsync(string boardId, int threadsOffset, int threadsCount)
+        public async Task<BoardInfoDto> GetBoardAsync(string board)
         {
-            var b = await context.Boards.AsNoTracking()
-                .Where(b => b.Key == boardId)
-                .Select(b => new { Board = b, ThreadsCount = b.Threads.Count() })
+            if (board == null)
+            {
+                throw new ArgumentNullException(nameof(board));
+            }
+            var result = await context.Boards.AsNoTracking()
+                .Where(b => b.Key == board)
+                .Select(b => new BoardInfoDto
+                {
+                    Key = b.Key,
+                    Name = b.Name,
+                    ThreadsCount = b.Threads.Count()
+                })
                 .FirstOrDefaultAsync();
 
-            if (b == null)
-            {
-                return null;
-            }
+            return result;
+        }
+
+        public async Task<BoardPageDto> GetBoardPageAsync(string board, int page, int pageSize)
+        {
+            var offset = (page - 1) * pageSize;
 
             var queryResult = await context.Threads.AsNoTracking()
-                .Where(t => t.BoardId == boardId)
+                .Where(t => t.BoardId == board)
                 .OrderByDescending(t => t.Posts.Max(p => p.CreationTime))
-                .Skip(threadsOffset)
-                .Take(threadsCount)
+                .Skip(offset)
+                .Take(pageSize)
                 .Select(t => new
                 {
                     Thread = t,
@@ -72,28 +86,28 @@ namespace OakChan.Services
                     zipped.post.Image = zipped.image;
                 }
 
-                return new ThreadPreview
+                return new ThreadPreviewDto
                 {
-                    Id = a.Thread.Id,
+                    ThreadId = a.Thread.Id,
                     Board = a.Thread.BoardId,
-                    OpPost = a.OpPost,
+                    OpPost = mapper.Map<PostDto>(a.OpPost),
                     TotalPostsCount = a.PostsCount,
                     PostsWithImageCount = a.ImagesCount,
-                    RecentPosts = a.RecentPosts
-                        .Reverse()
-                        .Skip(a.PostsCount > RecentPostsCount ? 0 : 1) //exclude op post from recent posts
-                        .ToArray()
+                    RecentPosts = mapper.Map<PostDto[]>(
+                        a.RecentPosts
+                         .Reverse()
+                         .Skip(a.PostsCount > RecentPostsCount ? 0 : 1) //exclude op post from recent posts
+                        )
                 };
             })
             .ToArray();
 
 
-            return new BoardPreview
+            return new BoardPageDto
             {
-                Key = b.Board.Key,
-                Name = b.Board.Name,
-                Threads = threadsOnPage,
-                TotalThreadsCount = b.ThreadsCount
+                BoardId = board,
+                PageNumber = page,
+                Threads = threadsOnPage
             };
 
         }

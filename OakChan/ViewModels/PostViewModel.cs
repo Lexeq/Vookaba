@@ -10,9 +10,7 @@ namespace OakChan.ViewModels
 
         public DateTime Date { get; set; }
 
-        public string Board { get; set; }
-
-        public string Thread { get; set; }
+        public string ThreadId { get; set; }
 
         public Guid AuthorId { get; set; }
 

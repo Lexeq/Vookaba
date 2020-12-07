@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OakChan.Deanon;
+using OakChan.Mapping;
 using OakChan.Services;
-using OakChan.Services.DTO;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
@@ -22,7 +22,8 @@ namespace OakChan.Controllers
         private readonly IMapper mapper;
         private readonly ILogger<BoardController> logger;
 
-        public BoardController(IBoardService boardService,
+        public BoardController(
+            IBoardService boardService,
             IStringLocalizer<BoardController> localizer,
             IMapper mapper,
             ILogger<BoardController> logger)
@@ -35,34 +36,25 @@ namespace OakChan.Controllers
 
         public async Task<IActionResult> Index(string board, int page = 1)
         {
-            var b = await boardService.GetBoardPreviewAsync(board, (Math.Max(0, page - 1)) * threadsPerPage, threadsPerPage);
-            if (b == null)
+            var boardInfo = await boardService.GetBoardAsync(board);
+            if (boardInfo == null)
             {
                 return BoardDoesNotExist(board);
             }
-            if (page < 1 || (page != 1 && b.Threads.Count() == 0))
+
+            var pageDto = await boardService.GetBoardPageAsync(board, Math.Max(page, 1), threadsPerPage);
+            if (pageDto.PageNumber > 1 && pageDto.Threads.Count == 0)
             {
                 return PageNotFound(board, page);
             }
 
-            return View(new BoardViewModel
+            var vm = mapper.Map<BoardPageViewModel>(pageDto, opt =>
             {
-                Key = b.Key,
-                Name = b.Name,
-                ThreadsOnPage = b.Threads.Select(t => new ThreadPreviewViewModel
-                {
-                    ThreadId = t.Id,
-                    PostsCount = t.TotalPostsCount,
-                    PostsWithImageCount = t.PostsWithImageCount,
-                    OpPost = mapper.Map<PostViewModel>(
-                        mapper.Map<PostDto>(t.OpPost), opt => opt.AfterMap((o, v) => v.Board = board)),
-                    RecentPosts = mapper.Map<PostViewModel[]>(mapper.Map<PostDto[]>(t.RecentPosts))
-                }),
-                TotalThreadsCount = b.TotalThreadsCount,
-                OpPost = new OpPostFormViewModel { Board = b.Key },
-                PageNumber = page,
-                TotalPages = (int)Math.Ceiling((double)b.TotalThreadsCount / threadsPerPage)
+                opt.Items[StringConstants.BoardName] = board;
+                opt.Items[StringConstants.PagesCount] = (int)Math.Ceiling((double)boardInfo.ThreadsCount / threadsPerPage);
             });
+
+            return View(vm);
         }
 
         [HttpPost]

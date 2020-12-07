@@ -43,14 +43,7 @@ namespace OakChan.Controllers
                 });
             }
 
-            var vm = mapper.Map<ThreadViewModel>(threadDto,
-                opt => opt.AfterMap((a, b) =>
-                {
-                    foreach (var p in b.Posts)
-                    {
-                        p.Board = board;
-                    }
-                }));
+            var vm = mapper.Map<ThreadViewModel>(threadDto);
             return View(vm);
         }
 

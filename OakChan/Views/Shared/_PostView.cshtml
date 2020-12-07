@@ -1,4 +1,5 @@
-﻿@model OakChan.ViewModels.PostViewModel
+﻿@using Microsoft.AspNetCore.Routing
+@model OakChan.ViewModels.PostViewModel
 @inject OakChan.DAL.IAttachmentsStorage attachments
 @{
     Guid usid;
@@ -20,7 +21,7 @@
             <span class="post__subject">#@Model.Subject</span>
             <span class="post__author">@Model.AuthorName</span>
             <span class="post__date">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss")</span>
-            <span class="post__number" data-pid="@Model.Number"><a asp-route="thread" asp-route-board="@Model.Board" asp-route-thread="@Model.Thread" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a></span>
+            <span class="post__number" data-pid="@Model.Number"><a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a></span>
         </div>
 
         @if (Model.HasImage)
