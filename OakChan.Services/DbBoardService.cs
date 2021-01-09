@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using OakChan.DAL.Database;
-using OakChan.DAL.Entities;
 using OakChan.Services.DTO;
+using OakChan.Services.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OakChan.Common.Exceptions;
 
 namespace OakChan.Services
 {
@@ -16,105 +17,108 @@ namespace OakChan.Services
 
         private readonly OakDbContext context;
         private readonly IMapper mapper;
-        private readonly PostCreator postCreator;
+        private readonly IPostService posts;
+        private readonly ThrowHelper throwHelper;
 
-        public DbBoardService(OakDbContext context, IMapper mapper, PostCreator postCreator)
+        public DbBoardService(OakDbContext context, IMapper mapper, IPostService posts, ThrowHelper throwHelper)
         {
             this.context = context;
             this.mapper = mapper;
-            this.postCreator = postCreator;
+            this.posts = posts;
+            this.throwHelper = throwHelper;
         }
 
-        public async Task<Thread> CreateThreadAsync(string boardId, PostCreationData data)
+        public async Task<ThreadDto> CreateThreadAsync(string boardId, ThreadCreationDto threadDto)
         {
-            var thread = new Thread { BoardId = boardId };
+            throwHelper.ThrowIfNullOrWhiteSpace(boardId, nameof(boardId));
+            throwHelper.ThrowIfNull(threadDto, nameof(threadDto));
 
-            var post = await postCreator.AddPostToThread(data, thread);
-            context.Posts.Add(post);
-            await context.SaveChangesAsync();
-
-            return thread;
-        }
-
-        public async Task<BoardInfoDto> GetBoardAsync(string board)
-        {
-            if (board == null)
+            if (await context.Boards.FindAsync(boardId) == null)
             {
-                throw new ArgumentNullException(nameof(board));
+                throw new EntityNotFoundException($"Board '{boardId}' does not exist.");
             }
-            var result = await context.Boards.AsNoTracking()
-                .Where(b => b.Key == board)
-                .Select(b => new BoardInfoDto
-                {
-                    Key = b.Key,
-                    Name = b.Name,
-                    ThreadsCount = b.Threads.Count()
-                })
+
+            var thread = new ThreadDto { Subject = threadDto.Subject, BoardId = boardId };
+
+            var post = await posts.CreatePost(thread, threadDto.OpPost);
+
+            return new ThreadDto
+            {
+                BoardId = boardId,
+                Subject = threadDto.Subject,
+                ThreadId = post.ThreadId,
+                OpPost = post,
+                Replies = Enumerable.Empty<PostDto>()
+            };
+        }
+
+        public async Task<BoardInfoDto> GetBoardInfoAsync(string boardId)
+        {
+            throwHelper.ThrowIfNullOrWhiteSpace(boardId, nameof(boardId));
+
+            var result = await mapper.ProjectTo<BoardInfoDto>(context.Boards.AsNoTracking())
+                .Where(b => b.Key == boardId)
                 .FirstOrDefaultAsync();
 
-            return result;
+            return result ?? throw new EntityNotFoundException($"Board with id '{boardId}' not found.");
         }
 
-        public async Task<BoardPageDto> GetBoardPageAsync(string board, int page, int pageSize)
+        public async Task<BoardPageDto> GetBoardPageAsync(string boardId, int page, int pageSize)
         {
+            throwHelper.ThrowIfNullOrWhiteSpace(boardId, nameof(boardId));
+            if (page <= 0) throw new ArgumentException("Page number must be greater than 0.", nameof(page));
+            if (pageSize <= 0) throw new ArgumentException("Page number must be greater than 0.", nameof(pageSize));
+
             var offset = (page - 1) * pageSize;
 
-            var queryResult = await context.Threads.AsNoTracking()
-                .Where(t => t.BoardId == board)
-                .OrderByDescending(t => t.Posts.Max(p => p.CreationTime))
-                .Skip(offset)
-                .Take(pageSize)
-                .Select(t => new
-                {
-                    Thread = t,
-                    PostsCount = t.Posts.Count(),
-                    ImagesCount = t.Posts.Where(p => p.Image != null).Count(),
-                    OpPost = t.Posts.OrderBy(p => p.CreationTime).First(),
-                    OpPic = t.Posts.OrderBy(p => p.CreationTime).Select(p => p.Image).First(),
-                    RecentPosts = t.Posts.OrderByDescending(p => p.CreationTime).Take(RecentPostsCount),
-                    RecentPostsImages = t.Posts.OrderByDescending(p => p.CreationTime).Select(p => p.Image).Take(RecentPostsCount)
-                })
-                .ToArrayAsync();
-
-            //projecting query result on model classes
-            var threadsOnPage = queryResult.Select(a =>
-            {
-                //set images for posts
-                a.OpPost.Image = a.OpPic;
-                foreach (var zipped in a.RecentPosts.Zip(a.RecentPostsImages, (post, image) => new { post, image }))
-                {
-                    zipped.post.Image = zipped.image;
-                }
-
-                return new ThreadPreviewDto
-                {
-                    ThreadId = a.Thread.Id,
-                    Board = a.Thread.BoardId,
-                    OpPost = mapper.Map<PostDto>(a.OpPost),
-                    TotalPostsCount = a.PostsCount,
-                    PostsWithImageCount = a.ImagesCount,
-                    RecentPosts = mapper.Map<PostDto[]>(
-                        a.RecentPosts
-                         .Reverse()
-                         .Skip(a.PostsCount > RecentPostsCount ? 0 : 1) //exclude op post from recent posts
-                        )
-                };
-            })
-            .ToArray();
-
+            var pageThreads = await GetThreadPreviews(boardId, offset, pageSize);
 
             return new BoardPageDto
             {
-                BoardId = board,
+                BoardId = boardId,
                 PageNumber = page,
-                Threads = threadsOnPage
+                Threads = pageThreads,
+                PageSize = pageSize
             };
-
         }
 
-        public async Task<IEnumerable<Board>> GetBoardsAsync()
+        public async Task<IEnumerable<BoardInfoDto>> GetBoardsAsync()
         {
-            return await context.Boards.AsNoTracking().ToArrayAsync();
+            return await mapper.ProjectTo<BoardInfoDto>(context.Boards).ToArrayAsync();
+        }
+
+        private async Task<IEnumerable<ThreadPreviewDto>> GetThreadPreviews(string board, int offset, int count)
+        {
+            var threadsQuery = context.Threads.AsNoTracking()
+               .Where(t => t.BoardId == board)
+               .OrderByDescending(t => t.Posts.Max(p => p.CreationTime))
+               .Skip(offset)
+               .Take(count);
+
+            var resultQuery = threadsQuery
+                .Select(t => new ThreadPreviewQueryResult
+                {
+                    ThreadId = t.Id,
+                    BoardId = t.BoardId,
+                    Subject = t.Subject,
+                    PostsCount = t.Posts.Count(),
+                    ImagesCount = t.Posts.Where(p => p.Image != null).Count(),
+                    OpPost = t.Posts.AsQueryable()
+                                        .Include(p => p.Image)
+                                        .OrderBy(p => p.CreationTime)
+                                        .First(),
+                    RecentPosts = t.Posts.AsQueryable()
+                                        .Include(p => p.Image)
+                                        .OrderBy(p => p.CreationTime)
+                                        .Skip(1)
+                                        .OrderByDescending(p => p.CreationTime)
+                                        .Take(RecentPostsCount)
+                                        .OrderBy(p => p.CreationTime)
+                                        .ToList()
+                });
+
+            var result = mapper.Map<List<ThreadPreviewDto>>(await resultQuery.ToListAsync());
+            return result;
         }
     }
 }

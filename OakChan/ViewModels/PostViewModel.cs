@@ -1,6 +1,4 @@
-﻿using OakChan.DAL.Entities;
-using System;
-using System.IO;
+﻿using System;
 
 namespace OakChan.ViewModels
 {
@@ -14,8 +12,6 @@ namespace OakChan.ViewModels
 
         public Guid AuthorId { get; set; }
 
-        public string Subject { get; set; }
-
         public string AuthorName { get; set; }
 
         public string Message { get; set; }
@@ -23,8 +19,5 @@ namespace OakChan.ViewModels
         public bool HasImage => Image != null;
 
         public ImageViewModel Image { get; set; }
-
-
     }
-
 }

@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace OakChan.DAL
 {
@@ -9,5 +8,9 @@ namespace OakChan.DAL
         string GetThumbnailLinkByName(string imageName);
 
         string GetImageLinkByName(string imageName);
+
+        Task<ImageInfo> AddImageAsync(byte[] bytes, string imageName);
+
+        Task<ImageInfo> AddImageAsync(Stream source, string imageName);
     }
 }

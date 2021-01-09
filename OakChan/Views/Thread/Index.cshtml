@@ -1,4 +1,5 @@
-﻿@model OakChan.ViewModels.ThreadViewModel
+﻿@using OakChan.ViewModels
+@model ThreadViewModel
 @{
     ViewData["Title"] = "Thread";
 }
@@ -15,37 +16,11 @@
 </div>
 <hr />
 <p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
-<div class="creation-form" id="form">
-    <div class="preview-container">
-        <div>
-            <img id="preview-img" class="preview-imgage" />
-        </div>
-    </div>
-    <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreatePost" asp-controller="Thread">
-        <input type="hidden" value="@Model.BoardId" asp-for="Post.Board" />
-        <input type="hidden" value="@Model.ThreadId" asp-for="Post.Thread" />
-        <div class="form-row theme-row">
-            <label asp-for="Post.Subject"></label>
-            <input asp-for="Post.Subject"/>
-        </div>
-        <div class="form-row">
-            <textarea class="form-control" rows="4" id="form-msg" asp-for="Post.Text"></textarea>
-        </div>
-        <div class="form-row">
-            <div class="form-button">
-                <input class="hidden-input" id="post-img" accept=".gif,.jpg,.png,.jpeg" type="file" asp-for="Post.Image" onchange="loadImagePreview(this.files)" />
-                <label for="post-img">@Localizer["Image"] </label>
-            </div>
-            <div class="form-button">
-                <input id="form-submit" class="hidden-input" type="submit" />
-                <label for="form-submit">@Localizer["Create"] </label>
-            </div>
-        </div>
-        <div class="form-row error-list" asp-validation-summary="All"></div>
-    </form>
-</div>
+
+<partial name="_PostCreationFormPartial" model="new PostFormViewModel()" />
 <div class="thread">
-    @foreach (var post in Model.Posts)
+    <partial name="_PostView" model="Model.OpPost" />
+    @foreach (var post in Model.Replies)
     {
         <partial name="_PostView" model="post" />
     }

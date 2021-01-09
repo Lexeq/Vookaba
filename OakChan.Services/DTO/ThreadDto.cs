@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace OakChan.Services.DTO
 {
@@ -10,6 +8,10 @@ namespace OakChan.Services.DTO
 
         public int ThreadId { get; set; }
 
-        public IEnumerable<PostDto> Posts { get; set; }
+        public string Subject { get; set; }
+
+        public PostDto OpPost { get; set; }
+
+        public IEnumerable<PostDto> Replies { get; set; }
     }
 }

@@ -8,6 +8,10 @@ namespace OakChan.DAL.Entities
 
         public string BoardId { get; set; }
 
+        public Board Board { get; set; }
+
+        public string Subject { get; set; }
+
         public IList<Post> Posts { get; set; }
     }
 }

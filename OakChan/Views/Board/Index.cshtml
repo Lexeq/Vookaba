@@ -1,4 +1,5 @@
-﻿@model OakChan.ViewModels.BoardPageViewModel;
+﻿@using OakChan.ViewModels
+@model BoardPageViewModel
 @{
     ViewBag.Title = $"{Model.Key} - Oak chan";
 }
@@ -15,46 +16,18 @@
 <h2 class="board-name">@($"/{Model.Key}/ - {Model.Name}")</h2>
 
 <p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Create thread"]</p>
-
-<div class="creation-form" id="form">
-    <div class="preview-container">
-        <div>
-            <img id="preview-img" class="preview-imgage" />
-        </div>
-    </div>
-    <form class="posting-form" id="posting-form" method="post" enctype="multipart/form-data" asp-action="CreateThread" asp-controller="Board">
-        <input type="hidden" value="@Model.Key" asp-for="OpPost.Board" autocomplete="off" />
-        <div class="form-row theme-row">
-            <label asp-for="OpPost.Subject">@Localizer["Subject"]</label>
-            <input asp-for="OpPost.Subject" autocomplete="off" />
-        </div>
-        <div class="form-row">
-            <textarea class="form-control" rows="4" id="form-msg" asp-for="OpPost.Text"></textarea>
-        </div>
-        <div class="form-row">
-            <div class="form-button">
-                <input class="hidden-input" id="post-img" accept=".gif,.jpg,.png,.jpeg" type="file" asp-for="OpPost.Image" onchange="loadImagePreview(this.files)" />
-                <label for="post-img">@Localizer["Image"]</label>
-            </div>
-            <div class="form-button">
-                <input id="form-submit" class="hidden-input" type="submit" />
-                <label for="form-submit">@Localizer["Create"]</label>
-            </div>
-        </div>
-        <div class="form-row error-list" asp-validation-summary="All"></div>
-    </form>
-</div>
+<partial name="_ThreadCreationFormPartial" model="new ThreadFormViewModel()" />
 <hr />
 <div class="threads-container" data-board="@Model.Key">
-    @foreach (var thread in Model.ThreadsOnPage)
+    @foreach (var thread in Model.Threads)
     {
         <div class="thread" id="thread-@thread.ThreadId">
             <div class="reclear">
                 <partial name="_PostView" model="thread.OpPost" />
                 <div class="to-thread">
-                    @if (thread.PostsCount - thread.RecentPosts.Count() - 1> 0)
+                    @if (thread.PostsCount - thread.RecentPosts.Count() - 1 > 0)
                     {
-                        <span>@Localizer["{0} post omited, {1} with image.", thread.PostsCount - thread.RecentPosts.Count() - 1, thread.PostsWithImageCount - thread.RecentPosts.Count(p => p.HasImage) - 1]</span>
+                        <span>@Localizer["{0} post omited, {1} with image.", thread.PostsOmmited, thread.ImagesOmmited]</span>
                     }
                     <a asp-route="thread" asp-route-board="@Model.Key" asp-route-thread="@thread.ThreadId">[@Localizer["To thread"]]</a>
                 </div>

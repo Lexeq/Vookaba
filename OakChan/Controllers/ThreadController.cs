@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OakChan.Deanon;
+using OakChan.Mapping;
 using OakChan.Services;
+using OakChan.Services.DTO;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
@@ -49,19 +51,21 @@ namespace OakChan.Controllers
 
         [HttpPost]
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
-        public async Task<IActionResult> CreatePost(PostFormViewModel post)
+        public async Task<IActionResult> CreatePostAsync(string board, int thread, PostFormViewModel postFormVM)
         {
             var anonId = await HttpContext.GetAnonGuidAsync();
             if (ModelState.IsValid)
             {
-                await threads.CreatePostAsync(post.Board, post.Thread.Value, await post.ToPostCreationData(anonId));
+                var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opt => opt.Items[StringConstants.UserId] = anonId);
+                var newPost = await threads.AddPostToThreadAsync(board, thread, postCreationDto);
+                return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
             }
             else
             {
                 logger.LogWarning("Bad request. " +
                     string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
+                return BadRequest();
             }
-            return (post == null || post.Board == null || post.Thread == null) ? BadRequest() : (IActionResult)RedirectToRoute("thread", new { post.Board, post.Thread }); ;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace OakChan.Services
     {
         public Task<ThreadDto> GetThreadAsync(string boardId, int threadId);
 
-        public Task<Post> CreatePostAsync(string board, int thread, PostCreationData post);
+        public Task<PostDto> AddPostToThreadAsync(string boardId, int threadId, PostCreationDto post);
     }
 }

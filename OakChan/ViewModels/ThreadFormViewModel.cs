@@ -4,13 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OakChan.ViewModels
 {
-    public class OpPostFormViewModel : IPostFormViewModel
+    public class ThreadFormViewModel
     {
-        [Required]
-        public string Board { get; set; }
-
-        public int? Thread { get; set; }
-
         [Display(Name = "Subject")]
         [MaxLength(32, ErrorMessage = "Subject max length is {1}.")]
         public string Subject { get; set; }

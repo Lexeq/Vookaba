@@ -8,9 +8,8 @@ namespace OakChan.ViewModels
 
         public int ThreadId { get; set; }
 
-        public PostFormViewModel Post { get; set; }
+        public OpPostViewModel OpPost { get; set; }
 
-        public IEnumerable<PostViewModel> Posts { get; set; }
-
+        public IEnumerable<PostViewModel> Replies { get; set; }
     }
 }

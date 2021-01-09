@@ -9,14 +9,18 @@ namespace OakChan.Models.DB.Configurations
         {
             builder.HasKey(t => t.Id);
 
-            builder.HasOne<Board>()
-                .WithMany(b=>b.Threads)
-                .IsRequired()
-                .HasForeignKey(t => t.BoardId);
+            builder.HasOne(t => t.Board)
+                .WithMany(b => b.Threads)
+                .HasForeignKey(t => t.BoardId)
+                .IsRequired();
 
             builder.HasMany(t => t.Posts)
                 .WithOne()
                 .HasForeignKey(a => a.ThreadId);
+
+            builder.Property(p => p.Subject)
+                .HasMaxLength(512)
+                .IsRequired(false);
         }
     }
 }

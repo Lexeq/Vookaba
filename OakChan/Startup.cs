@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using OakChan.Attributes;
+using OakChan.Common.Exceptions;
 using OakChan.DAL;
 using OakChan.DAL.Database;
 using OakChan.Deanon;
@@ -34,15 +35,16 @@ namespace OakChan
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
-            services.AddSingleton<MediaStorage>(
+            services.AddSingleton<IAttachmentsStorage>(
                 svc => new MediaStorage(svc.GetService<IWebHostEnvironment>().WebRootPath));
-            services.AddSingleton<IAttachmentsStorage>(svc => svc.GetService<MediaStorage>());
 
-            services.AddScoped<PostCreator>();
             services.AddScoped<IBoardService, DbBoardService>();
             services.AddScoped<IUserService, DbUserService>();
             services.AddScoped<IThreadService, DbThreadService>();
+            services.AddScoped<IPostService, DbPostService>();
             services.AddScoped<FavoriteThreadsService>();
+            services.AddSingleton<IHashService>(new HashService());
+            services.AddSingleton<ThrowHelper>();
 
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
 

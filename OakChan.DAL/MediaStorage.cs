@@ -14,19 +14,39 @@ namespace OakChan.DAL
 
         private readonly string rootFolder;
 
+        public int ThumbnailMaxSize => 240;
+
         public MediaStorage(string rootPath)
         {
             rootFolder = rootPath ?? throw new ArgumentNullException(nameof(rootPath));
         }
 
-        public async Task<Image> AddImage(byte[] bytes, string name)
+        public Task<ImageInfo> AddImageAsync(byte[] bytes, string imageName)
+            => AddImageAsync(Image.Load(bytes), imageName);
+
+        public Task<ImageInfo> AddImageAsync(Stream source, string imageName)
+            => AddImageAsync(Image.Load(source), imageName);
+
+        private async Task<ImageInfo> AddImageAsync(Image image, string name)
         {
-            using Image im = Image.Load(bytes);
             var imagePath = Path.Combine(rootFolder, MediaResourcesFolder, ImagesFolder, name);
-            var thumbPath = Path.Combine(rootFolder, MediaResourcesFolder, ImagesFolder, GetThumbnailName(name));
-            await File.WriteAllBytesAsync(imagePath, bytes);
-            await CreateThumbnail(im).SaveAsync(thumbPath);
-            return im;
+            var thumbName = GetThumbnailName(name);
+            var thumbPath = Path.Combine(rootFolder, MediaResourcesFolder, ImagesFolder, thumbName);
+            await image.SaveAsync(imagePath);
+            var thumb = CreateThumbnail(image);
+            await thumb.SaveAsync(thumbPath);
+            return new ImageInfo
+            {
+                Height = image.Height,
+                Name = name,
+                Width = image.Width,
+                Thumbnail = new ImageInfo
+                {
+                    Height = thumb.Height,
+                    Name = GetThumbnailName(name),
+                    Width = thumb.Width
+                }
+            };
         }
 
         public string GetImageLinkByName(string name)
@@ -40,13 +60,12 @@ namespace OakChan.DAL
 
         private Image CreateThumbnail(Image image)
         {
-            const int thumbnailMaxSize = 240;
             var thumbSource = image.Frames.Count > 1 ? image.Frames.ExportFrame(0) : image;
 
             return thumbSource.Clone(opt => opt.Resize(new ResizeOptions()
             {
                 Mode = ResizeMode.Max,
-                Size = new Size(thumbnailMaxSize)
+                Size = new Size(ThumbnailMaxSize)
             }));
         }
     }

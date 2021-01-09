@@ -18,8 +18,6 @@ namespace OakChan.Services.DTO
 
         public string Message { get; set; }
 
-        public string Subject { get; set; }
-
         public int ThreadId { get; set; }
     }
 }

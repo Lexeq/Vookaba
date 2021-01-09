@@ -30,9 +30,6 @@ namespace OakChan.DAL.Entities.Configurations
                 .HasForeignKey(p => p.UserId)
                 .IsRequired();
 
-            builder.Property(p => p.Subject)
-                .IsRequired(false);
-
             builder.HasOne(p => p.Image)
                 .WithMany();
         }

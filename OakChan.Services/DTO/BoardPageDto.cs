@@ -8,6 +8,8 @@ namespace OakChan.Services.DTO
 
         public int PageNumber { get; set; }
 
-        public ICollection<ThreadPreviewDto> Threads { get; set; }
+        public int PageSize { get; set; }
+
+        public IEnumerable<ThreadPreviewDto> Threads { get; set; }
     }
 }
