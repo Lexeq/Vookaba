@@ -117,16 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Go to home page" xml:space="preserve">
-    <value>Домашняя страница</value>
+  <data name="Create" xml:space="preserve">
+    <value>Создать</value>
   </data>
-  <data name="Hide form" xml:space="preserve">
-    <value>Скрыть форму</value>
+  <data name="Image" xml:space="preserve">
+    <value>Картинка</value>
   </data>
-  <data name="To thread" xml:space="preserve">
-    <value>В тред</value>
-  </data>
-  <data name="Write a post" xml:space="preserve">
-    <value>Написать пост</value>
+  <data name="Subject" xml:space="preserve">
+    <value>Тема</value>
   </data>
 </root>
