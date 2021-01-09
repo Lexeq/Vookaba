@@ -8,14 +8,7 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }
-
-<div class="navbar">
-    <a asp-route="default">
-        <img src="~/images/home.png" />
-        <span>@Localizer["Go to home page"]</span>
-    </a>
-    <a asp-route="board" asp-route-board="@Model.BoardId">@($"/{Model.BoardId}/")</a>
-</div>
+<partial name="_NavigationHeaderPartial" />
 <hr />
 <p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
 

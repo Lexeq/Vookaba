@@ -6,12 +6,7 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }
-<div class="navbar">
-    <a asp-route="default">
-        <img src="~/images/home.png" />
-        <span>@Localizer["Go to home page"]</span>
-    </a>
-</div>
+<partial name="_NavigationHeaderPartial" />
 <hr />
 <h2 class="board-name">@($"/{Model.Key}/ - {Model.Name}")</h2>
 

@@ -1,0 +1,13 @@
+﻿<div class="navbar">
+    <div class="navbar-left">
+        <a asp-route="default">
+            <img src="~/images/home.png" />
+            <span>@Localizer["Go to home page"]</span>
+        </a>
+        @if (ViewContext.RouteData.Values.ContainsKey("thread"))
+        {
+            var board = Context.Request.RouteValues["board"];
+            <a asp-route="board" asp-route-board="@board">@($"/{board}/")</a>
+        }
+    </div>
+</div>
