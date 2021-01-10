@@ -4,11 +4,12 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="~/css/generic.css" />
-    <link rel="stylesheet" href="~/css/post.css" />
-    <link rel="stylesheet" href="~/css/form.css" />
-    <link rel="stylesheet" href="~/css/home.css" />
-    <link rel="stylesheet" href="~/css/error.css" />
+    <environment include="Development">
+        <link rel="stylesheet" asp-href-include="~/css/*.css" asp-href-exclude="~/css/oak.min.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/css/oak.min.css" asp-append-version="true" />
+    </environment>
     @RenderSection("Styles", false)
 </head>
 <body>
