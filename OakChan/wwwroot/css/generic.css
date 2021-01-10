@@ -11,9 +11,15 @@ body {
     background-color: #f1e698;
 }
 
-
 a {
     color: #5a2e0b;
+}
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1)
 }
 
 .text-center {
@@ -29,27 +35,7 @@ a {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
-}
-
-.img-logo {
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-    height: 4rem;
-    max-height: 15vh;
-}
-
-.line-split {
-    height: 1.5px;
-    color: cornflowerblue;
-}
-
-hr {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    border: 0;
-    border-top: 1px solid rgba(0,0,0,.1)
+    line-height: 60px;
 }
 
 .clear-float {
@@ -60,59 +46,19 @@ hr {
     text-align: center;
     font-weight: 400;
 }
-/*main page*/
-
-/*error page*/
-.error-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    flex-direction: column;
-    text-align: center;
-    margin: 2rem;
-}
-
-.error-row {
-    margin: 0 0 5px 0;
-}
-
-.error-container__caption {
-    font-size: 3.5rem;
-}
-
-.error-container__description {
-    color: #8f8f8f;
-    font-size: 1.33rem;
-    font-weight: 200;
-    line-height: 75%;
-}
-
-.error-container__code {
-    font-weight: 400;
-    color: #da9305fd;
-}
-
-.error-container__image {
-    height: 180px;
-    max-height: 33vh;
-    min-height: 150px;
-}
 
 .navbar {
     font-size: 1.15rem;
 }
 
     .navbar a {
-        margin:0 10px 0 0;
+        margin: 0 10px 0 0;
     }
 
     .navbar img {
         width: 1em;
         height: 1em;
     }
-
-
 
 .page-number-info,
 .page-link {

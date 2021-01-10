@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OakChan.Deanon;
+using OakChan.Mapping;
 using OakChan.Services;
+using OakChan.Services.DTO;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
@@ -17,68 +20,67 @@ namespace OakChan.Controllers
         private const int threadsPerPage = 10;
         private readonly IBoardService boardService;
         private readonly IStringLocalizer<BoardController> localizer;
+        private readonly IMapper mapper;
         private readonly ILogger<BoardController> logger;
 
-        public BoardController(IBoardService boardService,
+        public BoardController(
+            IBoardService boardService,
             IStringLocalizer<BoardController> localizer,
+            IMapper mapper,
             ILogger<BoardController> logger)
         {
             this.boardService = boardService;
             this.localizer = localizer;
+            this.mapper = mapper;
             this.logger = logger;
         }
 
         public async Task<IActionResult> Index(string board, int page = 1)
         {
-            var b = await boardService.GetBoardPreviewAsync(board, (Math.Max(0, page - 1)) * threadsPerPage, threadsPerPage);
-            if (b == null)
+            var boardInfo = await boardService.GetBoardInfoAsync(board);
+            if (boardInfo == null)
             {
                 return BoardDoesNotExist(board);
             }
-            if (page < 1 || (page != 1 && b.Threads.Count() == 0))
+            var pagesCount = Math.Max(1, (int)Math.Ceiling((double)boardInfo.ThreadsCount / threadsPerPage));
+            if (page < 1 || page - 1 >= pagesCount)
             {
                 return PageNotFound(board, page);
             }
 
-            return View(new BoardViewModel
+            var pageDto = await boardService.GetBoardPageAsync(board, page, threadsPerPage);
+
+            var vm = mapper.Map<BoardPageViewModel>(pageDto, opt =>
             {
-                Key = b.Key,
-                Name = b.Name,
-                ThreadsOnPage = b.Threads.Select(t => new ThreadPreviewViewModel
-                {
-                    ThreadId = t.Id,
-                    PostsCount = t.TotalPostsCount,
-                    PostsWithImageCount = t.PostsWithImageCount,
-                    OpPost = PostViewModel.CreatePostViewModel(t.OpPost,board),
-                    RecentPosts = t.RecentPosts?.Select(x => PostViewModel.CreatePostViewModel(x, board))
-                }),
-                TotalThreadsCount = b.TotalThreadsCount,
-                OpPost = new OpPostFormViewModel { Board = b.Key },
-                PageNumber = page,
-                TotalPages = (int)Math.Ceiling((double)b.TotalThreadsCount / threadsPerPage)
+                opt.Items[StringConstants.BoardName] = boardInfo.Name;
+                opt.Items[StringConstants.PagesCount] = pagesCount;
             });
+
+            return View(vm);
         }
 
         [HttpPost]
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
-        public async Task<IActionResult> CreateThreadAsync(OpPostFormViewModel opPost)
+        public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
         {
             if (ModelState.IsValid)
             {
                 var anonId = await HttpContext.GetAnonGuidAsync();
 
-                var postData = await opPost.ToPostCreationData(anonId);
+                var threadData = mapper.Map<ThreadCreationDto>(opPost, opt =>
+                {
+                    opt.Items[StringConstants.UserId] = anonId;
+                });
 
-                var t = await boardService.CreateThreadAsync(opPost.Board, postData);
+                var t = await boardService.CreateThreadAsync(board, threadData);
 
-                return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.Id });
+                return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.ThreadId });
             }
             else
             {
                 logger.LogWarning("Bad request. " +
                     string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
-
-                return (opPost == null || opPost.Board == null) ? BadRequest() : (IActionResult)RedirectToRoute("board", new { opPost.Board });
+                return BadRequest();
             }
         }
 

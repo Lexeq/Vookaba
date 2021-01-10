@@ -1,0 +1,10 @@
+[
+  {
+    "outputFileName": "wwwroot/css/oak.min.css",
+    "inputFiles": [ "wwwroot/css/!(*.min).css" ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  }
+]

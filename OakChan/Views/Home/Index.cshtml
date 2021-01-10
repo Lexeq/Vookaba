@@ -3,7 +3,7 @@
     ViewBag.Title = Localizer["Welcome"];
 }
 
-@inject OakChan.DAL.MediaStorage media
+@inject OakChan.DAL.IAttachmentsStorage attachments
 <div class="logo">
     <img class="logo-img" src="/images/logo.png" />
 </div>
@@ -35,7 +35,7 @@
                 <a asp-route="thread" asp-route-board="@thread.BoardId" asp-route-thread="@thread.ThreadId">
                     <p class="favorite-thread__caption">@Localizer["popular in /{0}/", thread.BoardId]</p>
                     <div>
-                        <img class="favorite-thread__image" src="@(media.GetImageThumbnailRelativePath(thread.OpPost.Image.Name))" />
+                        <img class="favorite-thread__image" src="@(attachments.GetThumbnailLinkByName(thread.OpPost.Image.Name))" />
                         <div  class="favorite-thread__message">@(thread.OpPost.Message)</div>
                     </div>
                 </a>

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OakChan.DAL.Database;
-using OakChan.Models.DB;
 
 namespace OakChan.Migrations
 {
@@ -20,7 +19,7 @@ namespace OakChan.Migrations
                 .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("OakChan.Models.DB.Entities.Anonymous", b =>
+            modelBuilder.Entity("OakChan.DAL.Entities.Anonymous", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,7 +37,7 @@ namespace OakChan.Migrations
                     b.ToTable("Anonymous");
                 });
 
-            modelBuilder.Entity("OakChan.Models.DB.Entities.Board", b =>
+            modelBuilder.Entity("OakChan.DAL.Entities.Board", b =>
                 {
                     b.Property<string>("Key")
                         .HasColumnType("text");
@@ -53,7 +52,7 @@ namespace OakChan.Migrations
                     b.ToTable("Boards");
                 });
 
-            modelBuilder.Entity("OakChan.Models.DB.Entities.Image", b =>
+            modelBuilder.Entity("OakChan.DAL.Entities.Image", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,7 +91,7 @@ namespace OakChan.Migrations
                     b.ToTable("Images");
                 });
 
-            modelBuilder.Entity("OakChan.Models.DB.Entities.Post", b =>
+            modelBuilder.Entity("OakChan.DAL.Entities.Post", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -115,9 +114,6 @@ namespace OakChan.Migrations
                         .HasColumnType("text")
                         .HasDefaultValue("Аноним");
 
-                    b.Property<string>("Subject")
-                        .HasColumnType("text");
-
                     b.Property<int>("ThreadId")
                         .HasColumnType("integer");
 
@@ -135,7 +131,7 @@ namespace OakChan.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("OakChan.Models.DB.Entities.Thread", b =>
+            modelBuilder.Entity("OakChan.DAL.Entities.Thread", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -145,6 +141,9 @@ namespace OakChan.Migrations
                     b.Property<string>("BoardId")
                         .HasColumnType("text");
 
+                    b.Property<string>("Subject")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("BoardId");
@@ -152,28 +151,28 @@ namespace OakChan.Migrations
                     b.ToTable("Threads");
                 });
 
-            modelBuilder.Entity("OakChan.Models.DB.Entities.Post", b =>
+            modelBuilder.Entity("OakChan.DAL.Entities.Post", b =>
                 {
-                    b.HasOne("OakChan.Models.DB.Entities.Image", "Image")
+                    b.HasOne("OakChan.DAL.Entities.Image", "Image")
                         .WithMany()
                         .HasForeignKey("ImageId");
 
-                    b.HasOne("OakChan.Models.DB.Entities.Thread", "Thread")
+                    b.HasOne("OakChan.DAL.Entities.Thread", "Thread")
                         .WithMany("Posts")
                         .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("OakChan.Models.DB.Entities.Anonymous", null)
+                    b.HasOne("OakChan.DAL.Entities.Anonymous", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("OakChan.Models.DB.Entities.Thread", b =>
+            modelBuilder.Entity("OakChan.DAL.Entities.Thread", b =>
                 {
-                    b.HasOne("OakChan.Models.DB.Entities.Board", null)
+                    b.HasOne("OakChan.DAL.Entities.Board", null)
                         .WithMany("Threads")
                         .HasForeignKey("BoardId");
                 });

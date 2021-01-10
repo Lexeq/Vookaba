@@ -1,0 +1,33 @@
+﻿@model OakChan.ViewModels.PostFormViewModel
+
+<div class="creation-form" id="form">
+    <div class="preview-container">
+        <div>
+            <img id="preview-img" class="preview-imgage" />
+        </div>
+    </div>
+    <form id="posting-form"
+          method="post"
+          enctype="multipart/form-data"
+          class="posting-form"
+          asp-route="threadAction"
+          asp-route-board="@Context.Request.RouteValues["board"]"
+          asp-route-thread="@Context.Request.RouteValues["thread"]"
+          asp-route-action="CreatePost">
+
+        <div class="form-row">
+            <textarea class="form-control" rows="4" id="form-msg" asp-for="Text"></textarea>
+        </div>
+        <div class="form-row">
+            <div class="form-button">
+                <input class="hidden-input" id="post-img" accept=".gif,.jpg,.png,.jpeg" type="file" asp-for="Image" onchange="loadImagePreview(this.files)" />
+                <label for="post-img">@Localizer["Image"] </label>
+            </div>
+            <div class="form-button">
+                <input id="form-submit" class="hidden-input" type="submit" />
+                <label for="form-submit">@Localizer["Create"] </label>
+            </div>
+        </div>
+        <div class="form-row error-list" asp-validation-summary="All"></div>
+    </form>
+</div>

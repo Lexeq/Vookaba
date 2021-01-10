@@ -25,6 +25,10 @@ namespace OakChan.Deanon
             {
                 o.Cookie.Name = "greeting";
                 o.Cookie.IsEssential = true;
+                o.LoginPath = "/";
+                o.AccessDeniedPath = "/";
+                o.Cookie.SameSite = SameSiteMode.Strict;
+                o.SlidingExpiration = true;
             });
             return builder;
         }

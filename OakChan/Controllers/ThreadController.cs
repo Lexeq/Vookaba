@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OakChan.Deanon;
+using OakChan.Mapping;
 using OakChan.Services;
+using OakChan.Services.DTO;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
@@ -16,20 +19,23 @@ namespace OakChan.Controllers
         private readonly IThreadService threads;
         private readonly IStringLocalizer<ThreadController> localizer;
         private readonly ILogger<ThreadController> logger;
+        private readonly IMapper mapper;
 
         public ThreadController(IThreadService threads,
             IStringLocalizer<ThreadController> localizer,
-            ILogger<ThreadController> logger)
+            ILogger<ThreadController> logger,
+            IMapper mapper)
         {
             this.threads = threads;
             this.localizer = localizer;
             this.logger = logger;
+            this.mapper = mapper;
         }
 
         public async Task<IActionResult> Index(string board, int thread)
         {
-            var t = await threads.GetThreadAsync(board, thread);
-            if (t == null)
+            var threadDto = await threads.GetThreadAsync(board, thread);
+            if (threadDto == null)
             {
                 return View("Error", new ErrorViewModel
                 {
@@ -39,29 +45,27 @@ namespace OakChan.Controllers
                 });
             }
 
-            return View(new ThreadViewModel
-            {
-                Board = board,
-                Id = t.Id,
-                Posts = t.Posts.Select(p => PostViewModel.CreatePostViewModel(p, board))
-            });
+            var vm = mapper.Map<ThreadViewModel>(threadDto);
+            return View(vm);
         }
 
         [HttpPost]
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
-        public async Task<IActionResult> CreatePost(PostFormViewModel post)
+        public async Task<IActionResult> CreatePostAsync(string board, int thread, PostFormViewModel postFormVM)
         {
             var anonId = await HttpContext.GetAnonGuidAsync();
             if (ModelState.IsValid)
             {
-                await threads.CreatePostAsync(post.Board, post.Thread.Value, await post.ToPostCreationData(anonId));
+                var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opt => opt.Items[StringConstants.UserId] = anonId);
+                var newPost = await threads.AddPostToThreadAsync(board, thread, postCreationDto);
+                return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
             }
             else
             {
                 logger.LogWarning("Bad request. " +
                     string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
+                return BadRequest();
             }
-            return (post == null || post.Board == null || post.Thread == null) ? BadRequest() : (IActionResult)RedirectToRoute("thread", new { post.Board, post.Thread }); ;
         }
     }
 }

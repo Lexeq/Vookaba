@@ -21,7 +21,5 @@ namespace OakChan.DAL.Entities
         public int? ImageId { get; set; }
 
         public Image Image { get; set; }
-
-        public string Subject { get; set; }
     }
 }

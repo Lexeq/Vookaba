@@ -1,4 +1,5 @@
 using System.Globalization;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -10,10 +11,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using OakChan.Attributes;
+using OakChan.Common.Exceptions;
 using OakChan.DAL;
 using OakChan.DAL.Database;
 using OakChan.Deanon;
+using OakChan.Mapping;
 using OakChan.Services;
+using OakChan.Services.Mapping;
 
 namespace OakChan
 {
@@ -31,14 +35,16 @@ namespace OakChan
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
-            services.AddSingleton<MediaStorage>(
-                svc=> new MediaStorage(svc.GetService<IWebHostEnvironment>().WebRootPath));
+            services.AddSingleton<IAttachmentsStorage>(
+                svc => new MediaStorage(svc.GetService<IWebHostEnvironment>().WebRootPath));
 
-            services.AddScoped<PostCreator>();
             services.AddScoped<IBoardService, DbBoardService>();
             services.AddScoped<IUserService, DbUserService>();
             services.AddScoped<IThreadService, DbThreadService>();
+            services.AddScoped<IPostService, DbPostService>();
             services.AddScoped<FavoriteThreadsService>();
+            services.AddSingleton<IHashService>(new HashService());
+            services.AddSingleton<ThrowHelper>();
 
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
 
@@ -70,6 +76,13 @@ namespace OakChan
             services.Configure<ForwardedHeadersOptions>(o =>
             {
                 o.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
+            services.AddAutoMapper(cfg =>
+            {
+                cfg.DisableConstructorMapping();
+                cfg.AddProfile<ServicesMapProfile>();
+                cfg.AddProfile<ViewModelsMapProfile>();
             });
         }
 

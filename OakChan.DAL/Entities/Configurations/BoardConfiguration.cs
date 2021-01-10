@@ -14,7 +14,7 @@ namespace OakChan.DAL.Entities.Configurations
                 .IsRequired();
 
             builder.HasMany(b => b.Threads)
-                .WithOne()
+                .WithOne(t=>t.Board)
                 .HasForeignKey(t => t.BoardId);
         }
     }

@@ -1,6 +1,4 @@
-﻿using OakChan.DAL.Entities;
-using OakChan.Models;
-using OakChan.Services.DTO;
+﻿using OakChan.Services.DTO;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -8,10 +6,12 @@ namespace OakChan.Services
 {
     public interface IBoardService
     {
-        public Task<BoardPreview> GetBoardPreviewAsync(string boardId, int threadsOffset, int threadsCount);
+        public Task<ThreadDto> CreateThreadAsync(string boardId, ThreadCreationDto th);
 
-        public Task<Thread> CreateThreadAsync(string boardId, PostCreationData data);
+        public Task<IEnumerable<BoardInfoDto>> GetBoardsAsync();
 
-        public Task<IEnumerable<Board>> GetBoardsAsync();
+        public Task<BoardInfoDto> GetBoardInfoAsync(string boardId);
+
+        public Task<BoardPageDto> GetBoardPageAsync(string boardId, int page, int pageSize);
     }
 }
