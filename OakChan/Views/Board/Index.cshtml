@@ -17,10 +17,10 @@
     @foreach (var thread in Model.Threads)
     {
         <div class="thread" id="thread-@thread.ThreadId">
-            <div class="reclear">
+            <div class="oppost-container">
                 <partial name="_PostView" model="thread.OpPost" />
                 <div class="to-thread">
-                    @if (thread.PostsCount - thread.RecentPosts.Count() - 1 > 0)
+                    @if (thread.PostsOmmited > 0)
                     {
                         <span>@Localizer["{0} post omited, {1} with image.", thread.PostsOmmited, thread.ImagesOmmited]</span>
                     }
