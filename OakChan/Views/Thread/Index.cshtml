@@ -1,7 +1,9 @@
 ﻿@using OakChan.ViewModels
 @model ThreadViewModel
 @{
-    ViewData["Title"] = "Thread";
+    ViewBag.Title = Model.OpPost.Subject ?? (Model.OpPost.Message.Length <= 32 ?
+        Model.OpPost.Message :
+        Model.OpPost.Message.Substring(0, 29) + "...") + " - OakChan";
 }
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
