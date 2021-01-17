@@ -19,7 +19,7 @@
 <div class="post-container" id="@($"pc{Model.Number}")">
     <div id="@($"p{Model.Number}")" class="post@(usid == Model.AuthorId ? " post-owned" : "")@(Model.HasImage ? " post-withimage" : "")">
 
-        <div class="post-details">
+        <div class="post__details">
             @if (Model is OpPostViewModel op)
             {
                 <span class="post__subject">#@op.Subject</span>
