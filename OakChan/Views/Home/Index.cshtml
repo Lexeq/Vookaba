@@ -13,16 +13,30 @@
 
 <div class="board-list">
     <div class="board-list__head">
-        <p>@Localizer["Boards list"]</p>
+        @Localizer["Boards list"]
     </div>
-    <ul class="board-list__list">
-        @foreach (var brd in Model.Boards)
-        {
-            <li><a href="\@brd.Key">@($"/{brd.Key}/ - {brd.Name}")</a></li>
+    <div class="board-list__list">
+        @{
+            var boards = Model.Boards.ToArray();
+            var columns = 2;
+            var index = 0;
         }
-    </ul>
-</div>
+        @for (int c = 0; c < columns; c++)
+        {
+            <div class="board-list__column">
+                @for (int r = 0; r < boards.Length / columns + (boards.Length % columns > c ? 1 : 0); r++)
+                {
+                    var board = boards[index++];
 
+                    <div class="board-list__item">
+                        <a href="\@board.Key">@($"/{board.Key}/ - {board.Name}")</a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+<br />
 <div class="favorite-threads">
     <div class="favorite-threads__head">
         <span>@Localizer["Top threads"]</span>
@@ -36,7 +50,7 @@
                     <p class="favorite-thread__caption">@Localizer["popular in /{0}/", thread.BoardId]</p>
                     <div>
                         <img class="favorite-thread__image" src="@(attachments.GetThumbnailLinkByName(thread.OpPost.Image.Name))" />
-                        <div  class="favorite-thread__message">@(thread.OpPost.Message)</div>
+                        <div class="favorite-thread__message">@(thread.OpPost.Message)</div>
                     </div>
                 </a>
             </div>
