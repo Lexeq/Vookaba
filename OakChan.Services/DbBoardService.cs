@@ -84,7 +84,9 @@ namespace OakChan.Services
 
         public async Task<IEnumerable<BoardInfoDto>> GetBoardsAsync()
         {
-            return await mapper.ProjectTo<BoardInfoDto>(context.Boards).ToArrayAsync();
+            return await mapper.ProjectTo<BoardInfoDto>(context.Boards)
+                .OrderBy(b => b.Key)
+                .ToArrayAsync();
         }
 
         private async Task<IEnumerable<ThreadPreviewDto>> GetThreadPreviews(string board, int offset, int count)
