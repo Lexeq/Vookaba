@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Routing
 @using OakChan.ViewModels
+@using OakChan.Utils
 @model OakChan.ViewModels.PostViewModel
 @inject OakChan.DAL.IAttachmentsStorage attachments
 @{
@@ -24,7 +25,7 @@
                 <span class="post__subject">#@op.Subject</span>
             }
             <span class="post__author">@Model.AuthorName</span>
-            <span class="post__date">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss")</span>
+            <span class="post__date" data-timestamp="@Model.Date.GetUnixEpochOffset()">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss") UTC</span>
             <span class="post__number" data-pid="@Model.Number"><a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a></span>
         </div>
 
