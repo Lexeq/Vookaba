@@ -37,8 +37,12 @@ namespace OakChan.Controllers
 
         public async Task<IActionResult> Index(string board, int page = 1)
         {
-            var boardInfo = await boardService.GetBoardInfoAsync(board);
-            if (boardInfo == null)
+            BoardInfoDto boardInfo;
+            try
+            {
+                boardInfo = await boardService.GetBoardInfoAsync(board);
+            }
+            catch (KeyNotFoundException)
             {
                 return BoardDoesNotExist(board);
             }
@@ -63,23 +67,29 @@ namespace OakChan.Controllers
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
         public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
         {
+            var anonId = await HttpContext.GetAnonGuidAsync();
+
             if (ModelState.IsValid)
             {
-                var anonId = await HttpContext.GetAnonGuidAsync();
-
                 var threadData = mapper.Map<ThreadCreationDto>(opPost, opt =>
                 {
                     opt.Items[StringConstants.UserId] = anonId;
                 });
-
-                var t = await boardService.CreateThreadAsync(board, threadData);
-
-                return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.ThreadId });
+                try
+                {
+                    var t = await boardService.CreateThreadAsync(board, threadData);
+                    return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.ThreadId });
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    logger.LogWarning($"Bad request. From {anonId} to {nameof(CreateThreadAsync)}. {ex.Message}");
+                    return BadRequest();
+                }
             }
             else
             {
-                logger.LogWarning("Bad request. " +
-                    string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
+                logger.LogWarning($"Invalid model state from {anonId} to {nameof(CreateThreadAsync)}. " +
+                      string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }
         }

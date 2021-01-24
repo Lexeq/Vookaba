@@ -32,7 +32,7 @@ namespace OakChan.Services
 
             if (thread == null)
             {
-                throw new EntityNotFoundException($"Thread '{boardId}' does not exist.");
+                throw new KeyNotFoundException($"Thread '{threadId}' does not exist on board {boardId}.");
             }
 
             return await posts.CreatePost(new ThreadDto { ThreadId = threadId }, data);

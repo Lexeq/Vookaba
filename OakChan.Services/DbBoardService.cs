@@ -35,7 +35,7 @@ namespace OakChan.Services
 
             if (await context.Boards.FindAsync(boardId) == null)
             {
-                throw new EntityNotFoundException($"Board '{boardId}' does not exist.");
+                throw new KeyNotFoundException($"Board '{boardId}' does not exist.");
             }
 
             var thread = new ThreadDto { Subject = threadDto.Subject, BoardId = boardId };
@@ -60,7 +60,7 @@ namespace OakChan.Services
                 .Where(b => b.Key == boardId)
                 .FirstOrDefaultAsync();
 
-            return result ?? throw new EntityNotFoundException($"Board with id '{boardId}' not found.");
+            return result ?? throw new KeyNotFoundException($"Board '{boardId}' does not exist.");
         }
 
         public async Task<BoardPageDto> GetBoardPageAsync(string boardId, int page, int pageSize)

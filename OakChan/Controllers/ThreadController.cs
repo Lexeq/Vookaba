@@ -57,13 +57,21 @@ namespace OakChan.Controllers
             if (ModelState.IsValid)
             {
                 var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opt => opt.Items[StringConstants.UserId] = anonId);
-                var newPost = await threads.AddPostToThreadAsync(board, thread, postCreationDto);
-                return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
+                try
+                {
+                    var newPost = await threads.AddPostToThreadAsync(board, thread, postCreationDto);
+                    return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    logger.LogWarning($"Bad request. From {anonId} to {nameof(CreatePostAsync)}. {ex.Message}");
+                    return BadRequest();
+                }
             }
             else
             {
-                logger.LogWarning("Bad request. " +
-                    string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
+                logger.LogWarning($"Invalid model state from {anonId} to {nameof(CreatePostAsync)}. " +
+                      string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }
         }
