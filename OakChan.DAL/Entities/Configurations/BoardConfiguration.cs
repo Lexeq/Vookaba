@@ -15,7 +15,9 @@ namespace OakChan.DAL.Entities.Configurations
 
             builder.HasMany(b => b.Threads)
                 .WithOne(t=>t.Board)
-                .HasForeignKey(t => t.BoardId);
+                .HasForeignKey(t => t.BoardId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
