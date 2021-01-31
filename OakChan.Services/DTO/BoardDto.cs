@@ -7,5 +7,7 @@
         public string Name { get; set; }
 
         public int ThreadsCount { get; set; }
+
+        public bool IsHidden { get; set; }
     }
 }

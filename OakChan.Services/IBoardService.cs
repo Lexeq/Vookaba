@@ -8,7 +8,7 @@ namespace OakChan.Services
     {
         public Task<ThreadDto> CreateThreadAsync(string boardId, ThreadCreationDto th);
 
-        public Task<IEnumerable<BoardInfoDto>> GetBoardsAsync();
+        public Task<IEnumerable<BoardInfoDto>> GetBoardsAsync(bool showHidden);
 
         public Task<BoardInfoDto> GetBoardInfoAsync(string boardId);
 

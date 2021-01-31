@@ -18,6 +18,10 @@ namespace OakChan.DAL.Entities.Configurations
                 .HasForeignKey(t => t.BoardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            builder.Property(b => b.IsHidden)
+                .HasDefaultValue(false)
+                .IsRequired();
+
         }
     }
 }

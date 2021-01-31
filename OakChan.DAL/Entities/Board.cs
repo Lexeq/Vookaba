@@ -8,6 +8,8 @@ namespace OakChan.DAL.Entities
 
         public string Name { get; set; }
 
+        public bool IsHidden { get; set; }
+
         public IEnumerable<Thread> Threads { get; set; }
     }
 }
