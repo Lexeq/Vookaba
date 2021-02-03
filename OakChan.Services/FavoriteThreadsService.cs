@@ -1,4 +1,5 @@
-﻿using OakChan.DAL.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using OakChan.DAL.Database;
 using OakChan.Services.DTO;
 using System;
 using System.Linq;
@@ -28,14 +29,12 @@ namespace OakChan.Services
                 {
                     Thread = t,
                     PostCount = t.Posts.Count,
-                    OpPost = t.Posts.OrderBy(p => p.CreationTime).First(),
-                    Image = t.Posts.Select(p => p.Image).First(i => i.Id == t.Posts.OrderBy(p => p.CreationTime).First().ImageId)
+                    OpPost = t.Posts.AsQueryable().OrderBy(p => p.CreationTime).Include(p => p.Image).First(),
                 })
                 .ToArray();
 
             return toptop.Select(p =>
             {
-                p.OpPost.Image = p.Image;
                 return new TopThredInfo { OpPost = p.OpPost, ThreadId = p.Thread.Id, BoardId = p.Thread.BoardId };
             }).ToArray();
         }

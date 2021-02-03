@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20210201190910_InvertNavProperty.cs" />
+    <Compile Remove="Migrations\20210201190910_InvertNavProperty.Designer.cs" />
+    <Compile Remove="Migrations\20210201192454_InvertNavProperty.cs" />
+    <Compile Remove="Migrations\20210201192454_InvertNavProperty.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">

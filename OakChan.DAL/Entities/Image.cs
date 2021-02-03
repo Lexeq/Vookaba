@@ -21,5 +21,9 @@ namespace OakChan.DAL.Entities
         public byte[] Hash { get; set; }
 
         public string Name { get; set; }
+
+        public int? PostId { get; set; }
+
+        public Post Post { get; set; }
     }
 }

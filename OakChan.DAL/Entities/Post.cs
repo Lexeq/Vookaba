@@ -18,7 +18,6 @@ namespace OakChan.DAL.Entities
 
         public Guid UserId { get; set; }
 
-        public int? ImageId { get; set; }
 
         public Image Image { get; set; }
     }

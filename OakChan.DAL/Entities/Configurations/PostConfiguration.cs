@@ -31,7 +31,10 @@ namespace OakChan.DAL.Entities.Configurations
                 .IsRequired();
 
             builder.HasOne(p => p.Image)
-                .WithMany();
+                .WithOne(i => i.Post)
+                .HasForeignKey<Image>(i => i.PostId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
