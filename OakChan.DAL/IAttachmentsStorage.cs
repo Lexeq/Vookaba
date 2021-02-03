@@ -12,5 +12,7 @@ namespace OakChan.DAL
         Task<ImageInfo> AddImageAsync(byte[] bytes, string imageName);
 
         Task<ImageInfo> AddImageAsync(Stream source, string imageName);
+
+        Task DeleteImageAsync(string imageName);
     }
 }
