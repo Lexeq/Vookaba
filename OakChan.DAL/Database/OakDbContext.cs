@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using OakChan.DAL.Entities;
+using OakChan.Identity;
 using System.Reflection;
 
 namespace OakChan.DAL.Database
 {
-    public class OakDbContext : DbContext
+    public class OakDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int, ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>
     {
         public OakDbContext() { }
 
