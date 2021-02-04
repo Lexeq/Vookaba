@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,7 @@ using OakChan.Common.Exceptions;
 using OakChan.DAL;
 using OakChan.DAL.Database;
 using OakChan.Deanon;
+using OakChan.Identity;
 using OakChan.Mapping;
 using OakChan.Services;
 using OakChan.Services.Mapping;
@@ -83,6 +85,21 @@ namespace OakChan
                 cfg.DisableConstructorMapping();
                 cfg.AddProfile<ServicesMapProfile>();
                 cfg.AddProfile<ViewModelsMapProfile>();
+            });
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                .AddEntityFrameworkStores<OakDbContext>()
+                .AddUserStore<ApplicationUserStore>()
+                .AddRoleStore<ApplicationRoleStore>();
+
+            services.Configure<IdentityOptions>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequiredLength = 8;
+                o.Password.RequiredUniqueChars = 2;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireLowercase = false;
             });
         }
 

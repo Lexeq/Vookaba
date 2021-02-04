@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OakChan.DAL", "OakChan.DAL\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OakChan.Services", "OakChan.Services\OakChan.Services.csproj", "{ACF14DC8-792C-4C5D-9CDF-093DC1430409}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OakChan.Common", "OakChan.Common\OakChan.Common.csproj", "{F3955D47-1196-4755-9FC8-04945E73532E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OakChan.Common", "OakChan.Common\OakChan.Common.csproj", "{F3955D47-1196-4755-9FC8-04945E73532E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
