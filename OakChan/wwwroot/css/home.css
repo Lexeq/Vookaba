@@ -91,3 +91,12 @@
     -webkit-box-orient: vertical;
     text-decoration: none;
 }
+
+.home__auth-panel {
+    position: absolute;
+    right: 40px;
+    background: #f1e698;
+    top: 15px;
+    border-radius: 0.5em;
+    padding: 2px 5px;
+}

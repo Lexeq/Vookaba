@@ -21,6 +21,7 @@ using OakChan.Identity;
 using OakChan.Mapping;
 using OakChan.Services;
 using OakChan.Services.Mapping;
+using OakChan.Utils;
 
 namespace OakChan
 {
@@ -91,12 +92,26 @@ namespace OakChan
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                 .AddEntityFrameworkStores<OakDbContext>()
                 .AddUserStore<ApplicationUserStore>()
-                .AddRoleStore<ApplicationRoleStore>();
+                .AddRoleStore<ApplicationRoleStore>()
+                .AddErrorDescriber<LocalizedIdentityErrorDescriber>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Administration/AccessDenied";
+                options.Cookie.Name = "passport";
+                options.Cookie.HttpOnly = true;
+                options.LoginPath = "/Administration/Account/Login";
+                options.Cookie.IsEssential = true;
+                options.SlidingExpiration = true;
+            });
 
             services.Configure<IdentityOptions>(o =>
             {
+                o.User.RequireUniqueEmail = true;
+                o.User.AllowedUserNameCharacters = OakConstants.AllowedUserNameCharacters;
+
                 o.Password.RequireDigit = true;
-                o.Password.RequiredLength = 8;
+                o.Password.RequiredLength = OakConstants.MinPasswordLength;
                 o.Password.RequiredUniqueChars = 2;
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequireUppercase = false;
@@ -125,6 +140,11 @@ namespace OakChan
             app.UseDeanon();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapAreaControllerRoute(
+                    name: "AdministrationArea",
+                    areaName: "Administration",
+                    pattern: "Administration/{controller}/{action}");
+
                 endpoints.MapControllerRoute(
                   name: "error",
                   pattern: "error/{action}/{statusCode?}",

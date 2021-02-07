@@ -49,6 +49,8 @@ hr {
 
 .navbar {
     font-size: 1.15rem;
+    display: flex;
+    justify-content: space-between;
 }
 
     .navbar a {
@@ -90,4 +92,8 @@ hr {
 .page-current {
     background-color: #765432;
     font-weight: bold;
+}
+
+.auth-action {
+    font-weight: 500;
 }

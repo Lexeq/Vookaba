@@ -1,0 +1,34 @@
+﻿@model LoginViewModel
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
+@{
+    ViewBag.Title = Localizer["Login"];
+}
+<partial name="_NavigationHeaderPartial" />
+<h1 class="text-center">@Localizer["Login"]</h1>
+<fieldset class="auth__fieldset">
+    <legend>@Localizer["Fill in the fields"]</legend>
+    <form class="authform" method="post">
+        <div class="authform-error" asp-validation-summary="ModelOnly"></div>
+
+        <div class="form-row">
+            @Html.EditorFor(m => m.Login, "InputRow")
+        </div>
+        <div class="form-row">
+            @Html.EditorFor(m => m.Password, "InputRow")
+        </div>
+        <div class="form-row">
+            <input type="checkbox" checked="checked" />
+            <label asp-for="Remember"></label>
+        </div>
+        <br />
+        <div class="form-row">
+            <div class="form-button">
+                <input id="logsub" type="submit" class="hidden-input" />
+                <label for="logsub">@Localizer["Login"]</label>
+            </div>
+        </div>
+    </form>
+</fieldset>

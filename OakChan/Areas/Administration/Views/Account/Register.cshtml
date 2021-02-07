@@ -1,0 +1,35 @@
+﻿@model RegisterViewModel
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
+@{
+    ViewBag.Title = Localizer["Register"];
+}
+<partial name="_NavigationHeaderPartial" />
+<h1 class="text-center">@Localizer["Register new user"]</h1>
+<fieldset class="auth__fieldset">
+    <legend>@Localizer["Fill in the fields"]</legend>
+    <form class="authform" method="post">
+        <div class="authform-error" asp-validation-summary="ModelOnly"></div>
+        <div class="form-row">
+            @Html.EditorFor(m => m.Login, "InputRow")
+        </div>
+        <div class="form-row">
+            @Html.EditorFor(m => m.Email, "InputRow")
+        </div>
+        <div class="form-row">
+            @Html.EditorFor(m => m.Password, "InputRow")
+        </div>
+        <div class="form-row">
+            @Html.EditorFor(m => m.PasswordConfirmation, "InputRow")
+        </div>
+        <br />
+        <div class="form-row">
+            <div class="form-button" style="width:auto">
+                <input id="logsub" type="submit" class="hidden-input" />
+                <label for="logsub">@Localizer["Register"]</label>
+            </div>
+        </div>
+    </form>
+</fieldset>

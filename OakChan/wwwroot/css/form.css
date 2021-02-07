@@ -13,10 +13,13 @@
 }
 
 .form-row {
+    margin: 5px 0px;
+}
+
+.posting-form .form-row {
     display: flex;
     align-content: stretch;
     justify-content: space-between;
-    margin: 5px 0;
 }
 
 .theme-row label {
@@ -46,7 +49,7 @@
 
 .form-button {
     height: 25px;
-    width: 80px;
+    min-width: 80px;
 }
 
     .hidden-input:focus + label,
@@ -70,6 +73,7 @@
         justify-content: center;
         align-items: center;
         cursor: pointer;
+        overflow: hidden;
     }
 
 .preview-container {
@@ -125,3 +129,48 @@
     .error-list li::before {
         content: "- ";
     }
+
+.authform {
+    padding: 0.5rem;
+    margin: 10px 0px;
+}
+
+    .authform span {
+        margin-left: 5px;
+    }
+
+    .authform ul {
+        padding: 0px;
+        list-style-type: none;
+    }
+
+.authform-error {
+    color: red;
+}
+
+.authform .field-validation-error {
+    display: inline-block;
+}
+
+.authform .field-validation-valid {
+    display: none;
+}
+
+.auth__fieldset {
+    width: 500px;
+    display: block;
+    margin: auto;
+    border-color: darkred;
+}
+
+    .auth__fieldset legend {
+        margin: auto;
+    }
+
+.input-row__label {
+    display: block;
+}
+
+.input-row__input {
+    width: 100%;
+}
