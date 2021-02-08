@@ -117,6 +117,10 @@ namespace OakChan
                 o.Password.RequireUppercase = false;
                 o.Password.RequireLowercase = false;
             });
+
+            services.AddOptions();
+            services.AddScoped<DatabaseSeeder>();
+            services.Configure<SeedData>(Configuration.GetSection(nameof(SeedData)));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
