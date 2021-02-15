@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -41,6 +42,7 @@ namespace OakChan.Deanon
                     {
                         policy.RequireClaim(DeanonDefaults.UidClaimName);
                         policy.AuthenticationSchemes.Add(DeanonDefaults.AuthenticationScheme);
+                        policy.AddAuthenticationSchemes(IdentityConstants.ApplicationScheme);
                     });
         }
 

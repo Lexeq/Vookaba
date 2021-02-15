@@ -9,5 +9,7 @@
         public int ThreadsCount { get; set; }
 
         public bool IsHidden { get; set; }
+
+        public bool IsDisabled { get; set; }
     }
 }

@@ -85,7 +85,7 @@ namespace OakChan.Services
         public async Task<IEnumerable<BoardInfoDto>> GetBoardsAsync(bool showHidden)
         {
             return await mapper.ProjectTo<BoardInfoDto>(context.Boards)
-                .Where(b => showHidden || !b.IsHidden)
+                .Where(b => showHidden || (!b.IsHidden && !b.IsDisabled))
                 .OrderBy(b => b.Key)
                 .ToArrayAsync();
         }

@@ -38,17 +38,18 @@ namespace OakChan.Services
             return await posts.CreatePost(new ThreadDto { ThreadId = threadId }, data);
         }
 
-        public async Task<ThreadDto> GetThreadAsync(string boardId, int threadId)
+        public async Task<ThreadBoardAggregationDto> GetThreadAsync(string boardId, int threadId)
         {
             throwHelper.ThrowIfNullOrWhiteSpace(boardId, nameof(boardId));
 
             var thread = await context.Threads.AsNoTracking()
                 .Where(t => t.BoardId == boardId && t.Id == threadId)
+                .Include(t=>t.Board)
                 .Include(t => t.Posts)
                 .ThenInclude(p => p.Image)
                 .FirstOrDefaultAsync();
 
-            return mapper.Map<ThreadDto>(thread);
+            return mapper.Map<ThreadBoardAggregationDto>(thread);
         }
     }
 }

@@ -10,6 +10,7 @@ using OakChan.Deanon;
 using OakChan.Mapping;
 using OakChan.Services;
 using OakChan.Services.DTO;
+using OakChan.Utils;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
@@ -35,7 +36,8 @@ namespace OakChan.Controllers
         public async Task<IActionResult> Index(string board, int thread)
         {
             var threadDto = await threads.GetThreadAsync(board, thread);
-            if (threadDto == null)
+
+            if (threadDto == null || (threadDto.Board.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole)))
             {
                 return View("Error", new ErrorViewModel
                 {
@@ -45,7 +47,7 @@ namespace OakChan.Controllers
                 });
             }
 
-            var vm = mapper.Map<ThreadViewModel>(threadDto);
+            var vm = mapper.Map<ThreadViewModel>(threadDto.Thread);
             return View(vm);
         }
 
@@ -59,6 +61,11 @@ namespace OakChan.Controllers
                 var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opt => opt.Items[StringConstants.UserId] = anonId);
                 try
                 {
+                    var boardThread = await threads.GetThreadAsync(board, thread);
+                    if (boardThread.Board.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
+                    {
+                        return NotFound();
+                    }
                     var newPost = await threads.AddPostToThreadAsync(board, thread, postCreationDto);
                     return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
                 }

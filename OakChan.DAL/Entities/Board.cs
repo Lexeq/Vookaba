@@ -10,6 +10,8 @@ namespace OakChan.DAL.Entities
 
         public bool IsHidden { get; set; }
 
+        public bool IsDisabled { get; set; }
+
         public IEnumerable<Thread> Threads { get; set; }
     }
 }

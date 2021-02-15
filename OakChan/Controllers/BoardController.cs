@@ -11,6 +11,7 @@ using OakChan.Deanon;
 using OakChan.Mapping;
 using OakChan.Services;
 using OakChan.Services.DTO;
+using OakChan.Utils;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
@@ -46,6 +47,10 @@ namespace OakChan.Controllers
             {
                 return BoardDoesNotExist(board);
             }
+            if(boardInfo.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
+            {
+                return NotFound();
+            }
             var pagesCount = Math.Max(1, (int)Math.Ceiling((double)boardInfo.ThreadsCount / threadsPerPage));
             if (page < 1 || page - 1 >= pagesCount)
             {
@@ -77,6 +82,11 @@ namespace OakChan.Controllers
                 });
                 try
                 {
+                    var boardInfo = await boardService.GetBoardInfoAsync(board);
+                    if(boardInfo.IsDisabled)
+                    {
+                        return BadRequest();
+                    }
                     var t = await boardService.CreateThreadAsync(board, threadData);
                     return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.ThreadId });
                 }

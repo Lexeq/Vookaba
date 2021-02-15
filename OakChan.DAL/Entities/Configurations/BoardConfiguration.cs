@@ -14,7 +14,7 @@ namespace OakChan.DAL.Entities.Configurations
                 .IsRequired();
 
             builder.HasMany(b => b.Threads)
-                .WithOne(t=>t.Board)
+                .WithOne(t => t.Board)
                 .HasForeignKey(t => t.BoardId)
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -22,6 +22,9 @@ namespace OakChan.DAL.Entities.Configurations
                 .HasDefaultValue(false)
                 .IsRequired();
 
+            builder.Property(b => b.IsDisabled)
+                .HasDefaultValue(false)
+                .IsRequired();
         }
     }
 }

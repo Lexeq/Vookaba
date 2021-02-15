@@ -22,6 +22,7 @@ namespace OakChan.Services
                 throw new ArgumentException($"{nameof(boardsLimit)} must be greater then 0.", nameof(boardsLimit));
             }
             var toptop = context.Boards
+                .Where(b=>!b.IsDisabled && !b.IsHidden)
                 .SelectMany(b => b.Threads.OrderByDescending(t => t.Posts.Count()).Take(1))
                 .OrderByDescending(t => t.Posts.Count())
                 .Take(3)

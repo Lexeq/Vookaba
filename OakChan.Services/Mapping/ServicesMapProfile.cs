@@ -30,6 +30,10 @@ namespace OakChan.Services.Mapping
                 .ReverseMap()
                 .ForMember(thread => thread.Posts, opt => opt.Ignore());
 
+            CreateMap<Thread, ThreadBoardAggregationDto>()
+                .ForMember(dto => dto.Thread, opt => opt.MapFrom(thread => thread))
+                .ForMember(dto => dto.Board, opt => opt.MapFrom(thread => thread.Board));
+
             CreateMap<ThreadPreviewQueryResult, ThreadPreviewDto>()
                 .ForMember(dto => dto.BoardId, opt => opt.MapFrom(q => q.BoardId))
                 .ForMember(dto => dto.OpPost, opt => opt.MapFrom(q => q.OpPost))
