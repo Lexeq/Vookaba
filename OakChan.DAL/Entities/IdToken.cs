@@ -2,7 +2,7 @@
 
 namespace OakChan.DAL.Entities
 {
-    public class Anonymous
+    public class IdToken
     {
         public Guid Id { get; set; }
 

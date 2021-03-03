@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace OakChan.DAL.Entities.Configurations
 {
-    public class AnonymousConfiguration : IEntityTypeConfiguration<Anonymous>
+    public class IdTokenConfiguration : IEntityTypeConfiguration<IdToken>
     {
-        public void Configure(EntityTypeBuilder<Anonymous> builder)
+        public void Configure(EntityTypeBuilder<IdToken> builder)
         {
             builder.HasKey(a => a.Id);
 

@@ -13,7 +13,7 @@ namespace OakChan.DAL.Database
         public OakDbContext(DbContextOptions options)
             : base(options) { }
 
-        public DbSet<Anonymous> Anonymous { get; set; }
+        public DbSet<IdToken> IdTokens { get; set; }
 
         public DbSet<Post> Posts { get; set; }
 

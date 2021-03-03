@@ -16,8 +16,7 @@ namespace OakChan.DAL.Entities
 
         public string Message { get; set; }
 
-        public Guid UserId { get; set; }
-
+        public Guid AuthorId { get; set; }
 
         public Image Image { get; set; }
     }

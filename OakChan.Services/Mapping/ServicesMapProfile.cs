@@ -10,10 +10,10 @@ namespace OakChan.Services.Mapping
     {
         public ServicesMapProfile()
         {
-            CreateMap<Anonymous, UserDto>();
+            CreateMap<IdToken, UserDto>();
 
             CreateMap<Post, PostDto>()
-                .ForMember(dto => dto.AuthorId, opt => opt.MapFrom(post => post.UserId))
+                .ForMember(dto => dto.AuthorId, opt => opt.MapFrom(post => post.AuthorId))
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(post => post.Name))
                 .ForMember(dto => dto.Created, opt => opt.MapFrom(post => post.CreationTime))
                 .ForMember(dto => dto.ThreadId, opt => opt.MapFrom(post => post.ThreadId))

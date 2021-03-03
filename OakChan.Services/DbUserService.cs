@@ -20,14 +20,14 @@ namespace OakChan.Services
 
         public async Task<UserDto> CreateAnonymousAsync(string ip)
         {
-            var anon = new Anonymous
+            var anon = new IdToken
             {
                 Created = DateTime.UtcNow,
                 Id = Guid.NewGuid(),
                 IP = ip
             };
 
-            context.Anonymous.Add(anon);
+            context.IdTokens.Add(anon);
             await context.SaveChangesAsync();
             var user = mapper.Map<UserDto>(anon);
             return user;

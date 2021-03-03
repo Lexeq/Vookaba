@@ -25,9 +25,9 @@ namespace OakChan.DAL.Entities.Configurations
                 .IsRequired(false)
                 .HasMaxLength(4096);
 
-            builder.HasOne<Anonymous>()
+            builder.HasOne<IdToken>()
                 .WithMany()
-                .HasForeignKey(p => p.UserId)
+                .HasForeignKey(p => p.AuthorId)
                 .IsRequired();
 
             builder.HasOne(p => p.Image)
