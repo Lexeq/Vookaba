@@ -52,7 +52,7 @@ namespace OakChan.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
+        [Authorize]
         public async Task<IActionResult> CreatePostAsync(string board, int thread, PostFormViewModel postFormVM)
         {
             var anonId = await HttpContext.GetAnonGuidAsync();

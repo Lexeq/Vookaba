@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using OakChan.Services;
+using Microsoft.Extensions.Options;
+using OakChan.DAL;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -10,36 +11,45 @@ namespace OakChan.Deanon
     public class DeanonMiddleware
     {
         private readonly RequestDelegate next;
+        private readonly DeanonOptions options;
 
-        private string _scheme;
-        private string _claim;
-
-        public DeanonMiddleware(RequestDelegate next)
+        public DeanonMiddleware(RequestDelegate next, IOptions<DeanonOptions> options)
         {
             this.next = next ?? throw new ArgumentNullException(nameof(next));
-            _scheme = DeanonDefaults.AuthenticationScheme;
-            _claim = DeanonDefaults.UidClaimName;
+            this.options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public async Task InvokeAsync(HttpContext context, IUserService users)
+        public async Task InvokeAsync(HttpContext context, IdTokenManager db)
         {
-            var authResult = await context.AuthenticateAsync(_scheme);
-            if (!authResult.Succeeded)
+            if (!context.User.HasClaim(c => c.Type == DeanonDefaults.UidClaimName))
             {
-                var user = await users.CreateAnonymousAsync(context.Connection.RemoteIpAddress.ToString());
+                var anonAuth = await context.AuthenticateAsync(DeanonDefaults.AuthenticationScheme);
 
-                var identity = new ClaimsIdentity(
-                    claims: new[] { new Claim(_claim, user.Id.ToString()) },
-                    authenticationType: _scheme);
-
-                var principal = new ClaimsPrincipal(new[] { identity });
-                await context.SignInAsync(_scheme, principal,
-                    new AuthenticationProperties
-                    {
-                        IsPersistent = true,
-                        ExpiresUtc = new DateTime(2099, 1, 1),
-                    });
+                if (!anonAuth.Succeeded)
+                {
+                    var token = await db.CreateGuestTokenAsync();
+                    var identity = new ClaimsIdentity(
+                        claims: new[] { new Claim(DeanonDefaults.UidClaimName, token.Id.ToString()) },
+                        authenticationType: DeanonDefaults.AuthenticationScheme);
+                    await context.SignInAsync(DeanonDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(identity),
+                        new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = new DateTime(2099, 1, 1)
+                        });
+                    context.User.AddIdentity(identity);
+                }
+                else
+                {
+                    context.User.AddIdentities(anonAuth.Principal.Identities);
+                }
             }
+            else if (options.SignOutIfUserAuthentificated)
+            {
+                await context.SignOutAsync(DeanonDefaults.AuthenticationScheme);
+            }
+
             await next.Invoke(context);
         }
     }

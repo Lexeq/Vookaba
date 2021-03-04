@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OakChan.Identity;
 
 namespace OakChan.DAL.Entities.Configurations
 {
@@ -11,7 +12,14 @@ namespace OakChan.DAL.Entities.Configurations
 
             builder.Property(a => a.Created).IsRequired();
 
-            builder.Property(a => a.IP).IsRequired();
+            builder.HasIndex(t => t.UserId)
+                .IsUnique(true);
+
+            builder.HasOne<ApplicationUser>()
+                .WithOne()
+                .IsRequired(false)
+                .HasForeignKey<IdToken>(j => j.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

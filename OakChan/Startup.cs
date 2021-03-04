@@ -43,12 +43,12 @@ namespace OakChan
                 svc => new MediaStorage(svc.GetRequiredService<IWebHostEnvironment>().WebRootPath, svc.GetRequiredService<ILogger<MediaStorage>>()));
 
             services.AddScoped<IBoardService, DbBoardService>();
-            services.AddScoped<IUserService, DbUserService>();
             services.AddScoped<IThreadService, DbThreadService>();
             services.AddScoped<IPostService, DbPostService>();
             services.AddScoped<FavoriteThreadsService>();
             services.AddSingleton<IHashService>(new HashService());
             services.AddSingleton<ThrowHelper>();
+            services.AddScoped<IdTokenManager>();
 
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
 
@@ -93,7 +93,8 @@ namespace OakChan
                 .AddEntityFrameworkStores<OakDbContext>()
                 .AddUserStore<ApplicationUserStore>()
                 .AddRoleStore<ApplicationRoleStore>()
-                .AddErrorDescriber<LocalizedIdentityErrorDescriber>();
+                .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
+                .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>();
 
             services.ConfigureApplicationCookie(options =>
             {

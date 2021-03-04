@@ -40,35 +40,29 @@ namespace OakChan.Deanon
                     name: DeanonDefaults.DeanonPolicy,
                     policy =>
                     {
+                        policy.RequireAuthenticatedUser();
                         policy.RequireClaim(DeanonDefaults.UidClaimName);
-                        policy.AuthenticationSchemes.Add(DeanonDefaults.AuthenticationScheme);
-                        policy.AddAuthenticationSchemes(IdentityConstants.ApplicationScheme);
                     });
         }
 
-        public static async Task<Guid> GetAnonGuidAsync(this HttpContext context)
+        public static Task<Guid> GetAnonGuidAsync(this HttpContext context)
         {
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
             }
 
-            var authResult = await context.AuthenticateAsync(DeanonDefaults.AuthenticationScheme);
-            if (authResult.Succeeded)
+            var claim = context.User.FindFirst(DeanonDefaults.UidClaimName);
+            if (claim != null && Guid.TryParse(claim.Value, out var guid))
             {
-                var claim = authResult.Principal.FindFirst(DeanonDefaults.UidClaimName);
-                if (claim != null && Guid.TryParse(claim.Value, out var guid))
-                {
-                    return guid;
-                }
-                else
-                {
-                    var logger = context.RequestServices.GetService<ILoggerFactory>().CreateLogger(nameof(DeanonExtensions));
-                    logger.LogWarning($"Fail to get usid. Claim is null: {claim == null}. Value is {claim?.Value}");
-                }
+                return Task.FromResult(guid);
             }
-
-            throw new DeanonException("Can't get Guid");
+            else
+            {
+                var logger = context.RequestServices.GetService<ILoggerFactory>().CreateLogger(nameof(DeanonExtensions));
+                logger.LogWarning($"Fail to get usid. Claim is null: {claim == null}. Value is {claim?.Value}");
+                throw new DeanonException("Can't get Guid");
+            }
         }
     }
 }

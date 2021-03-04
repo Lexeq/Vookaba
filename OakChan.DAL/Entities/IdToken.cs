@@ -1,13 +1,14 @@
-﻿using System;
+﻿using OakChan.Identity;
+using System;
 
 namespace OakChan.DAL.Entities
 {
     public class IdToken
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
 
-        public string IP { get; set; }
+        public DateTimeOffset Created { get; set; } = DateTimeOffset.UtcNow;
 
-        public DateTime Created { get; set; }
+        public int? UserId { get; set; }
     }
 }
