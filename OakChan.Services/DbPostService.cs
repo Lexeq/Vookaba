@@ -50,7 +50,9 @@ namespace OakChan.Services
                 Message = postDto.Message,
                 Name = postDto.AuthorName,
                 Thread = thread,
-                AuthorId = postDto.AuthorId
+                AuthorId = postDto.AuthorId,
+                AuthorIP = postDto.IP,
+                AuthorUserAgent = postDto.UserAgent
             };
 
             if (postDto.Attachment != null)

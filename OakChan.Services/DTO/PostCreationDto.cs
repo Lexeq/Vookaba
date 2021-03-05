@@ -12,5 +12,9 @@ namespace OakChan.Services.DTO
         public string Message { get; set; }
 
         public IFormFile Attachment { get; set; }
+
+        public string IP { get; set; }
+
+        public string UserAgent { get; set; }
     }
 }

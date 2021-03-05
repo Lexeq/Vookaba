@@ -19,5 +19,9 @@ namespace OakChan.DAL.Entities
         public Guid AuthorId { get; set; }
 
         public Image Image { get; set; }
+
+        public string AuthorIP { get; set; }
+
+        public string AuthorUserAgent { get; set; }
     }
 }

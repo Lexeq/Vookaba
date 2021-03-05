@@ -4,6 +4,6 @@
     {
         public const string BoardName = "BoardName";
         public const string PagesCount = "PagesCount";
-        public const string UserId = "UserId";
+        public const string UserInfo = "UserInfo";
     }
 }

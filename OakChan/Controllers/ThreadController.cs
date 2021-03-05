@@ -52,13 +52,15 @@ namespace OakChan.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
         public async Task<IActionResult> CreatePostAsync(string board, int thread, PostFormViewModel postFormVM)
         {
-            var anonId = await HttpContext.GetAnonGuidAsync();
+            var userInfo = HttpContext.Features.Get<IDeanonFeature>();
+
             if (ModelState.IsValid)
             {
-                var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opt => opt.Items[StringConstants.UserId] = anonId);
+                var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opts => opts.Items[StringConstants.UserInfo] = userInfo);
+
                 try
                 {
                     var boardThread = await threads.GetThreadAsync(board, thread);
@@ -71,13 +73,13 @@ namespace OakChan.Controllers
                 }
                 catch (KeyNotFoundException ex)
                 {
-                    logger.LogWarning($"Bad request. From {anonId} to {nameof(CreatePostAsync)}. {ex.Message}");
+                    logger.LogWarning($"Bad request. From {userInfo.UserToken} to {nameof(CreatePostAsync)}. {ex.Message}");
                     return BadRequest();
                 }
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {anonId} to {nameof(CreatePostAsync)}. " +
+                logger.LogWarning($"Invalid model state from {userInfo.UserToken} to {nameof(CreatePostAsync)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }

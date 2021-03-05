@@ -47,7 +47,7 @@ namespace OakChan.Controllers
             {
                 return BoardDoesNotExist(board);
             }
-            if(boardInfo.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
+            if (boardInfo.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
             {
                 return NotFound();
             }
@@ -72,18 +72,19 @@ namespace OakChan.Controllers
         [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
         public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
         {
-            var anonId = await HttpContext.GetAnonGuidAsync();
+            var userInfo = HttpContext.Features.Get<IDeanonFeature>();
 
             if (ModelState.IsValid)
             {
                 var threadData = mapper.Map<ThreadCreationDto>(opPost, opt =>
                 {
-                    opt.Items[StringConstants.UserId] = anonId;
+                    opt.Items[StringConstants.UserInfo] = userInfo;
                 });
+
                 try
                 {
                     var boardInfo = await boardService.GetBoardInfoAsync(board);
-                    if(boardInfo.IsDisabled)
+                    if (boardInfo.IsDisabled)
                     {
                         return BadRequest();
                     }
@@ -92,13 +93,13 @@ namespace OakChan.Controllers
                 }
                 catch (KeyNotFoundException ex)
                 {
-                    logger.LogWarning($"Bad request. From {anonId} to {nameof(CreateThreadAsync)}. {ex.Message}");
+                    logger.LogWarning($"Bad request. From {userInfo.UserToken} to {nameof(CreateThreadAsync)}. {ex.Message}");
                     return BadRequest();
                 }
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {anonId} to {nameof(CreateThreadAsync)}. " +
+                logger.LogWarning($"Invalid model state from {userInfo.UserToken} to {nameof(CreateThreadAsync)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }

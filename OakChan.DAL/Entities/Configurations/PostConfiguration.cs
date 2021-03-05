@@ -35,6 +35,12 @@ namespace OakChan.DAL.Entities.Configurations
                 .HasForeignKey<Image>(i => i.PostId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            builder.Property(p => p.AuthorIP)
+                .IsRequired(true);
+
+            builder.Property(p => p.AuthorUserAgent)
+                .IsRequired(true);
         }
     }
 }

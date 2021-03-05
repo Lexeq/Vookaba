@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using OakChan.Deanon;
 using OakChan.Services.DTO;
 using OakChan.ViewModels;
 using System.Diagnostics;
@@ -24,10 +25,18 @@ namespace OakChan.Mapping
 
             CreateMap<PostFormViewModel, PostCreationDto>()
                 .ForMember(dto => dto.Attachment, opt => opt.MapFrom(vm => vm.Image))
-                .ForMember(dto => dto.AuthorId, opt => opt.MapFrom(
-                    (_, __, ___, context) => context.Items[StringConstants.UserId]))
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(vm => vm.Name))
-                .ForMember(dto => dto.Message, opt => opt.MapFrom(vm => vm.Text));
+                .ForMember(dto => dto.Message, opt => opt.MapFrom(vm => vm.Text))
+                .ForMember(dto => dto.AuthorId, opt => opt.Ignore())
+                .ForMember(dto => dto.UserAgent, opt => opt.Ignore())
+                .ForMember(dto => dto.IP, opt => opt.Ignore())
+                .AfterMap((vm, dto, ctx) =>
+                {
+                    var user = ctx.Items[StringConstants.UserInfo] as IDeanonFeature;
+                    dto.AuthorId = user.UserToken;
+                    dto.UserAgent = user.UserAgent;
+                    dto.IP = user.IPAddress.ToString();
+                });
 
             CreateMap<ThreadDto, ThreadViewModel>()
                 .ForMember(vm => vm.BoardId, opt => opt.MapFrom(dto => dto.BoardId))
@@ -47,10 +56,18 @@ namespace OakChan.Mapping
 
             CreateMap<ThreadFormViewModel, PostCreationDto>()
                 .ForMember(dto => dto.Attachment, opt => opt.MapFrom(vm => vm.Image))
-                .ForMember(dto => dto.AuthorId, opt => opt.MapFrom(
-                    (_, __, ___, context) => context.Items[StringConstants.UserId]))
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(vm => vm.Name))
-                .ForMember(dto => dto.Message, opt => opt.MapFrom(vm => vm.Text));
+                .ForMember(dto => dto.Message, opt => opt.MapFrom(vm => vm.Text))
+                .ForMember(dto => dto.AuthorId, opt => opt.Ignore())
+                .ForMember(dto => dto.UserAgent, opt => opt.Ignore())
+                .ForMember(dto => dto.IP, opt => opt.Ignore())
+                .AfterMap((vm, dto, ctx) =>
+                {
+                    var user = ctx.Items[StringConstants.UserInfo] as IDeanonFeature;
+                    dto.AuthorId = user.UserToken;
+                    dto.UserAgent = user.UserAgent;
+                    dto.IP = user.IPAddress.ToString();
+                });
 
             CreateMap<ThreadFormViewModel, ThreadCreationDto>()
                 .ForMember(dto => dto.Subject, opt => opt.MapFrom(vm => vm.Subject))
