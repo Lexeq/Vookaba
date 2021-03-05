@@ -50,7 +50,19 @@ namespace OakChan.Deanon
                 await context.SignOutAsync(DeanonDefaults.AuthenticationScheme);
             }
 
+            SetDeanonFeature(context);
             await next.Invoke(context);
+        }
+
+        private void SetDeanonFeature(HttpContext context)
+        {
+            var feature = new DeanonFeature
+            {
+                IPAddress = context.Connection.RemoteIpAddress,
+                UserToken = Guid.Parse(context.User.FindFirstValue(DeanonDefaults.UidClaimName)),
+                UserAgent = context.Request.Headers["User-Agent"]
+            };
+            context.Features.Set<IDeanonFeature>(feature);
         }
     }
 }
