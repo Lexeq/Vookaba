@@ -44,16 +44,8 @@ namespace OakChan.Services
                 context.Attach(thread);
             }
 
-            var post = new Post
-            {
-                CreationTime = DateTime.UtcNow,
-                Message = postDto.Message,
-                Name = postDto.AuthorName,
-                Thread = thread,
-                AuthorId = postDto.AuthorId,
-                AuthorIP = postDto.IP,
-                AuthorUserAgent = postDto.UserAgent
-            };
+            var post = mapper.Map<Post>(postDto);
+            post.Thread = thread;
 
             if (postDto.Attachment != null)
             {

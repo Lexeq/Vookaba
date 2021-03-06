@@ -2,6 +2,7 @@
 using OakChan.DAL.Entities;
 using OakChan.Services.DTO;
 using OakChan.Services.Internal;
+using System;
 using System.Linq;
 
 namespace OakChan.Services.Mapping
@@ -50,6 +51,18 @@ namespace OakChan.Services.Mapping
 
             CreateMap<Image, ImageDto>()
                 .ForMember(dto => dto.ImageId, opt => opt.MapFrom(img => img.Id));
+
+            CreateMap<PostCreationDto, Post>()
+                .ForMember(p => p.AuthorId, opt => opt.MapFrom(dto => dto.AuthorId))
+                .ForMember(p => p.AuthorIP, opt => opt.MapFrom(dto => dto.IP))
+                .ForMember(p => p.AuthorUserAgent, opt => opt.MapFrom(dto => dto.UserAgent))
+                .ForMember(p => p.CreationTime, opt => opt.MapFrom(dto => DateTime.UtcNow))
+                .ForMember(p => p.Message, opt => opt.MapFrom(dto => dto.Message))
+                .ForMember(p => p.Name, opt => opt.MapFrom(dto => dto.AuthorName))
+                .ForMember(p => p.Id, opt => opt.Ignore())
+                .ForMember(p => p.ThreadId, opt => opt.Ignore())
+                .ForMember(p => p.Image, opt => opt.Ignore())
+                .ForMember(p => p.Thread, opt => opt.Ignore());
         }
     }
 }
