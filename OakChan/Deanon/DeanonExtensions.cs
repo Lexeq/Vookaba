@@ -44,25 +44,5 @@ namespace OakChan.Deanon
                         policy.RequireClaim(DeanonDefaults.UidClaimName);
                     });
         }
-
-        public static Task<Guid> GetAnonGuidAsync(this HttpContext context)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            var claim = context.User.FindFirst(DeanonDefaults.UidClaimName);
-            if (claim != null && Guid.TryParse(claim.Value, out var guid))
-            {
-                return Task.FromResult(guid);
-            }
-            else
-            {
-                var logger = context.RequestServices.GetService<ILoggerFactory>().CreateLogger(nameof(DeanonExtensions));
-                logger.LogWarning($"Fail to get usid. Claim is null: {claim == null}. Value is {claim?.Value}");
-                throw new DeanonException("Can't get Guid");
-            }
-        }
     }
 }
