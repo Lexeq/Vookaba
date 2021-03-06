@@ -141,8 +141,8 @@ namespace OakChan
             app.UseRequestLocalization();
             app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();
             app.UseDeanon();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapAreaControllerRoute(
