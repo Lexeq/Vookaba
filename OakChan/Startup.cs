@@ -1,6 +1,5 @@
 using System.Globalization;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -49,18 +48,10 @@ namespace OakChan
             services.AddScoped<FavoriteThreadsService>();
             services.AddSingleton<IHashService>(new HashService());
             services.AddSingleton<ThrowHelper>();
-            services.AddScoped<IdTokenManager>();
 
+            services.AddDeanon();
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
 
-            services.AddAuthentication()
-                .AddDeanonCookie();
-
-            services.AddAuthorization(options =>
-            {
-                options.AddDeanonPolicy();
-            });
-            services.AddSingleton<IAuthorizationHandler, DeanonClaimHandler>();
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Environment.WebRootPath));
 
             var mvcBuilder = services.AddMvc();

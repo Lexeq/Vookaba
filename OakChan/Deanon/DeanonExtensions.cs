@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
+using OakChan.DAL;
 using System;
 
 namespace OakChan.Deanon
@@ -10,36 +12,43 @@ namespace OakChan.Deanon
     public static class DeanonExtensions
     {
         public static IApplicationBuilder UseDeanon(this IApplicationBuilder app)
+            => UseDeanon(app, new DeanonOptions());
+
+        public static IApplicationBuilder UseDeanon(this IApplicationBuilder app, DeanonOptions options)
         {
             if (app == null)
             {
                 throw new ArgumentNullException(nameof(app));
             }
-            return app.UseMiddleware<DeanonMiddleware>();
+            return app.UseMiddleware<DeanonMiddleware>(Options.Create(options));
         }
 
-        public static AuthenticationBuilder AddDeanonCookie(this AuthenticationBuilder builder)
+        public static IServiceCollection AddDeanon(this IServiceCollection services)
         {
-            builder.AddCookie(DeanonConstants.AuthenticationScheme, o =>
+            services.AddAuthentication()
+                .AddCookie(DeanonConstants.AuthenticationScheme, o =>
+                {
+                    o.Cookie.Name = "greeting";
+                    o.Cookie.IsEssential = true;
+                    o.LoginPath = "/";
+                    o.AccessDeniedPath = "/";
+                    o.Cookie.SameSite = SameSiteMode.Strict;
+                    o.SlidingExpiration = true;
+                });
+
+            services.AddAuthorization(options =>
             {
-                o.Cookie.Name = "greeting";
-                o.Cookie.IsEssential = true;
-                o.LoginPath = "/";
-                o.AccessDeniedPath = "/";
-                o.Cookie.SameSite = SameSiteMode.Strict;
-                o.SlidingExpiration = true;
-            });
-            return builder;
-        }
-
-        public static void AddDeanonPolicy(this AuthorizationOptions options)
-        {
-            options.AddPolicy(
+                options.AddPolicy(
                     name: DeanonConstants.DeanonPolicy,
                     policy =>
                     {
                         policy.AddRequirements(new DeanonRequirement());
                     });
+            });
+
+            services.AddSingleton<IAuthorizationHandler, DeanonClaimHandler>();
+            services.TryAddScoped<IdTokenManager>();
+            return services;
         }
     }
 }
