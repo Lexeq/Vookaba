@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
 
 namespace OakChan.Deanon
 {
@@ -20,9 +17,10 @@ namespace OakChan.Deanon
             }
             return app.UseMiddleware<DeanonMiddleware>();
         }
+
         public static AuthenticationBuilder AddDeanonCookie(this AuthenticationBuilder builder)
         {
-            builder.AddCookie(DeanonDefaults.AuthenticationScheme, o =>
+            builder.AddCookie(DeanonConstants.AuthenticationScheme, o =>
             {
                 o.Cookie.Name = "greeting";
                 o.Cookie.IsEssential = true;
@@ -37,11 +35,10 @@ namespace OakChan.Deanon
         public static void AddDeanonPolicy(this AuthorizationOptions options)
         {
             options.AddPolicy(
-                    name: DeanonDefaults.DeanonPolicy,
+                    name: DeanonConstants.DeanonPolicy,
                     policy =>
                     {
-                        policy.RequireAuthenticatedUser();
-                        policy.RequireClaim(DeanonDefaults.UidClaimName);
+                        policy.AddRequirements(new DeanonRequirement());
                     });
         }
     }

@@ -69,7 +69,7 @@ namespace OakChan.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = DeanonDefaults.DeanonPolicy)]
+        [Authorize(Policy = DeanonConstants.DeanonPolicy)]
         public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
         {
             var userInfo = HttpContext.Features.Get<IDeanonFeature>();

@@ -9,14 +9,17 @@ namespace OakChan.Deanon
 {
     public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
     {
+        private readonly DeanonOptions deanonOptions;
         private readonly IdTokenManager idTokens;
 
         public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager,
                      RoleManager<ApplicationRole> roleManager,
                      IOptions<IdentityOptions> identityOptions,
+                     IOptions<DeanonOptions> deanonOptions,
                      IdTokenManager IdTokens)
             : base(userManager, roleManager, identityOptions)
         {
+            this.deanonOptions = deanonOptions.Value;
             this.idTokens = IdTokens;
         }
 
@@ -24,7 +27,7 @@ namespace OakChan.Deanon
         {
             var claimsIdentity = await base.GenerateClaimsAsync(user);
             var tok = await idTokens.GetUserToken(user.Id);
-            claimsIdentity.AddClaim(new Claim(DeanonDefaults.UidClaimName, tok.Id.ToString()));
+            claimsIdentity.AddClaim(new Claim(deanonOptions.IdTokenClaimType, tok.Id.ToString()));
             return claimsIdentity;
         }
     }

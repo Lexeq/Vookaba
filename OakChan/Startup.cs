@@ -1,5 +1,6 @@
 using System.Globalization;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -59,6 +60,7 @@ namespace OakChan
             {
                 options.AddDeanonPolicy();
             });
+            services.AddSingleton<IAuthorizationHandler, DeanonClaimHandler>();
             services.AddSingleton<IFileProvider>(new PhysicalFileProvider(Environment.WebRootPath));
 
             var mvcBuilder = services.AddMvc();

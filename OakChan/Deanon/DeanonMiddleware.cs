@@ -21,17 +21,17 @@ namespace OakChan.Deanon
 
         public async Task InvokeAsync(HttpContext context, IdTokenManager db)
         {
-            if (!context.User.HasClaim(c => c.Type == DeanonDefaults.UidClaimName))
+            if (!context.User.HasClaim(c => c.Type == options.IdTokenClaimType))
             {
-                var anonAuth = await context.AuthenticateAsync(DeanonDefaults.AuthenticationScheme);
+                var anonAuth = await context.AuthenticateAsync(DeanonConstants.AuthenticationScheme);
 
                 if (!anonAuth.Succeeded)
                 {
                     var token = await db.CreateGuestTokenAsync();
                     var identity = new ClaimsIdentity(
-                        claims: new[] { new Claim(DeanonDefaults.UidClaimName, token.Id.ToString()) },
-                        authenticationType: DeanonDefaults.AuthenticationScheme);
-                    await context.SignInAsync(DeanonDefaults.AuthenticationScheme,
+                        claims: new[] { new Claim(options.IdTokenClaimType, token.Id.ToString()) },
+                        authenticationType: DeanonConstants.AuthenticationScheme);
+                    await context.SignInAsync(DeanonConstants.AuthenticationScheme,
                         new ClaimsPrincipal(identity),
                         new AuthenticationProperties
                         {
@@ -47,7 +47,7 @@ namespace OakChan.Deanon
             }
             else if (options.SignOutIfUserAuthentificated)
             {
-                await context.SignOutAsync(DeanonDefaults.AuthenticationScheme);
+                await context.SignOutAsync(DeanonConstants.AuthenticationScheme);
             }
 
             SetDeanonFeature(context);
@@ -59,7 +59,7 @@ namespace OakChan.Deanon
             var feature = new DeanonFeature
             {
                 IPAddress = context.Connection.RemoteIpAddress,
-                UserToken = Guid.Parse(context.User.FindFirstValue(DeanonDefaults.UidClaimName)),
+                UserToken = Guid.Parse(context.User.FindFirstValue(options.IdTokenClaimType)),
                 UserAgent = context.Request.Headers["User-Agent"]
             };
             context.Features.Set<IDeanonFeature>(feature);
