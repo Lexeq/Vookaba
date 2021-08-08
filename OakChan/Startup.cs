@@ -13,6 +13,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OakChan.Attributes;
+using OakChan.Common;
 using OakChan.Common.Exceptions;
 using OakChan.DAL;
 using OakChan.DAL.Database;
@@ -20,6 +21,7 @@ using OakChan.Deanon;
 using OakChan.Identity;
 using OakChan.Mapping;
 using OakChan.Services;
+using OakChan.Services.DbServices;
 using OakChan.Services.Mapping;
 using OakChan.Utils;
 
@@ -44,8 +46,7 @@ namespace OakChan
 
             services.AddScoped<IBoardService, DbBoardService>();
             services.AddScoped<IThreadService, DbThreadService>();
-            services.AddScoped<IPostService, DbPostService>();
-            services.AddScoped<FavoriteThreadsService>();
+            services.AddScoped<ITopThreadsService, TopThreadsService>();
             services.AddSingleton<IHashService>(new HashService());
             services.AddSingleton<ThrowHelper>();
 
