@@ -12,6 +12,8 @@ namespace OakChan.DAL.Entities
 
         public bool IsDisabled { get; set; }
 
+        public int BumpLimit { get; set; }
+
         public IEnumerable<Thread> Threads { get; set; }
     }
 }

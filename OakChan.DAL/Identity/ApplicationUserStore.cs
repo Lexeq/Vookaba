@@ -9,10 +9,10 @@ namespace OakChan.Identity
 {
     public class ApplicationUserStore : UserStore<ApplicationUser, ApplicationRole, OakDbContext, int, ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationUserToken, ApplicationRoleClaim>
     {
-        private readonly IdTokenManager tokens;
+        private readonly AnonymousTokenManager tokens;
 
         public ApplicationUserStore(OakDbContext context,
-            IdTokenManager tokens,
+            AnonymousTokenManager tokens,
             IdentityErrorDescriber describer = null)
             : base(context, describer)
         {

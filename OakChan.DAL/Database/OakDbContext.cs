@@ -13,7 +13,7 @@ namespace OakChan.DAL.Database
         public OakDbContext(DbContextOptions options)
             : base(options) { }
 
-        public DbSet<IdToken> IdTokens { get; set; }
+        public DbSet<AnonymousToken> AnonymousTokens { get; set; }
 
         public DbSet<Post> Posts { get; set; }
 
@@ -23,9 +23,13 @@ namespace OakChan.DAL.Database
 
         public DbSet<Image> Images { get; set; }
 
+        public DbSet<BoardModerator> BoardModerators { get; set; }
+
+        public DbSet<Report> Reports { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(OakDbContext)));
             base.OnModelCreating(modelBuilder);
         }
     }

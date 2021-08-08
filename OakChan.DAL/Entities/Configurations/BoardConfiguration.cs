@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OakChan.Common;
 
 namespace OakChan.DAL.Entities.Configurations
 {
@@ -9,14 +10,13 @@ namespace OakChan.DAL.Entities.Configurations
         {
             builder.HasKey(b => b.Key);
 
-            builder.Property(b => b.Name)
-                .HasMaxLength(128)
+            builder.Property(b => b.Key)
+                .HasMaxLength(OakConstants.BoardConstants.MaxKeyLength)
                 .IsRequired();
 
-            builder.HasMany(b => b.Threads)
-                .WithOne(t => t.Board)
-                .HasForeignKey(t => t.BoardId)
-                .OnDelete(DeleteBehavior.Cascade);
+            builder.Property(b => b.Name)
+                .HasMaxLength(OakConstants.BoardConstants.MaxNameLength)
+                .IsRequired();
 
             builder.Property(b => b.IsHidden)
                 .HasDefaultValue(false)
@@ -24,6 +24,10 @@ namespace OakChan.DAL.Entities.Configurations
 
             builder.Property(b => b.IsDisabled)
                 .HasDefaultValue(false)
+                .IsRequired();
+
+            builder.Property(b => b.BumpLimit)
+                .HasDefaultValue(OakConstants.BoardConstants.DefaultBumpLimit)
                 .IsRequired();
         }
     }
