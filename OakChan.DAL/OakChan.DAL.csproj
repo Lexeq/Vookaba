@@ -5,22 +5,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20210201190910_InvertNavProperty.cs" />
-    <Compile Remove="Migrations\20210201190910_InvertNavProperty.Designer.cs" />
-    <Compile Remove="Migrations\20210201192454_InvertNavProperty.cs" />
-    <Compile Remove="Migrations\20210201192454_InvertNavProperty.Designer.cs" />
+    <EmbeddedResource Include="Migrations\Sql\00_down_triggers.sql" />
+    <EmbeddedResource Include="Migrations\Sql\00_up_triggers.sql" />
+    <EmbeddedResource Include="Migrations\Sql\01_down_views.sql" />
+    <EmbeddedResource Include="Migrations\Sql\01_up_views.sql" />
   </ItemGroup>
-
+  
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.7">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="3.1.8" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.3" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.2" />
   </ItemGroup>
-
-</Project>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\OakChan.Common\OakChan.Common.csproj" />
+  </ItemGroup>
+  
+  </Project>

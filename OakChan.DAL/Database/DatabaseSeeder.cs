@@ -1,20 +1,20 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using OakChan.DAL.Database;
 using OakChan.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OakChan.Utils
+namespace OakChan.DAL.Database
 {
     public class DatabaseSeeder
     {
         private OakDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
+
         private readonly SeedData options;
 
         public DatabaseSeeder(OakDbContext context,
@@ -29,6 +29,12 @@ namespace OakChan.Utils
         }
 
         public async Task SeedAsync()
+        {
+            await SeedAdminUser();
+            await SeedBoards();
+        }
+
+        private async Task SeedAdminUser()
         {
             var adminRole = await roleManager.FindByNameAsync(options.AdminRoleName);
             if (adminRole == null)
@@ -59,5 +65,17 @@ namespace OakChan.Utils
                 await userManager.AddToRoleAsync(adminUser, adminRole.Name);
             }
         }
+
+        private async Task SeedBoards()
+        {
+            if (await context.Boards.AnyAsync())
+            {
+                return;
+            }
+
+            context.Boards.AddRange(options.Boards);
+            await context.SaveChangesAsync();
+        }
+
     }
 }
