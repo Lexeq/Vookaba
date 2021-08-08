@@ -1,0 +1,28 @@
+{
+  "boards": [
+    {
+      "Key": "b",
+      "Name": "random",
+      "IsHidden": false,
+      "IsDisabled": false
+    },
+    {
+      "Key": "d",
+      "Name": "deleted",
+      "IsHidden": false,
+      "IsDisabled": true
+    },
+    {
+      "Key": "h",
+      "Name": "hidden",
+      "IsHidden": true,
+      "IsDisabled": false
+    },
+    {
+      "Key": "hd",
+      "Name": "hiddenDeleted",
+      "IsHidden": true,
+      "IsDisabled": true
+    }
+  ]
+}
