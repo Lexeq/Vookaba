@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
+using System.Net;
 
 namespace OakChan.Services.DTO
 {
@@ -11,10 +12,12 @@ namespace OakChan.Services.DTO
 
         public string Message { get; set; }
 
-        public IFormFile Attachment { get; set; }
+        public IFormFileCollection Attachments { get; set; }
 
-        public string IP { get; set; }
+        public IPAddress IP { get; set; }
 
         public string UserAgent { get; set; }
+
+        public bool IsSaged { get; set; }
     }
 }

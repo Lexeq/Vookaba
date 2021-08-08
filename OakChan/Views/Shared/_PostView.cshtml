@@ -2,7 +2,7 @@
 @using OakChan.ViewModels
 @using OakChan.Utils
 @using OakChan.Deanon;
-@model OakChan.ViewModels.PostViewModel
+@model PostViewModel
 @inject OakChan.DAL.IAttachmentsStorage attachments
 @{
     Guid usid = Context.Features.Get<IDeanonFeature>().UserToken;
@@ -12,11 +12,7 @@
     <div id="@($"p{Model.Number}")" class="post@(usid == Model.AuthorId ? " post-owned" : "")@(Model.HasImage ? " post-withimage" : "")">
 
         <div class="post__details">
-            @if (Model is OpPostViewModel op)
-            {
-                <span class="post__subject">#@op.Subject</span>
-            }
-            <span class="post__author">@Model.AuthorName</span>
+            <span class="post__author">@(Model.AuthorName ?? Localizer["Anonymous"].Value)</span>
             <span class="post__date" data-timestamp="@Model.Date.GetUnixEpochOffset()">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss") UTC</span>
             <span class="post__number" data-pid="@Model.Number"><a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a></span>
         </div>
