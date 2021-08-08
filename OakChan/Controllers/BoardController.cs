@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -7,63 +8,73 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using OakChan.Common;
+using OakChan.Controllers.Base;
 using OakChan.Deanon;
+using OakChan.Identity;
 using OakChan.Mapping;
 using OakChan.Services;
 using OakChan.Services.DTO;
-using OakChan.Utils;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
 {
-    public class BoardController : Controller
+    public class BoardController : OakController
     {
-        private const int threadsPerPage = 10;
         private readonly IBoardService boardService;
+        private readonly IThreadService threadService;
         private readonly IStringLocalizer<BoardController> localizer;
         private readonly IMapper mapper;
         private readonly ILogger<BoardController> logger;
 
         public BoardController(
             IBoardService boardService,
+            IThreadService threadService,
             IStringLocalizer<BoardController> localizer,
             IMapper mapper,
             ILogger<BoardController> logger)
         {
             this.boardService = boardService;
+            this.threadService = threadService;
             this.localizer = localizer;
             this.mapper = mapper;
             this.logger = logger;
         }
 
-        public async Task<IActionResult> Index(string board, int page = 1)
+        public async Task<IActionResult> Index(string board, int page = 1, int pageSize = 10)
         {
-            BoardInfoDto boardInfo;
-            try
+            if (page < 1)
             {
-                boardInfo = await boardService.GetBoardInfoAsync(board);
+                return PageNotFound(board, page);
             }
-            catch (KeyNotFoundException)
+            
+            BoardInfoDto boardInfo = await boardService.GetBoardInfoAsync(board);
+
+            if (boardInfo == null ||
+                boardInfo.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
             {
                 return BoardDoesNotExist(board);
             }
-            if (boardInfo.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
-            {
-                return NotFound();
-            }
-            var pagesCount = Math.Max(1, (int)Math.Ceiling((double)boardInfo.ThreadsCount / threadsPerPage));
-            if (page < 1 || page - 1 >= pagesCount)
+
+            pageSize = CoercePageSize(pageSize);
+            var offset = (page - 1) * pageSize;
+            var pagesCount = Math.Max(1, (int)Math.Ceiling((double)boardInfo.ThreadsCount / pageSize));
+
+            if (offset >= boardInfo.ThreadsCount && page != 1)
             {
                 return PageNotFound(board, page);
             }
 
-            var pageDto = await boardService.GetBoardPageAsync(board, page, threadsPerPage);
+            var threads = await boardService.GetThreadPreviewsAsync(boardInfo.Key, offset, pageSize, 2);
 
-            var vm = mapper.Map<BoardPageViewModel>(pageDto, opt =>
+            var vm = new BoardPageViewModel
             {
-                opt.Items[StringConstants.BoardName] = boardInfo.Name;
-                opt.Items[StringConstants.PagesCount] = pagesCount;
-            });
+                Key = board,
+                Name = boardInfo.Name,
+                PageNumber = page,
+                Threads = mapper.Map<IEnumerable<ThreadPreviewViewModel>>(threads),
+                TotalPages = pagesCount
+            };
 
             return View(vm);
         }
@@ -81,21 +92,15 @@ namespace OakChan.Controllers
                     opt.Items[StringConstants.UserInfo] = userInfo;
                 });
 
-                try
+                var boardInfo = await boardService.GetBoardInfoAsync(board);
+                if (boardInfo == null || boardInfo.IsDisabled)
                 {
-                    var boardInfo = await boardService.GetBoardInfoAsync(board);
-                    if (boardInfo.IsDisabled)
-                    {
-                        return BadRequest();
-                    }
-                    var t = await boardService.CreateThreadAsync(board, threadData);
-                    return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.ThreadId });
-                }
-                catch (KeyNotFoundException ex)
-                {
-                    logger.LogWarning($"Bad request. From {userInfo.UserToken} to {nameof(CreateThreadAsync)}. {ex.Message}");
+                    logger.LogWarning($"Bad request. From {userInfo.UserToken} to {nameof(CreateThreadAsync)}. Bad board key {board}");
+
                     return BadRequest();
                 }
+                var t = await threadService.CreateThreadAsync(boardInfo.Key, threadData);
+                return RedirectToRoute("thread", new { Board = boardInfo.Key, Thread = t.ThreadId });
             }
             else
             {
@@ -105,24 +110,21 @@ namespace OakChan.Controllers
             }
         }
 
-        private ViewResult BoardDoesNotExist(string board)
+        private IActionResult BoardDoesNotExist(string board)
         {
-            return this.ErrorView(new ErrorViewModel
-            {
-                Code = 404,
-                Title = localizer["Not found"],
-                Description = localizer["Board {0} does not exist.", board]
-            });
+            return Error(404, localizer["Not found"], localizer["Board {0} does not exist.", board]);
         }
 
         private IActionResult PageNotFound(string board, int page)
         {
-            return this.ErrorView(new ErrorViewModel
-            {
-                Code = 404,
-                Title = localizer["Not found"],
-                Description = localizer["Page {0} does not exist on board /{1}/.", page, board]
-            });
+            return Error(404, localizer["Not found"], localizer["Page {0} does not exist on board /{1}/.", page, board]);
+        }
+
+        private int CoercePageSize(int pageSize)
+        {
+            const int minValue = 5;
+            const int maxValue = 50;
+            return Math.Min(Math.Max(minValue, pageSize), maxValue);
         }
     }
 }

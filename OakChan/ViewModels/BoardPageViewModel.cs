@@ -8,7 +8,7 @@ namespace OakChan.ViewModels
 
         public string Name { get; set; }
 
-        public ICollection<ThreadPreviewViewModel> Threads { get; set; }
+        public IEnumerable<ThreadPreviewViewModel> Threads { get; set; }
 
         public int PageNumber { get; set; }
 

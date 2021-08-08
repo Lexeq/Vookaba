@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace OakChan.Services.DTO
+﻿namespace OakChan.Services.DTO
 {
     public class ThreadPreviewDto : ThreadDto
     {

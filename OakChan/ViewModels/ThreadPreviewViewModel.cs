@@ -7,13 +7,15 @@ namespace OakChan.ViewModels
     {
         public int ThreadId { get; set; }
 
+        public string BoardKey { get; set; }
+
         public int PostsCount { get; set; }
 
         public string Subject { get; set; }
 
         public int PostsWithImageCount { get; set; }
 
-        public OpPostViewModel OpPost { get; set; }
+        public PostViewModel OpPost { get; set; }
 
         public IEnumerable<PostViewModel> RecentPosts { get; set; }
 
