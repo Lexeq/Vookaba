@@ -30,5 +30,24 @@ namespace OakChan.Services
         /// <param name="recentPostsCount">Количество последних ответов для предпросмотра.</param>
         /// <returns>Коллекция объектов предпросмотра тредов или пустое множество, если тредов для задданных параметров не существует.</returns>
         public Task<IEnumerable<ThreadPreviewDto>> GetThreadPreviewsAsync(string boardKey, int offset, int count, int recentPostsCount);
+
+        /// <summary>
+        /// Создает новую доску.
+        /// </summary>
+        /// <param name="board">Параметры новой доски</param>
+        public Task CreateBoardAsync(BoardDto board);
+
+        /// <summary>
+        /// Удаляет существующкю доску.
+        /// </summary>
+        /// <param name="boardKey">Идентификатор доски.</param>
+        public Task DeleteBoardAsync(string boardKey);
+
+        /// <summary>
+        /// Обновляет параметры треда.
+        /// </summary>
+        /// <param name="key">Идентификатор доски.</param>
+        /// <param name="updatedBoard">Новые параметры доски.</param>
+        public Task UpdateBoardAsync(string key, BoardDto updatedBoard);
     }
 }

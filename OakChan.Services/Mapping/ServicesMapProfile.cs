@@ -65,6 +65,11 @@ namespace OakChan.Services.Mapping
                 .ForMember(p => p.IsSaged, opt => opt.MapFrom(dto => dto.IsSaged))
                 .ForMember(p => p.Thread, opt => opt.Ignore())
                 .ForMember(p => p.IsOP, opt => opt.Ignore());
+
+            CreateMap<BoardDto, Board>()
+                .ForMember(b => b.Threads, opt => opt.Ignore())
+                .ForMember(b => b.Key, opt => opt.MapFrom(dto => dto.Key.ToLowerInvariant()));
+
         }
     }
 }
