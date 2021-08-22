@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "_Layout";
+}
+@section Scripts{
+    @RenderSection("Scripts", false)
+}
+@section Styles{
+    @RenderSection("Styles", false)
+}
+
+<partial name="_NavigationHeaderPartial" />
+@RenderBody()

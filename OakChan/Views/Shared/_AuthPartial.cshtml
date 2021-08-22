@@ -3,6 +3,10 @@
 @if (signInManager.IsSignedIn(User))
 {
     <div>
+        @if(User.IsInRole(OakChan.Common.OakConstants.DefaultAdministratorRole))
+        {
+            <a asp-area="Administration" asp-controller="Admin" asp-action="Dashboard">@Localizer["Administration"]</a>
+        }
         <span class="user-name">@User.Identity.Name</span>
         <a class="auth-action" asp-area="Administration" asp-controller="Account" asp-action="Logout">@Localizer["Logout"]</a>
     </div>

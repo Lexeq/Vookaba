@@ -1,0 +1,9 @@
+﻿@model OakChan.Areas.Administration.ViewModels.AdminDashboardViemModel
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}
+<h1>@Localizer["Oakchan administration"]</h1>
+<hr />
+<partial name="_BoardsListPartial" model="Model.Boards" />
+<hr />
+<a asp-action="CreateBoard">@Localizer["New board"]</a>

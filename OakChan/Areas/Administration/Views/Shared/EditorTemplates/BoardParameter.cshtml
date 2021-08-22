@@ -1,0 +1,4 @@
+﻿@model object
+<label class="board-param__label" asp-for="@Model"></label>
+<input class="board-param__input" asp-for="@Model" autocomplete="off"/>
+<span class="board-param-error" asp-validation-for="@Model"></span>

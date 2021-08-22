@@ -1,0 +1,18 @@
+﻿@model BoardPropertiesViewModel
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
+<h2>@Localizer["Edit board"] /@Model.BoardKey/</h2>
+<fieldset>
+    <form method="post" asp-action="UpdateBoard">
+        <input type="hidden" asp-for="BoardKey" />
+        <partial name="_BoardPropertiesPartial" model="Model" />
+        <button type="submit">@Localizer["Update"]</button>
+    </form>
+</fieldset>
+<hr />
+<fieldset>
+    <legend>@Localizer["Danger zone"]</legend>
+    <partial name="_DeleteBoardFormPartial" model="Model.BoardKey" />
+</fieldset>
