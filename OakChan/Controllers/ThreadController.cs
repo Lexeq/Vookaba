@@ -6,28 +6,32 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using OakChan.Common;
+using OakChan.Controllers.Base;
 using OakChan.Deanon;
 using OakChan.Mapping;
 using OakChan.Services;
 using OakChan.Services.DTO;
-using OakChan.Utils;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
 {
-    public class ThreadController : Controller
+    public class ThreadController : OakController
     {
         private readonly IThreadService threads;
+        private readonly IBoardService boards;
         private readonly IStringLocalizer<ThreadController> localizer;
         private readonly ILogger<ThreadController> logger;
         private readonly IMapper mapper;
 
         public ThreadController(IThreadService threads,
+            IBoardService boards,
             IStringLocalizer<ThreadController> localizer,
-            ILogger<ThreadController> logger,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<ThreadController> logger)
         {
             this.threads = threads;
+            this.boards = boards;
             this.localizer = localizer;
             this.logger = logger;
             this.mapper = mapper;
@@ -35,20 +39,19 @@ namespace OakChan.Controllers
 
         public async Task<IActionResult> Index(string board, int thread)
         {
-            var threadDto = await threads.GetThreadAsync(board, thread);
-
-            if (threadDto == null || (threadDto.Board.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole)))
+            var showAll = User.IsInRole(OakConstants.DefaultAdministratorRole);
+            var boardDto = await boards.GetBoardInfoAsync(board);
+            if (boardDto?.IsDisabled == false || showAll)
             {
-                return View("Error", new ErrorViewModel
+                var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
+                if (threadDto != null)
                 {
-                    Code = 404,
-                    Title = localizer["Not found"],
-                    Description = localizer["Thread not found."]
-                });
+                    var vm = mapper.Map<ThreadViewModel>(new ThreadBoardAggregationDto { Thread = threadDto, Board = boardDto });
+                    return View(vm);
+                }
             }
 
-            var vm = mapper.Map<ThreadViewModel>(threadDto.Thread);
-            return View(vm);
+            return Error(404, localizer["Not found"], localizer["Thread not found."]);
         }
 
         [HttpPost]
@@ -59,27 +62,24 @@ namespace OakChan.Controllers
 
             if (ModelState.IsValid)
             {
-                var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opts => opts.Items[StringConstants.UserInfo] = userInfo);
-
-                try
+                var boardDto = await boards.GetBoardInfoAsync(board);
+                if (boardDto?.IsDisabled == false)
                 {
-                    var boardThread = await threads.GetThreadAsync(board, thread);
-                    if (boardThread.Board.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
+                    var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
+                    if (threadDto != null && !threadDto.IsReadOnly)
                     {
-                        return NotFound();
+                        var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opts => opts.Items[StringConstants.UserInfo] = userInfo);
+                        var newPost = await threads.AddPostToThreadAsync(boardDto.Key, thread, postCreationDto);
+                        return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
                     }
-                    var newPost = await threads.AddPostToThreadAsync(board, thread, postCreationDto);
-                    return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
                 }
-                catch (KeyNotFoundException ex)
-                {
-                    logger.LogWarning($"Bad request. From {userInfo.UserToken} to {nameof(CreatePostAsync)}. {ex.Message}");
-                    return BadRequest();
-                }
+                logger.LogWarning($"Invalid arguments from {userInfo.UserToken}({userInfo.IPAddress}) to {nameof(CreatePostAsync)}. " +
+                    string.Join(Environment.NewLine, $"board: {board}", $"thread: {thread}."));
+                return BadRequest();
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {userInfo.UserToken} to {nameof(CreatePostAsync)}. " +
+                logger.LogWarning($"Invalid model state from {userInfo.UserToken}({userInfo.IPAddress}) to {nameof(CreatePostAsync)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }

@@ -19,7 +19,7 @@ namespace OakChan.Deanon
             this.options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public async Task InvokeAsync(HttpContext context, IdTokenManager db)
+        public async Task InvokeAsync(HttpContext context, AnonymousTokenManager db)
         {
             if (!context.User.HasClaim(c => c.Type == options.IdTokenClaimType))
             {
@@ -29,7 +29,7 @@ namespace OakChan.Deanon
                 {
                     var token = await db.CreateGuestTokenAsync();
                     var identity = new ClaimsIdentity(
-                        claims: new[] { new Claim(options.IdTokenClaimType, token.Id.ToString()) },
+                        claims: new[] { new Claim(options.IdTokenClaimType, token.Token.ToString()) },
                         authenticationType: DeanonConstants.AuthenticationScheme);
                     await context.SignInAsync(DeanonConstants.AuthenticationScheme,
                         new ClaimsPrincipal(identity),

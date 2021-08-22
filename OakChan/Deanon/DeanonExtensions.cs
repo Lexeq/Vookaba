@@ -47,7 +47,7 @@ namespace OakChan.Deanon
             });
 
             services.AddSingleton<IAuthorizationHandler, DeanonClaimHandler>();
-            services.TryAddScoped<IdTokenManager>();
+            services.TryAddScoped<AnonymousTokenManager>();
             return services;
         }
     }

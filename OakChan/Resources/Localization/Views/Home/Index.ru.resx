@@ -123,6 +123,12 @@
   <data name="popular in /{0}/" xml:space="preserve">
     <value>популярно в /{0}/</value>
   </data>
+  <data name="Recently created threads" xml:space="preserve">
+    <value>Свежие треды</value>
+  </data>
+  <data name="Recently updated threads" xml:space="preserve">
+    <value>Свежие ответы</value>
+  </data>
   <data name="Top threads" xml:space="preserve">
     <value>Популярные треды</value>
   </data>

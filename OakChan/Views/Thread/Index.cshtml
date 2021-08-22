@@ -1,7 +1,7 @@
 ﻿@using OakChan.ViewModels
 @model ThreadViewModel
 @{
-    ViewBag.Title = Model.OpPost.Subject ?? (Model.OpPost.Message.Length <= 32 ?
+    ViewBag.Title = Model.Subject ?? (Model.OpPost.Message.Length <= 32 ?
         Model.OpPost.Message :
         Model.OpPost.Message.Substring(0, 29) + "...") + " - OakChan";
 }
@@ -14,6 +14,10 @@
 
 <partial name="_PostCreationFormPartial" model="new PostFormViewModel()" />
 <div class="thread">
+    @if (!string.IsNullOrWhiteSpace(Model.Subject))
+    {
+        <span class="thread__subject">#@Model.Subject</span>
+    }
     <partial name="_PostView" model="Model.OpPost" />
     @foreach (var post in Model.Replies)
     {

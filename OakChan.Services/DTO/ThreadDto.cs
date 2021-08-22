@@ -1,17 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace OakChan.Services.DTO
 {
     public class ThreadDto
     {
-        public string BoardId { get; set; }
+        public string BoardKey { get; set; }
 
         public int ThreadId { get; set; }
 
+        public bool IsReadOnly { get; set; }
+
+        public bool IsPinned { get; set; }
+
         public string Subject { get; set; }
 
-        public PostDto OpPost { get; set; }
+        public DateTime LastBump { get; set; }
 
-        public IEnumerable<PostDto> Replies { get; set; }
+        public IEnumerable<PostDto> Posts { get; set; }
     }
 }

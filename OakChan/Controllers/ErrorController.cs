@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
+using OakChan.Controllers.Base;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
 {
-    public class ErrorController : Controller
+    public class ErrorController : OakController
     {
         private readonly ILogger<ErrorController> logger;
         private readonly IStringLocalizer<ErrorController> localizer;
@@ -31,11 +32,7 @@ namespace OakChan.Controllers
         }
 
         private IActionResult ErrorView(int statusCode) =>
-            this.ErrorView(new ErrorViewModel
-            {
-                Code = statusCode,
-                Title = localizer[GetStatusCodeDescription(statusCode)]
-            });
+            base.Error(statusCode, localizer[GetStatusCodeDescription(statusCode)], "");
 
         private string GetStatusCodeDescription(int code) =>
            code switch

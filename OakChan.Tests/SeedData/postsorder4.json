@@ -1,0 +1,65 @@
+{
+  "threads": [
+    {
+      "Id": 1,
+      "BoardKey": "b",
+      "Created": "2021-01-01T23:01:00.000000",
+      "Subject": "first created",
+      "IsReadOnly": false,
+      "IsPined": false
+    }
+  ],
+  "posts": [
+    {
+      "Id": 10,
+      "IsOP": true,
+      "ThreadId": 1,
+      "Created": "2021-01-01T23:01:05.000000",
+      "Message": "OP1",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false
+    },
+    {
+      "Id": 42,
+      "ThreadId": 1,
+      "Created": "2021-01-01T23:10:00.000000",
+      "Message": "Rep1",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false
+    },
+    {
+      "Id": 420,
+      "ThreadId": 1,
+      "Created": "2021-01-01T23:20:00.000000",
+      "Message": "Rep3",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false
+    },
+    {
+      "Id": 600,
+      "ThreadId": 1,
+      "Created": "2021-01-01T23:30:00.000000",
+      "Message": "Rep4",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false
+    },
+    {
+      "Id": 100,
+      "ThreadId": 1,
+      "Created": "2021-01-01T23:15:00.000000",
+      "Message": "Rep2",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false
+    }
+  ]
+}
