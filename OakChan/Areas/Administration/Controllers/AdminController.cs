@@ -113,14 +113,14 @@ namespace OakChan.Areas.Administration.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateBoard(BoardPropertiesViewModel board)
+        public async Task<IActionResult> UpdateBoard(BoardPropertiesViewModel board, string editingBoard)
         {
             if (ModelState.IsValid)
             {
                 var dto = mapper.Map<BoardDto>(board);
                 try
                 {
-                    await boardService.UpdateBoardAsync(dto.Key, dto);
+                    await boardService.UpdateBoardAsync(editingBoard, dto);
                 }
                 catch (Exception ex)
                 {

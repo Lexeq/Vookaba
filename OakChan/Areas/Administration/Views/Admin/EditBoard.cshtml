@@ -6,7 +6,7 @@
 <h2>@Localizer["Edit board"] /@Model.BoardKey/</h2>
 <fieldset>
     <form method="post" asp-action="UpdateBoard">
-        <input type="hidden" asp-for="BoardKey" />
+        <input type="hidden" asp-for="BoardKey" name="editingBoard"/>
         <partial name="_BoardPropertiesPartial" model="Model" />
         <button type="submit">@Localizer["Update"]</button>
     </form>
