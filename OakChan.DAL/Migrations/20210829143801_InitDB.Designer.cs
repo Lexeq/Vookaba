@@ -11,7 +11,7 @@ using OakChan.DAL.Database;
 namespace OakChan.DAL.Migrations
 {
     [DbContext(typeof(OakDbContext))]
-    [Migration("20210808085433_InitDB")]
+    [Migration("20210829143801_InitDB")]
     partial class InitDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,32 +19,24 @@ namespace OakChan.DAL.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.8")
+                .HasAnnotation("ProductVersion", "5.0.9")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-            modelBuilder.Entity("OakChan.DAL.Entities.AnonymousToken", b =>
+            modelBuilder.Entity("OakChan.DAL.Entities.AuthorToken", b =>
                 {
                     b.Property<Guid>("Token")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .ValueGeneratedOnUpdateSometimes()
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<IPAddress>("IP")
                         .HasColumnType("inet");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Token");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("AnonymousTokens");
+                    b.ToTable("AuthorTokens");
                 });
 
             modelBuilder.Entity("OakChan.DAL.Entities.Base.Attachment", b =>
@@ -153,21 +145,16 @@ namespace OakChan.DAL.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<Guid>("AnonymousToken")
+                    b.Property<Guid>("AuthorToken")
                         .HasColumnType("uuid");
 
-                    b.Property<IPAddress>("AuthorIP")
-                        .IsRequired()
-                        .HasColumnType("inet");
-
-                    b.Property<string>("AuthorUserAgent")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<IPAddress>("IP")
+                        .IsRequired()
+                        .HasColumnType("inet")
+                        .HasColumnName("AuthorIP");
 
                     b.Property<bool>("IsOP")
                         .HasColumnType("boolean");
@@ -190,9 +177,14 @@ namespace OakChan.DAL.Migrations
                     b.Property<int>("ThreadId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("AuthorUserAgent");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AnonymousToken");
+                    b.HasIndex("AuthorToken");
 
                     b.HasIndex("IsOP", "ThreadId")
                         .HasSortOrder(new[] { SortOrder.Descending, SortOrder.Ascending });
@@ -209,21 +201,16 @@ namespace OakChan.DAL.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<Guid>("AnonymousToken")
+                    b.Property<Guid>("AuthorToken")
                         .HasColumnType("uuid");
 
-                    b.Property<IPAddress>("ComplainantIP")
-                        .IsRequired()
-                        .HasColumnType("inet");
-
-                    b.Property<string>("ComplainantUserAgent")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
+
+                    b.Property<IPAddress>("IP")
+                        .IsRequired()
+                        .HasColumnType("inet")
+                        .HasColumnName("ComplainantIP");
 
                     b.Property<bool>("IsProcessed")
                         .ValueGeneratedOnAdd()
@@ -241,9 +228,14 @@ namespace OakChan.DAL.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("character varying(512)");
 
+                    b.Property<string>("UserAgent")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("ComplainantUserAgent");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AnonymousToken");
+                    b.HasIndex("AuthorToken");
 
                     b.HasIndex("IsProcessed");
 
@@ -267,9 +259,7 @@ namespace OakChan.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("character varying(10)");
 
-                    b.Property<DateTime?>("Created")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
+                    b.Property<DateTime>("Created")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("IsPinned")
@@ -279,12 +269,14 @@ namespace OakChan.DAL.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateTime>("LastBump")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValue(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
                     b.Property<DateTime>("LastHit")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValue(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
                     b.Property<int>("PostsCount")
                         .ValueGeneratedOnAddOrUpdate()
@@ -372,6 +364,9 @@ namespace OakChan.DAL.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("AuthorToken")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
@@ -417,6 +412,9 @@ namespace OakChan.DAL.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorToken")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -519,14 +517,6 @@ namespace OakChan.DAL.Migrations
                     b.HasDiscriminator().HasValue(1);
                 });
 
-            modelBuilder.Entity("OakChan.DAL.Entities.AnonymousToken", b =>
-                {
-                    b.HasOne("OakChan.Identity.ApplicationUser", null)
-                        .WithOne()
-                        .HasForeignKey("OakChan.DAL.Entities.AnonymousToken", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("OakChan.DAL.Entities.Base.Attachment", b =>
                 {
                     b.HasOne("OakChan.DAL.Entities.Post", "Post")
@@ -555,9 +545,9 @@ namespace OakChan.DAL.Migrations
 
             modelBuilder.Entity("OakChan.DAL.Entities.Post", b =>
                 {
-                    b.HasOne("OakChan.DAL.Entities.AnonymousToken", null)
+                    b.HasOne("OakChan.DAL.Entities.AuthorToken", null)
                         .WithMany()
-                        .HasForeignKey("AnonymousToken")
+                        .HasForeignKey("AuthorToken")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -572,9 +562,9 @@ namespace OakChan.DAL.Migrations
 
             modelBuilder.Entity("OakChan.DAL.Entities.Report", b =>
                 {
-                    b.HasOne("OakChan.DAL.Entities.AnonymousToken", null)
+                    b.HasOne("OakChan.DAL.Entities.AuthorToken", null)
                         .WithMany()
-                        .HasForeignKey("AnonymousToken")
+                        .HasForeignKey("AuthorToken")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -609,6 +599,15 @@ namespace OakChan.DAL.Migrations
                     b.HasOne("OakChan.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("OakChan.Identity.ApplicationUser", b =>
+                {
+                    b.HasOne("OakChan.DAL.Entities.AuthorToken", null)
+                        .WithOne()
+                        .HasForeignKey("OakChan.Identity.ApplicationUser", "AuthorToken")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

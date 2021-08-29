@@ -25,29 +25,16 @@ namespace OakChan.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AspNetUsers",
+                name: "AuthorTokens",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                    Token = table.Column<Guid>(type: "uuid", nullable: false),
+                    IP = table.Column<IPAddress>(type: "inet", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.PrimaryKey("PK_AuthorTokens", x => x.Token);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,23 +74,64 @@ namespace OakChan.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AnonymousTokens",
+                name: "AspNetUsers",
                 columns: table => new
                 {
-                    Token = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: true),
-                    IP = table.Column<IPAddress>(type: "inet", nullable: true),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    AuthorToken = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    PasswordHash = table.Column<string>(type: "text", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_AuthorTokens_AuthorToken",
+                        column: x => x.AuthorToken,
+                        principalTable: "AuthorTokens",
+                        principalColumn: "Token",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Threads",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BoardKey = table.Column<string>(type: "character varying(10)", nullable: false),
+                    Subject = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: true),
+                    IsReadOnly = table.Column<bool>(type: "boolean", nullable: false),
+                    IsPinned = table.Column<bool>(type: "boolean", nullable: false),
+                    LastBump = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)),
+                    LastHit = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)),
+                    PostsCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
+                    PostsWithAttachmentnsCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AnonymousTokens", x => x.Token);
+                    table.PrimaryKey("PK_Threads", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AnonymousTokens_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Threads_Boards_BoardKey",
+                        column: x => x.BoardKey,
+                        principalTable: "Boards",
+                        principalColumn: "Key",
+                        onDelete: ReferentialAction.Cascade,
+                        onUpdate: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -219,34 +247,6 @@ namespace OakChan.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Threads",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BoardKey = table.Column<string>(type: "character varying(10)", nullable: false),
-                    Subject = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: true),
-                    IsReadOnly = table.Column<bool>(type: "boolean", nullable: false),
-                    IsPinned = table.Column<bool>(type: "boolean", nullable: false),
-                    LastBump = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    LastHit = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    PostsCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    PostsWithAttachmentnsCount = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Threads", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Threads_Boards_BoardKey",
-                        column: x => x.BoardKey,
-                        principalTable: "Boards",
-                        principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -259,18 +259,18 @@ namespace OakChan.DAL.Migrations
                     Name = table.Column<string>(type: "text", nullable: true),
                     Message = table.Column<string>(type: "character varying(4096)", maxLength: 4096, nullable: true),
                     IsSaged = table.Column<bool>(type: "boolean", nullable: false),
-                    AnonymousToken = table.Column<Guid>(type: "uuid", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    AuthorToken = table.Column<Guid>(type: "uuid", nullable: false),
                     AuthorIP = table.Column<IPAddress>(type: "inet", nullable: false),
-                    AuthorUserAgent = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    AuthorUserAgent = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Posts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Posts_AnonymousTokens_AnonymousToken",
-                        column: x => x.AnonymousToken,
-                        principalTable: "AnonymousTokens",
+                        name: "FK_Posts_AuthorTokens_AuthorToken",
+                        column: x => x.AuthorToken,
+                        principalTable: "AuthorTokens",
                         principalColumn: "Token",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -314,24 +314,18 @@ namespace OakChan.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ComplainantIP = table.Column<IPAddress>(type: "inet", nullable: false),
-                    ComplainantUserAgent = table.Column<string>(type: "text", nullable: false),
-                    AnonymousToken = table.Column<Guid>(type: "uuid", nullable: false),
                     IsProcessed = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     ProcessedById = table.Column<int>(type: "integer", nullable: true),
                     Reason = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
                     PostId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    AuthorToken = table.Column<Guid>(type: "uuid", nullable: false),
+                    ComplainantIP = table.Column<IPAddress>(type: "inet", nullable: false),
+                    ComplainantUserAgent = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reports", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Reports_AnonymousTokens_AnonymousToken",
-                        column: x => x.AnonymousToken,
-                        principalTable: "AnonymousTokens",
-                        principalColumn: "Token",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reports_AspNetUsers_ProcessedById",
                         column: x => x.ProcessedById,
@@ -339,18 +333,18 @@ namespace OakChan.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
+                        name: "FK_Reports_AuthorTokens_AuthorToken",
+                        column: x => x.AuthorToken,
+                        principalTable: "AuthorTokens",
+                        principalColumn: "Token",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "FK_Reports_Posts_PostId",
                         column: x => x.PostId,
                         principalTable: "Posts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AnonymousTokens_UserId",
-                table: "AnonymousTokens",
-                column: "UserId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -384,6 +378,12 @@ namespace OakChan.DAL.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_AuthorToken",
+                table: "AspNetUsers",
+                column: "AuthorToken",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -411,9 +411,9 @@ namespace OakChan.DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Posts_AnonymousToken",
+                name: "IX_Posts_AuthorToken",
                 table: "Posts",
-                column: "AnonymousToken");
+                column: "AuthorToken");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_IsOP_ThreadId",
@@ -427,9 +427,9 @@ namespace OakChan.DAL.Migrations
                 columns: new[] { "ThreadId", "Number" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reports_AnonymousToken",
+                name: "IX_Reports_AuthorToken",
                 table: "Reports",
-                column: "AnonymousToken");
+                column: "AuthorToken");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reports_IsProcessed",
@@ -500,16 +500,16 @@ namespace OakChan.DAL.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "AnonymousTokens");
+                name: "AuthorTokens");
 
             migrationBuilder.DropTable(
                 name: "Threads");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Boards");
