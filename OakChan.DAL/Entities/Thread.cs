@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace OakChan.DAL.Entities
 {
-    public class Thread : EntityWithCreationTime
+    public class Thread : IHasCreationTime
     {
         public int Id { get; set; }
 
@@ -27,5 +27,7 @@ namespace OakChan.DAL.Entities
         public int PostsWithAttachmentnsCount { get; set; }
 
         public IList<Post> Posts { get; set; }
+
+        public DateTime Created { get; set; }
     }
 }

@@ -11,20 +11,20 @@ namespace OakChan.Tests.Base
 {
     public class DbSeedData
     {
-        private readonly List<AnonymousToken> _tokens = new();
+        private readonly List<AuthorToken> _tokens = new();
         private readonly List<Thread> _threads = new();
         private readonly List<Board> _boards = new();
         private readonly List<Image> _images = new();
         private readonly List<Post> _posts = new();
 
-        internal IEnumerable<AnonymousToken> Tokens => _tokens;
+        internal IEnumerable<AuthorToken> Tokens => _tokens;
         internal IEnumerable<Thread> Threads => _threads;
         internal IEnumerable<Board> Boards => _boards;
         internal IEnumerable<Image> Images => _images;
         internal IEnumerable<Post> Posts => _posts;
 
-        internal AnonymousToken DefaultToken { get; }
-            = new AnonymousToken
+        internal AuthorToken DefaultToken { get; }
+            = new AuthorToken
             {
                 Token = new Guid("11111111-1111-1111-1111-111111111111"),
                 Created = DateTime.Parse("2000-01-01")
@@ -54,7 +54,7 @@ namespace OakChan.Tests.Base
             JsonSerializer serializer = JsonSerializer.Create(settings);
             var jObj = JObject.Parse(json);
 
-            var tokens = jObj["tokens"]?.ToObject<AnonymousToken[]>(serializer);
+            var tokens = jObj["tokens"]?.ToObject<AuthorToken[]>(serializer);
             if (tokens != null)
                 AddTokens(tokens);
 
@@ -77,7 +77,7 @@ namespace OakChan.Tests.Base
             return this;
         }
 
-        public DbSeedData AddTokens(params AnonymousToken[] tokens)
+        public DbSeedData AddTokens(params AuthorToken[] tokens)
         {
             _tokens.AddRange(tokens);
             return this;

@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace OakChan.Tests.Services
@@ -66,7 +65,7 @@ namespace OakChan.Tests.Services
                 Name = "b",
                 Threads = new[]
                 {
-                    new Thread{ Id = 100, Subject = "t", Posts = new[] {new DefaultPost() } }
+                    new Thread{ Id = 100, Subject = "t", Posts = new[] {new DefaultOpPost() } }
                 }
             };
             SeedData.AddTokens(SeedData.DefaultToken).AddBoards(board);
@@ -85,10 +84,7 @@ namespace OakChan.Tests.Services
                 Subject = "test_thread",
                 OpPost = new PostCreationDto
                 {
-                    IP = IPAddress.Loopback,
-                    AuthorId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                     Message = "test_message",
-                    UserAgent = "ua-test",
                 }
             };
             SeedData.AddDefaults();
@@ -110,10 +106,7 @@ namespace OakChan.Tests.Services
         {
             var postData = new PostCreationDto
             {
-                IP = IPAddress.Loopback,
-                AuthorId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                 Message = "test_message",
-                UserAgent = "ua-test"
             };
 
             SeedData.AddDefaults()
@@ -123,12 +116,9 @@ namespace OakChan.Tests.Services
                     Id = 1,
                     Posts = new[]
                     {
-                        new Post
+                        new DefaultOpPost()
                         {
-                            AuthorIP = System.Net.IPAddress.Loopback,
-                            AnonymousToken = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                             Message = "x",
-                            AuthorUserAgent = "x"
                         }
                     }
                 });
@@ -170,9 +160,6 @@ namespace OakChan.Tests.Services
                 Subject = "a_thread",
                 OpPost = new PostCreationDto
                 {
-                    AuthorId = SeedData.DefaultToken.Token,
-                    UserAgent = "test",
-                    IP = IPAddress.Loopback,
                     Message = "a_1"
                 }
             });
@@ -182,18 +169,12 @@ namespace OakChan.Tests.Services
                 Subject = "b_thread",
                 OpPost = new PostCreationDto
                 {
-                    AuthorId = SeedData.DefaultToken.Token,
-                    UserAgent = "test",
-                    IP = IPAddress.Loopback,
                     Message = "b_1"
                 }
             });
 
             var a2 = await service.AddPostToThreadAsync("a", aThread.ThreadId, new PostCreationDto
             {
-                AuthorId = SeedData.DefaultToken.Token,
-                UserAgent = "test",
-                IP = IPAddress.Loopback,
                 Message = "a_2"
             });
 
@@ -219,7 +200,7 @@ namespace OakChan.Tests.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
+                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
                               new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
                         }
                     }
@@ -231,12 +212,7 @@ namespace OakChan.Tests.Services
 
             var service = CreateThreadService();
 
-            await service.AddPostToThreadAsync("a", 10, new PostCreationDto
-            {
-                IP = IPAddress.Loopback,
-                UserAgent = "test",
-                AuthorId = SeedData.DefaultToken.Token
-            });
+            await service.AddPostToThreadAsync("a", 10, new PostCreationDto());
 
             var thread = await service.GetThreadAsync("a", 10);
             Assert.AreEqual(DateTime.UtcNow.Date, thread.LastBump.Date);
@@ -258,7 +234,7 @@ namespace OakChan.Tests.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-40) },
+                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-40) },
                               new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-30) },
                               new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-20) },
                               new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) },
@@ -274,9 +250,6 @@ namespace OakChan.Tests.Services
 
             await service.AddPostToThreadAsync("a", 10, new PostCreationDto
             {
-                IP = IPAddress.Loopback,
-                UserAgent = "test",
-                AuthorId = SeedData.DefaultToken.Token,
             });
 
             var thread = await service.GetThreadAsync("a", 10);
@@ -299,7 +272,7 @@ namespace OakChan.Tests.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
+                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
                               new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
                         }
                     }
@@ -313,9 +286,6 @@ namespace OakChan.Tests.Services
 
             await service.AddPostToThreadAsync("a", 10, new PostCreationDto
             {
-                IP = IPAddress.Loopback,
-                UserAgent = "test",
-                AuthorId = SeedData.DefaultToken.Token,
                 IsSaged = true
             });
 

@@ -13,7 +13,7 @@ namespace OakChan.Services.Mapping
         {
             CreateMap<Post, PostDto>()
                 .ForMember(dto => dto.PostId, opt => opt.MapFrom(post => post.Id))
-                .ForMember(dto => dto.AuthorId, opt => opt.MapFrom(post => post.AnonymousToken))
+                .ForMember(dto => dto.AuthorId, opt => opt.MapFrom(post => post.AuthorToken))
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(post => post.Name))
                 .ForMember(dto => dto.Created, opt => opt.MapFrom(post => post.Created))
                 .ForMember(dto => dto.ThreadId, opt => opt.MapFrom(post => post.ThreadId))
@@ -52,9 +52,9 @@ namespace OakChan.Services.Mapping
                 .ForMember(dto => dto.Size, opt => opt.MapFrom(img => img.FileSize));
 
             CreateMap<PostCreationDto, Post>()
-                .ForMember(p => p.AnonymousToken, opt => opt.MapFrom(dto => dto.AuthorId))
-                .ForMember(p => p.AuthorIP, opt => opt.MapFrom(dto => dto.IP))
-                .ForMember(p => p.AuthorUserAgent, opt => opt.MapFrom(dto => dto.UserAgent))
+                .ForMember(p => p.AuthorToken, opt => opt.Ignore())
+                .ForMember(p => p.IP, opt => opt.Ignore())
+                .ForMember(p => p.UserAgent, opt => opt.Ignore())
                 .ForMember(p => p.Created, opt => opt.Ignore())
                 .ForMember(p => p.Message, opt => opt.MapFrom(dto => dto.Message))
                 .ForMember(p => p.Name, opt => opt.MapFrom(dto => dto.AuthorName))

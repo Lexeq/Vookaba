@@ -10,18 +10,19 @@ namespace OakChan.DAL.Entities.Configurations
             builder.HasKey(r => r.Id);
 
             builder.Property(r => r.Created)
-                .ValueGeneratedOnAdd()
                 .IsRequired();
 
-            builder.Property(r => r.ComplainantIP)
+            builder.Property(r => r.IP)
+                .HasColumnName("ComplainantIP")
                 .IsRequired();
 
-            builder.Property(r => r.ComplainantUserAgent)
+            builder.Property(r => r.UserAgent)
+                .HasColumnName("ComplainantUserAgent")
                 .IsRequired();
 
-            builder.HasOne<AnonymousToken>()
+            builder.HasOne<AuthorToken>()
                 .WithMany()
-                .HasForeignKey(r => r.AnonymousToken)
+                .HasForeignKey(r => r.AuthorToken)
                 .IsRequired();
 
             builder.HasIndex(r => r.IsProcessed);

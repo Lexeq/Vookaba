@@ -87,8 +87,13 @@ namespace OakChan
                 .AddEntityFrameworkStores<OakDbContext>()
                 .AddUserStore<ApplicationUserStore>()
                 .AddRoleStore<ApplicationRoleStore>()
+                .AddUserManager<ApplicationUserManager>()
                 .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
                 .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>();
+
+            services.AddScoped<AuthorTokenManager>();
+            services.AddScoped<IAuthorTokenFactory>(s => s.GetRequiredService<AuthorTokenManager>());
+            services.AddScoped<IAuthorTokenManager, AuthorTokenManager>(s => s.GetRequiredService<AuthorTokenManager>());
 
             services.ConfigureApplicationCookie(options =>
             {

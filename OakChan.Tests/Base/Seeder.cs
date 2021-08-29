@@ -8,15 +8,15 @@ namespace OakChan.Tests.Base
 {
     public class Seeder
     {
-        private readonly DbContextOptions<OakDbContext> dbContextOptions;
+        private readonly Func<OakDbContext> dbContextFactory;
 
         public DbSeedData Data { get; } = new DbSeedData();
 
         public bool Seeded { get; private set; }
 
-        public Seeder(DbContextOptions<OakDbContext> dbContextOptions)
+        public Seeder(Func<OakDbContext> dbContextFactory)
         {
-            this.dbContextOptions = dbContextOptions;
+            this.dbContextFactory = dbContextFactory;
         }
         public void Seed()
         {
@@ -25,9 +25,9 @@ namespace OakChan.Tests.Base
                 throw new InvalidOperationException("The database is already seeded.");
             }
 
-            using var db = new OakDbContext(dbContextOptions);
+            using var db = dbContextFactory();
 
-            if (HasEnteties(Data.Tokens)) db.AnonymousTokens.AddRange(Data.Tokens);
+            if (HasEnteties(Data.Tokens)) db.AuthorTokens.AddRange(Data.Tokens);
             if (HasEnteties(Data.Boards)) db.Boards.AddRange(Data.Boards);
             if (HasEnteties(Data.Threads)) db.Threads.AddRange(Data.Threads);
             if (HasEnteties(Data.Posts)) db.Posts.AddRange(Data.Posts);

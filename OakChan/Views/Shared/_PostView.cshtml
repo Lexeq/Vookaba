@@ -1,11 +1,11 @@
 ﻿@using Microsoft.AspNetCore.Routing
 @using OakChan.ViewModels
 @using OakChan.Utils
-@using OakChan.Deanon;
+@using OakChan.Common;
 @model PostViewModel
 @inject OakChan.DAL.IAttachmentsStorage attachments
 @{
-    Guid usid = Context.Features.Get<IDeanonFeature>().UserToken;
+    Guid usid = Guid.Parse(Context.User.FindFirst(OakConstants.AuthorTokenClaimType).Value);
 }
 
 <div class="post-container" id="@($"pc{Model.Number}")">

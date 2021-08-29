@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
+using OakChan.Common;
 using OakChan.DAL;
 using OakChan.Identity;
 using System.Security.Claims;
@@ -9,25 +10,15 @@ namespace OakChan.Deanon
 {
     public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
     {
-        private readonly DeanonOptions deanonOptions;
-        private readonly AnonymousTokenManager idTokens;
-
         public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager,
                      RoleManager<ApplicationRole> roleManager,
-                     IOptions<IdentityOptions> identityOptions,
-                     IOptions<DeanonOptions> deanonOptions,
-                     AnonymousTokenManager IdTokens)
-            : base(userManager, roleManager, identityOptions)
-        {
-            this.deanonOptions = deanonOptions.Value;
-            this.idTokens = IdTokens;
-        }
+                     IOptions<IdentityOptions> identityOptions)
+            : base(userManager, roleManager, identityOptions) { }
 
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(ApplicationUser user)
         {
             var claimsIdentity = await base.GenerateClaimsAsync(user);
-            var token = await idTokens.GetUserToken(user.Id);
-            claimsIdentity.AddClaim(new Claim(deanonOptions.IdTokenClaimType, token.Token.ToString()));
+            claimsIdentity.AddClaim(new Claim(OakConstants.AuthorTokenClaimType, user.AuthorToken.ToString()));
             return claimsIdentity;
         }
     }

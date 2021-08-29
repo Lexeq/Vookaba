@@ -19,20 +19,9 @@ namespace OakChan.Tests.Base
             mapperConfiguration = new MapperConfiguration(o => o.AddProfile<ViewModelsMapProfile>());
         }
 
-        protected void SetDeanonFeature(Controller controller)
+        protected void SetHttpContext(Controller controller)
         {
-            var deanonMock = new Mock<IDeanonFeature>();
-            deanonMock
-                .Setup(x => x.IPAddress)
-                .Returns(new System.Net.IPAddress(0));
-            deanonMock
-                .Setup(x => x.UserAgent)
-                .Returns("UA-Tests");
-            deanonMock
-                .Setup(x => x.UserToken)
-                .Returns(new Guid());
             controller.ControllerContext.HttpContext = new DefaultHttpContext();
-            controller.HttpContext.Features.Set(deanonMock.Object);
         }
     }
 }

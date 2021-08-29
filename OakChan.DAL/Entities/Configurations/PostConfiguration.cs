@@ -15,22 +15,23 @@ namespace OakChan.DAL.Entities.Configurations
                 .IsRequired(false);
 
             builder.Property(p => p.Created)
-                .ValueGeneratedOnAdd()
                 .IsRequired();
 
-            builder.Property(p => p.AuthorIP)
+            builder.Property(p => p.IP)
+                .HasColumnName("AuthorIP")
                 .IsRequired(true);
 
-            builder.Property(p => p.AuthorUserAgent)
+            builder.Property(p => p.UserAgent)
+                .HasColumnName("AuthorUserAgent")
                 .IsRequired(true);
 
             builder.Property(p => p.Message)
                 .IsRequired(false)
                 .HasMaxLength(OakConstants.PostConstants.MessageMaxLength);
 
-            builder.HasOne<AnonymousToken>()
+            builder.HasOne<AuthorToken>()
                 .WithMany()
-                .HasForeignKey(p => p.AnonymousToken)
+                .HasForeignKey(p => p.AuthorToken)
                 .IsRequired();
 
             builder.HasOne(p => p.Thread)

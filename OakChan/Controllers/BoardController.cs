@@ -81,21 +81,17 @@ namespace OakChan.Controllers
 
         [HttpPost]
         [Authorize(Policy = DeanonConstants.DeanonPolicy)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
         {
-            var userInfo = HttpContext.Features.Get<IDeanonFeature>();
-
             if (ModelState.IsValid)
             {
-                var threadData = mapper.Map<ThreadCreationDto>(opPost, opt =>
-                {
-                    opt.Items[StringConstants.UserInfo] = userInfo;
-                });
+                var threadData = mapper.Map<ThreadCreationDto>(opPost);
 
                 var boardInfo = await boardService.GetBoardInfoAsync(board);
                 if (boardInfo == null || boardInfo.IsDisabled)
                 {
-                    logger.LogWarning($"Bad request. From {userInfo.UserToken} to {nameof(CreateThreadAsync)}. Bad board key {board}");
+                    logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.AuthorTokenClaimType)} to {nameof(CreateThreadAsync)}. Bad board key {board}");
 
                     return BadRequest();
                 }
@@ -104,7 +100,7 @@ namespace OakChan.Controllers
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {userInfo.UserToken} to {nameof(CreateThreadAsync)}. " +
+                logger.LogWarning($"Invalid model state from {OakConstants.AuthorTokenClaimType} to {nameof(CreateThreadAsync)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }

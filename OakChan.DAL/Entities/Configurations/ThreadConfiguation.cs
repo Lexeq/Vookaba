@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OakChan.Common;
 using OakChan.DAL.Entities;
+using System;
 
 namespace OakChan.Models.DB.Configurations
 {
@@ -17,10 +18,12 @@ namespace OakChan.Models.DB.Configurations
                 .IsRequired(false);
 
             builder.Property(t => t.LastBump)
-                .ValueGeneratedOnAdd();
+                .HasDefaultValue(DateTime.MinValue)
+                .ValueGeneratedOnUpdate();
 
             builder.Property(t => t.LastHit)
-                .ValueGeneratedOnAdd();
+                .HasDefaultValue(DateTime.MinValue)
+                .ValueGeneratedOnUpdate();
 
             builder.Property(t => t.PostsCount)
                 .HasDefaultValue(0)
@@ -31,9 +34,7 @@ namespace OakChan.Models.DB.Configurations
                 .ValueGeneratedOnAddOrUpdate();
 
             builder.Property(t => t.Created)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-
+                .IsRequired(true);
 
             builder.HasOne(t => t.Board)
                 .WithMany(b => b.Threads)

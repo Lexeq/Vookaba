@@ -5,7 +5,7 @@ using System.Net;
 
 namespace OakChan.DAL.Entities
 {
-    public class Post : EntityWithCreationTime
+    public class Post : IHasCreationTime, IHasAuthor
     {
         public int Id { get; set; }
 
@@ -15,7 +15,7 @@ namespace OakChan.DAL.Entities
 
         public int Number { get; set; }
 
-        public List<Attachment> Attachments{ get; set; }
+        public List<Attachment> Attachments { get; set; }
 
         public bool IsOP { get; set; }
 
@@ -25,10 +25,13 @@ namespace OakChan.DAL.Entities
 
         public bool IsSaged { get; set; }
 
-        public Guid AnonymousToken { get; set; }
+        public DateTime Created { get; set; }
 
-        public IPAddress AuthorIP { get; set; }
+        public Guid AuthorToken { get; set; }
 
-        public string AuthorUserAgent { get; set; }
+        public IPAddress IP { get; set; }
+
+        public string UserAgent { get; set; }
+
     }
 }

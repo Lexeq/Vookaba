@@ -24,16 +24,9 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.Attachments, opt => opt.Ignore())
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(vm => vm.Name))
                 .ForMember(dto => dto.Message, opt => opt.MapFrom(vm => vm.Text))
-                .ForMember(dto => dto.AuthorId, opt => opt.Ignore())
-                .ForMember(dto => dto.UserAgent, opt => opt.Ignore())
-                .ForMember(dto => dto.IP, opt => opt.Ignore())
                 .ForMember(dto => dto.IsSaged, opt => opt.MapFrom(vm => vm.IsSaged))
                 .AfterMap((vm, dto, ctx) =>
                 {
-                    var user = ctx.Items[StringConstants.UserInfo] as IDeanonFeature;
-                    dto.AuthorId = user.UserToken;
-                    dto.UserAgent = user.UserAgent;
-                    dto.IP = user.IPAddress;
                     if (vm.Image != null)
                     {
                         var files = new FormFileCollection();
@@ -61,16 +54,9 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.Attachments, opt => opt.Ignore())
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(vm => vm.Name))
                 .ForMember(dto => dto.Message, opt => opt.MapFrom(vm => vm.Text))
-                .ForMember(dto => dto.AuthorId, opt => opt.Ignore())
-                .ForMember(dto => dto.UserAgent, opt => opt.Ignore())
-                .ForMember(dto => dto.IP, opt => opt.Ignore())
                 .ForMember(dto => dto.IsSaged, opt => opt.Ignore())
                 .AfterMap((vm, dto, ctx) =>
                 {
-                    var user = ctx.Items[StringConstants.UserInfo] as IDeanonFeature;
-                    dto.AuthorId = user.UserToken;
-                    dto.UserAgent = user.UserAgent;
-                    dto.IP = user.IPAddress;
                     if (vm.Image != null)
                     {
                         var files = new FormFileCollection();

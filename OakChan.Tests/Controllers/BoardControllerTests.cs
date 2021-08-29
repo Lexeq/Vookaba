@@ -29,7 +29,7 @@ namespace OakChan.Tests.Controllers
                 stringLocalizer ?? Mock.Of<IStringLocalizer<BoardController>>(),
                 mapper ?? Mapper,
                 logger ?? Mock.Of<ILogger<BoardController>>());
-            SetDeanonFeature(controller);
+            SetHttpContext(controller);
             return controller;
         }
 

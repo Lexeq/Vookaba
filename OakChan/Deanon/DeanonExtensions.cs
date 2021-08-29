@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using OakChan.DAL;
+using OakChan.Identity;
 using System;
 
 namespace OakChan.Deanon
@@ -47,7 +48,7 @@ namespace OakChan.Deanon
             });
 
             services.AddSingleton<IAuthorizationHandler, DeanonClaimHandler>();
-            services.TryAddScoped<AnonymousTokenManager>();
+            services.TryAddScoped<IAuthorTokenFactory, AuthorTokenManager>();
             return services;
         }
     }

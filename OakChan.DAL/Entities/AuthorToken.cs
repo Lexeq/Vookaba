@@ -4,12 +4,12 @@ using System.Net;
 
 namespace OakChan.DAL.Entities
 {
-    public class AnonymousToken : EntityWithCreationTime
+    public class AuthorToken : IHasCreationTime
     {
         public Guid Token { get; set; }
 
-        public int? UserId { get; set; }
-
         public IPAddress IP { get; set; }
+
+        public DateTime Created { get; set; }
     }
 }

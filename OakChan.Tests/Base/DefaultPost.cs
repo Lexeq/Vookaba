@@ -10,9 +10,9 @@ namespace OakChan.Tests.Base
         {
             Message = "Post";
             Created = new DateTime(2021, 1, 1);
-            AuthorIP = IPAddress.Loopback;
-            AuthorUserAgent = "Oak";
-            AnonymousToken = new Guid("11111111-1111-1111-1111-111111111111");
+            AuthorToken = new Guid("11111111-1111-1111-1111-111111111111");
+            IP = IPAddress.Loopback;
+            UserAgent = "tester";
         }
     }
 

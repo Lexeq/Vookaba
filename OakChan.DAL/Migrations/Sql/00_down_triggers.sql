@@ -17,13 +17,6 @@ DROP FUNCTION IF EXISTS public.set_post_number() CASCADE;
 DROP TRIGGER IF EXISTS ON public."Posts" update_threads CASCADE;
 DROP FUNCTION IF EXISTS public.update_thread_columns() CASCADE;
 
-DROP TRIGGER IF EXISTS ON public."Attachment" attachment_del_ins CASCADE;
+DROP TRIGGER IF EXISTS ON public."Attachment" attachment_insert_or_delete CASCADE;
 DROP FUNCTION IF EXISTS public.update_posts_with_attachmentns_count() CASCADE;
 
-DROP TRIGGER IF EXISTS ON public."Posts" set_posts_creation_time CASCADE;
-DROP TRIGGER IF EXISTS ON public."Tokens" set_tokens_creation_time CASCADE;
-DROP TRIGGER IF EXISTS ON public."Reports" set_reports_creation_time CASCADE;
-DROP FUNCTION IF EXISTS public.set_creation_date() CASCADE;
-
-DROP TRIGGER IF EXISTS ON public."Threads" set_thread_times CASCADE;
-DROP FUNCTION IF EXISTS public.set_thread_times() CASCADE;

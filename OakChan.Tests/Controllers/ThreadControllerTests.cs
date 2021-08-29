@@ -27,7 +27,7 @@ namespace OakChan.Tests.Controllers
                 stringLocalizer ?? Mock.Of<IStringLocalizer<ThreadController>>(),
                 mapper ?? Mapper,
                 logger ?? Mock.Of<ILogger<ThreadController>>());
-            SetDeanonFeature(controller);
+            SetHttpContext(controller);
             return controller;
         }
 

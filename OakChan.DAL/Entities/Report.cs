@@ -5,15 +5,9 @@ using System.Net;
 
 namespace OakChan.DAL.Entities
 {
-    public class Report : EntityWithCreationTime
+    public class Report : IHasCreationTime, IHasAuthor
     {
         public int Id { get; set; }
-
-        public IPAddress ComplainantIP { get; set; }
-
-        public string ComplainantUserAgent { get; set; }
-
-        public Guid AnonymousToken { get; set; }
 
         public bool IsProcessed { get; set; }
 
@@ -25,5 +19,12 @@ namespace OakChan.DAL.Entities
 
         public Post Post { get; set; }
 
+        public DateTime Created { get; set; }
+
+        public Guid AuthorToken { get; set; }
+
+        public IPAddress IP { get; set; }
+
+        public string UserAgent { get; set; }
     }
 }

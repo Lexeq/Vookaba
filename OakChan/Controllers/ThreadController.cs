@@ -56,10 +56,9 @@ namespace OakChan.Controllers
 
         [HttpPost]
         [Authorize(Policy = DeanonConstants.DeanonPolicy)]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePostAsync(string board, int thread, PostFormViewModel postFormVM)
         {
-            var userInfo = HttpContext.Features.Get<IDeanonFeature>();
-
             if (ModelState.IsValid)
             {
                 var boardDto = await boards.GetBoardInfoAsync(board);
@@ -68,18 +67,18 @@ namespace OakChan.Controllers
                     var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
                     if (threadDto != null && !threadDto.IsReadOnly)
                     {
-                        var postCreationDto = mapper.Map<PostCreationDto>(postFormVM, opts => opts.Items[StringConstants.UserInfo] = userInfo);
+                        var postCreationDto = mapper.Map<PostCreationDto>(postFormVM);
                         var newPost = await threads.AddPostToThreadAsync(boardDto.Key, thread, postCreationDto);
                         return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
                     }
                 }
-                logger.LogWarning($"Invalid arguments from {userInfo.UserToken}({userInfo.IPAddress}) to {nameof(CreatePostAsync)}. " +
+                logger.LogWarning($"Invalid arguments from {User.FindFirst(OakConstants.AuthorTokenClaimType)}({IP}) to {nameof(CreatePostAsync)}. " +
                     string.Join(Environment.NewLine, $"board: {board}", $"thread: {thread}."));
                 return BadRequest();
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {userInfo.UserToken}({userInfo.IPAddress}) to {nameof(CreatePostAsync)}. " +
+                logger.LogWarning($"Invalid model state from {User.FindFirst(OakConstants.AuthorTokenClaimType)}({IP}) to {nameof(CreatePostAsync)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }

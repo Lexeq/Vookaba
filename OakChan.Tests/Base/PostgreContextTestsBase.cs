@@ -1,9 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Moq;
 using NUnit.Framework;
+using OakChan.Common;
 using OakChan.DAL.Database;
-using System;
+using OakChan.Deanon;
+using System.Linq;
 using System.Reflection;
 
 namespace OakChan.Tests.Base
@@ -44,7 +48,7 @@ namespace OakChan.Tests.Base
             }
             if (_outerContext == null)
             {
-                _outerContext = new OakDbContext(_dbContextOptions);
+                _outerContext = CreateNewContext();
             }
             return _outerContext;
         }
@@ -53,7 +57,7 @@ namespace OakChan.Tests.Base
         [OneTimeSetUp]
         public void Initialize()
         {
-            using var _context = new OakDbContext(_dbContextOptions);
+            using var _context = CreateNewContext();
             _context.Database.EnsureDeleted();
             _context.Database.Migrate();
             TruncateTables(); //drop all default data
@@ -62,7 +66,7 @@ namespace OakChan.Tests.Base
         [OneTimeTearDown]
         public void Finish()
         {
-            using var context = new OakDbContext(_dbContextOptions);
+            using var context = CreateNewContext();
             context.Database.EnsureDeleted();
         }
 
@@ -70,7 +74,7 @@ namespace OakChan.Tests.Base
         [SetUp]
         public void SetUp()
         {
-            _seeder = new Seeder(_dbContextOptions);
+            _seeder = new Seeder(CreateNewContext);
         }
 
         [TearDown]
@@ -82,13 +86,26 @@ namespace OakChan.Tests.Base
             return;
         }
 
+
+
+        private OakDbContext CreateNewContext()
+        {
+            var httpContext = new DefaultHttpContext();
+            httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Loopback;
+            httpContext.Request.Headers["User-Agent"] = nameof(PostgreContextTestsBase);
+            httpContext.User.Identities.First().AddClaim(new System.Security.Claims.Claim(OakConstants.AuthorTokenClaimType, "11111111-1111-1111-1111-111111111111"));
+            var httpAM = new Mock<IHttpContextAccessor>(MockBehavior.Strict);
+            httpAM.Setup(m => m.HttpContext).Returns(httpContext);
+            return new OakDbContext(_dbContextOptions, httpAM.Object);
+        }
+
         //TODO: truncate ALL tables
         private void TruncateTables()
         {
-            using var context = new OakDbContext(_dbContextOptions);
+            using var context = CreateNewContext();
             context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""Boards"" RESTART IDENTITY CASCADE");
             context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""Threads"" RESTART IDENTITY CASCADE");
-            context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""AnonymousTokens"" RESTART IDENTITY CASCADE");
+            context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""AuthorTokens"" RESTART IDENTITY CASCADE");
             context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""Attachment"" RESTART IDENTITY CASCADE");
             context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""Posts"" RESTART IDENTITY CASCADE");
         }
