@@ -6,6 +6,8 @@ namespace OakChan.DAL
 {
     public interface IAuthorTokenManager
     {
+        public Task<AuthorToken> CreateTokenAsync();
+
         public Task<AuthorToken> GetTokenAsync(ApplicationUser user);
 
     }

@@ -5,7 +5,7 @@ namespace OakChan.DAL
 {
     public interface IAuthorTokenFactory
     {
-        public Task<AuthorToken> CreateTokenAsync();
+        public Task<AuthorToken> GenerateTokenAsync();
 
     }
 }

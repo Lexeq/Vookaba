@@ -18,7 +18,7 @@ namespace OakChan.Deanon
         protected override async Task<ClaimsIdentity> GenerateClaimsAsync(ApplicationUser user)
         {
             var claimsIdentity = await base.GenerateClaimsAsync(user);
-            claimsIdentity.AddClaim(new Claim(OakConstants.AuthorTokenClaimType, user.AuthorToken.ToString()));
+            claimsIdentity.AddClaim(new Claim(OakConstants.AuthorTokenClaimType, user.AuthorTokenId.ToString()));
             return claimsIdentity;
         }
     }

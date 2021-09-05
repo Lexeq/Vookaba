@@ -13,9 +13,9 @@ namespace OakChan.Identity
     public class ApplicationUserStore :
         UserStore<ApplicationUser, ApplicationRole, OakDbContext, int>,
         IUserInvitationStore<ApplicationUser>,
-        IInvitationStore<Invitation>
+        IInvitationStore<ApplicationInvitation>
     {
-        private DbSet<Invitation> Invitations => Context.Set<Invitation>();
+        private DbSet<ApplicationInvitation> Invitations => Context.Set<ApplicationInvitation>();
 
         private new ExtendedIdentityErrorDescriber ErrorDescriber => base.ErrorDescriber as ExtendedIdentityErrorDescriber;
 
@@ -38,14 +38,14 @@ namespace OakChan.Identity
             return IdentityResult.Success;
         }
 
-        protected virtual async Task<Invitation> FindInvitationAsync(string invitationToken, CancellationToken cancellationToken)
+        protected virtual async Task<ApplicationInvitation> FindInvitationAsync(string invitationToken, CancellationToken cancellationToken)
         {
             return Guid.TryParse(invitationToken, out var id) ?
                 await Invitations.FindAsync(new object[] { id }, cancellationToken) :
                 null;
         }
 
-        private Task<IdentityResult> ValidateInvitationAsync(Invitation invitation, CancellationToken cancellation)
+        private Task<IdentityResult> ValidateInvitationAsync(ApplicationInvitation invitation, CancellationToken cancellation)
         {
             List<IdentityError> errors = new();
             if (invitation == null)
@@ -94,7 +94,7 @@ namespace OakChan.Identity
             return IdentityResult.Success;
         }
 
-        public async Task<IdentityResult> CreateAsync(Invitation invitation, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(ApplicationInvitation invitation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
@@ -107,7 +107,7 @@ namespace OakChan.Identity
             return IdentityResult.Success;
         }
 
-        public virtual async Task<IdentityResult> UpdateAsync(Invitation invitation, CancellationToken cancellationToken)
+        public virtual async Task<IdentityResult> UpdateAsync(ApplicationInvitation invitation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
@@ -129,7 +129,7 @@ namespace OakChan.Identity
             return IdentityResult.Success;
         }
 
-        public virtual async Task<IdentityResult> DeleteAsync(Invitation invitation, CancellationToken cancellationToken)
+        public virtual async Task<IdentityResult> DeleteAsync(ApplicationInvitation invitation, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
@@ -149,15 +149,15 @@ namespace OakChan.Identity
             return IdentityResult.Success; ;
         }
 
-        public virtual Task<string> GetInvitationTokenAsync(Invitation invitation, CancellationToken cancellationToken)
+        public virtual Task<string> GetInvitationTokenAsync(ApplicationInvitation invitation, CancellationToken cancellationToken)
         {
             return Task.FromResult(invitation.Token);
         }
 
-        public virtual Task<Invitation> FindInvitationByTokenAsync(string token, CancellationToken cancellationToken)
+        public virtual Task<ApplicationInvitation> FindInvitationByTokenAsync(string token, CancellationToken cancellationToken)
                => FindInvitationByIdAsync(token, cancellationToken);
 
-        public virtual Task<Invitation> FindInvitationByIdAsync(string id, CancellationToken cancellationToken)
+        public virtual Task<ApplicationInvitation> FindInvitationByIdAsync(string id, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
