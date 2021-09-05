@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
+using OakChan.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.Utils
 {
-    public class LocalizedIdentityErrorDescriber : IdentityErrorDescriber
+    public class LocalizedIdentityErrorDescriber : ExtendedIdentityErrorDescriber
     {
         private readonly IStringLocalizer<LocalizedIdentityErrorDescriber> localizer;
 
@@ -78,6 +79,15 @@ namespace OakChan.Utils
 
         public override IdentityError RecoveryCodeRedemptionFailed()
             => GetErrorByCode(nameof(RecoveryCodeRedemptionFailed));
+
+        public override IdentityError NoInvitation()
+            => GetErrorByCode(nameof(NoInvitation));
+
+        public override IdentityError InvitationExpired(DateTime expired)
+            => GetErrorByCode(nameof(InvitationExpired), expired);
+
+        public override IdentityError InvitationUsed()
+            => GetErrorByCode(nameof(InvitationUsed));
 
         public override IdentityError PasswordRequiresUniqueChars(int uniqueChars)
             => GetErrorByCode(nameof(PasswordRequiresUniqueChars), uniqueChars);
