@@ -90,6 +90,10 @@ namespace OakChan
                 .AddUserManager<ApplicationUserManager>()
                 .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
                 .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>();
+            services.AddScoped(s => (ApplicationUserStore)s.GetRequiredService<IUserStore<ApplicationUser>>());
+            services.AddScoped<IInvitationStore<ApplicationInvitation>>(s => s.GetRequiredService<ApplicationUserStore>());
+            services.AddScoped<IUserInvitationStore<ApplicationUser>>(s => s.GetRequiredService<ApplicationUserStore>());
+            services.AddScoped<InvitationManager<ApplicationInvitation>>();
 
             services.AddScoped<AuthorTokenManager>();
             services.AddScoped<IAuthorTokenFactory>(s => s.GetRequiredService<AuthorTokenManager>());
