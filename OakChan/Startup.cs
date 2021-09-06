@@ -118,6 +118,7 @@ namespace OakChan
                 o.Password.RequireLowercase = false;
             });
 
+            services.Configure<ChanOptions>(o => o.PublicRegistrationEnabled = false);
             services.AddOptions();
             services.AddScoped<DatabaseSeeder>();
             services.Configure<SeedData>(Configuration.GetSection(nameof(SeedData)));
