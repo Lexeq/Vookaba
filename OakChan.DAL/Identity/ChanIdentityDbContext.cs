@@ -27,18 +27,10 @@ namespace OakChan.Identity
             builder.Entity(delegate (EntityTypeBuilder<TInvitation> b)
             {
                 b.HasKey(i => i.Id);
-                b.HasOne(i => i.Publisher)
-                    .WithMany()
-                    .HasForeignKey(i => i.PublisherId)
-                    .IsRequired(true);
-
-                b.HasOne(i => i.UsedBy)
-                    .WithMany()
-                    .HasForeignKey(i => i.UsedByID)
-                    .IsRequired(false);
 
                 b.Property(i => i.ConcurrencyStamp)
-                    .IsConcurrencyToken();
+                    .IsConcurrencyToken()
+                    .IsRequired();
 
                 b.HasIndex(i => i.IsUsed)
                     .IsUnique(false);

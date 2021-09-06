@@ -34,6 +34,7 @@ namespace OakChan.Identity
             }
 
             invitation.UsedBy = user;
+            invitation.IsUsed = true;
             invitation.ConcurrencyStamp = Guid.NewGuid().ToString();
             return IdentityResult.Success;
         }
@@ -52,7 +53,7 @@ namespace OakChan.Identity
             {
                 errors.Add(ErrorDescriber.NoInvitation());
             }
-            else if (invitation.UsedByID.HasValue)
+            else if (invitation.IsUsed)
             {
                 errors.Add(ErrorDescriber.InvitationUsed());
             }
