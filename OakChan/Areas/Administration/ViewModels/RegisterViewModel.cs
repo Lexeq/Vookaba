@@ -26,4 +26,5 @@ namespace OakChan.Areas.Administration.ViewModels
         [Display(Name = "Login")]
         public string Login { get; set; }
     }
+
 }

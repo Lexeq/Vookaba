@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using OakChan.Areas.Administration.ViewModels;
+using OakChan.Common;
 using OakChan.Identity;
 using System.Threading.Tasks;
 
@@ -10,28 +12,39 @@ namespace OakChan.Areas.Administration.Controllers
     [Area("Administration")]
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> userManager;
+        private readonly ApplicationUserManager userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly ChanOptions chanOptions;
         private readonly IStringLocalizer<AccountController> localizer;
 
-        public AccountController(UserManager<ApplicationUser> userManager,
+        public AccountController(ApplicationUserManager userManager,
             SignInManager<ApplicationUser> signInManager,
+            IOptions<ChanOptions> chanOptionsAccessor,
             IStringLocalizer<AccountController> localizer)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.chanOptions = chanOptionsAccessor.Value;
             this.localizer = localizer;
         }
 
         [HttpGet]
-        public IActionResult Register()
+        public IActionResult Register(string invitation)
         {
-            return View();
+            return View(chanOptions.PublicRegistrationEnabled ?
+                new RegisterViewModel() :
+                new RegisterWithInvitationViewModel { Invitaion = invitation });
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel vm, string returnUrl = null)
         {
+            if (!chanOptions.PublicRegistrationEnabled)
+            {
+                vm = new RegisterWithInvitationViewModel();
+                await TryUpdateModelAsync(vm as RegisterWithInvitationViewModel);
+            }
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser
@@ -40,7 +53,9 @@ namespace OakChan.Areas.Administration.Controllers
                     UserName = vm.Login
                 };
 
-                var result = await userManager.CreateAsync(user, vm.Password);
+                IdentityResult result = chanOptions.PublicRegistrationEnabled ?
+                    await userManager.CreateAsync(user, vm.Password) :
+                    await userManager.CreateAsync(user, vm.Password, (vm as RegisterWithInvitationViewModel).Invitaion);
                 if (result.Succeeded)
                 {
                     await signInManager.SignInAsync(user, false);

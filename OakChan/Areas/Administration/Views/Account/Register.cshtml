@@ -23,6 +23,13 @@
         <div class="form-row">
             @Html.EditorFor(m => m.PasswordConfirmation, "InputRow")
         </div>
+        @if (Model is RegisterWithInvitationViewModel)
+        {
+            <div class="form-row">
+                @Html.EditorFor(m => ((RegisterWithInvitationViewModel)m).Invitaion, "InputRow")
+            </div>
+        }
+
         <br />
         <div class="form-row">
             <div class="form-button" style="width:auto">
