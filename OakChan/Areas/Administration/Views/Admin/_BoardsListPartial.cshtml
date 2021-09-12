@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<OakChan.Services.DTO.BoardInfoDto>
 
-<table>
+<table id="boards-control">
     <tr>
         <th>@Localizer["Id"]</th>
         <th>@Localizer["Name"]</th>
@@ -24,4 +24,9 @@
             </td>
         </tr>
     }
+    <tr>
+        <td colspan="5">
+            <a asp-action="CreateBoard">[@Localizer["New board"]]</a>
+        </td>
+    </tr>
 </table>

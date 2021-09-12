@@ -1,9 +1,19 @@
 ﻿@model OakChan.Areas.Administration.ViewModels.AdminDashboardViemModel
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/scripts/invitations.js"></script>
 }
-<h1>@Localizer["Oakchan administration"]</h1>
-<hr />
-<partial name="_BoardsListPartial" model="Model.Boards" />
-<hr />
-<a asp-action="CreateBoard">@Localizer["New board"]</a>
+<div class="dashboard">
+    <h1>@Localizer["Oakchan administration"]</h1>
+    <hr />
+    <div class="dash-section">
+        <h3>@Localizer["Boards:"]</h3>
+        <partial name="_BoardsListPartial" model="Model.Boards" />
+    </div>
+    <hr />
+    <div class="dash-section">
+        <h3>@Localizer["Users:"]</h3>
+        <partial name="_InvitationsPartial" />
+    </div>
+    <hr />
+</div>
