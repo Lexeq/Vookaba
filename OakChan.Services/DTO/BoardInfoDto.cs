@@ -1,6 +1,6 @@
 ﻿namespace OakChan.Services.DTO
 {
-    public class BoardDto
+    public class BoardInfoDto
     {
         public string Key { get; set; }
 
@@ -11,5 +11,7 @@
         public bool IsDisabled { get; set; }
 
         public int BumpLimit { get; set; }
+
+        public int ThreadsCount { get; set; }
     }
 }

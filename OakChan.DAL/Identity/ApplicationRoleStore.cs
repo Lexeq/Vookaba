@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using OakChan.DAL.Database;
 
 namespace OakChan.Identity
 {
-    public class ApplicationRoleStore : RoleStore<ApplicationRole, OakDbContext, int, ApplicationUserRole, ApplicationRoleClaim>
+    public class ApplicationRoleStore : RoleStore<ApplicationRole, OakDbContext, int>
     {
         public ApplicationRoleStore(OakDbContext context, IdentityErrorDescriber describer = null)
             : base(context, describer)

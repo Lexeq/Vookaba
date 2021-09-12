@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OakChan.Common;
 using OakChan.DAL.Entities;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.DAL.Database
 {
-    public class OakDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, int, ApplicationUserClaim, ApplicationUserRole, ApplicationUserLogin, ApplicationRoleClaim, ApplicationUserToken>
+    public class OakDbContext : ChanIdentityDbContext<ApplicationUser, ApplicationRole, ApplicationInvitation, int>
     {
         private readonly IHttpContextAccessor httpContextAccessor;
 
@@ -38,6 +37,7 @@ namespace OakChan.DAL.Database
 
         public DbSet<Report> Reports { get; set; }
 
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetAssembly(typeof(OakDbContext)));
@@ -46,7 +46,6 @@ namespace OakChan.DAL.Database
 
         public override int SaveChanges()
         {
-            AutoSetProperties();
             return base.SaveChanges();
         }
 
@@ -64,7 +63,6 @@ namespace OakChan.DAL.Database
 
         public override Task<int> SaveChangesAsync(System.Threading.CancellationToken cancellationToken = default)
         {
-            AutoSetProperties();
             return base.SaveChangesAsync(cancellationToken);
         }
 

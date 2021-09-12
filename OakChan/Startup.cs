@@ -1,5 +1,4 @@
 using System.Globalization;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -20,6 +19,7 @@ using OakChan.DAL.Database;
 using OakChan.Deanon;
 using OakChan.Identity;
 using OakChan.Mapping;
+using OakChan.Policies;
 using OakChan.Services;
 using OakChan.Services.DbServices;
 using OakChan.Services.Mapping;
@@ -40,6 +40,7 @@ namespace OakChan
 
         public void ConfigureServices(IServiceCollection services)
         {
+            //TODO: clean up this mess
             services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
             services.AddSingleton<IAttachmentsStorage>(
                 svc => new MediaStorage(svc.GetRequiredService<IWebHostEnvironment>().WebRootPath, svc.GetRequiredService<ILogger<MediaStorage>>()));
@@ -90,6 +91,10 @@ namespace OakChan
                 .AddUserManager<ApplicationUserManager>()
                 .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
                 .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>();
+            services.AddScoped(s => (ApplicationUserStore)s.GetRequiredService<IUserStore<ApplicationUser>>());
+            services.AddScoped<IInvitationStore<ApplicationInvitation>>(s => s.GetRequiredService<ApplicationUserStore>());
+            services.AddScoped<IUserInvitationStore<ApplicationUser>>(s => s.GetRequiredService<ApplicationUserStore>());
+            services.AddScoped<InvitationManager<ApplicationInvitation>>();
 
             services.AddScoped<AuthorTokenManager>();
             services.AddScoped<IAuthorTokenFactory>(s => s.GetRequiredService<AuthorTokenManager>());
@@ -118,6 +123,9 @@ namespace OakChan
                 o.Password.RequireLowercase = false;
             });
 
+            services.AddChanPolicies();
+
+            services.Configure<ChanOptions>(o => o.PublicRegistrationEnabled = false);
             services.AddOptions();
             services.AddScoped<DatabaseSeeder>();
             services.Configure<SeedData>(Configuration.GetSection(nameof(SeedData)));

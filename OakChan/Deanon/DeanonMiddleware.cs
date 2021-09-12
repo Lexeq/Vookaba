@@ -20,7 +20,7 @@ namespace OakChan.Deanon
             this.options = options?.Value ?? throw new ArgumentNullException(nameof(options));
         }
 
-        public async Task InvokeAsync(HttpContext context, IAuthorTokenFactory postingTokens)
+        public async Task InvokeAsync(HttpContext context, IAuthorTokenManager postingTokens)
         {
             if (!context.User.HasClaim(c => c.Type == OakConstants.AuthorTokenClaimType))
             {

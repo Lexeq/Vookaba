@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using OakChan.Deanon;
+using OakChan.Areas.Administration.ViewModels;
 using OakChan.Services.DTO;
 using OakChan.ViewModels;
 using System.Linq;
@@ -70,6 +71,15 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.OpPost, opt => opt.MapFrom(vm => vm));
 
             CreateMap<ImageDto, ImageViewModel>();
+
+            CreateMap<BoardPropertiesViewModel, BoardDto>()
+                .ForMember(dto => dto.Key, opt => opt.MapFrom(vm => vm.BoardKey))
+                .ReverseMap();
+
+            CreateMap<BoardInfoDto, BoardPropertiesViewModel>()
+                .ForMember(vm => vm.BoardKey, opt => opt.MapFrom(dto => dto.Key))
+                .ReverseMap()
+                .ForMember(dto => dto.ThreadsCount, opt => opt.Ignore());
         }
     }
 }

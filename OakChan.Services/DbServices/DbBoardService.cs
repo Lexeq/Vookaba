@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using OakChan.Common.Exceptions;
 using OakChan.DAL.Entities;
+using OakChan.DAL;
+using Microsoft.Extensions.Logging;
 
 namespace OakChan.Services.DbServices
 {
@@ -15,13 +17,21 @@ namespace OakChan.Services.DbServices
     {
         private readonly OakDbContext context;
         private readonly IMapper mapper;
+        private readonly IAttachmentsStorage storage;
         private readonly ThrowHelper throwHelper;
+        private readonly ILogger<DbBoardService> logger;
 
-        public DbBoardService(OakDbContext context, IMapper mapper, ThrowHelper throwHelper)
+        public DbBoardService(OakDbContext context,
+                              IMapper mapper,
+                              IAttachmentsStorage storage,
+                              ThrowHelper throwHelper,
+                              ILogger<DbBoardService> logger)
         {
             this.context = context;
             this.mapper = mapper;
+            this.storage = storage;
             this.throwHelper = throwHelper;
+            this.logger = logger;
         }
 
         public async Task<BoardInfoDto> GetBoardInfoAsync(string boardKey)
@@ -89,6 +99,90 @@ namespace OakChan.Services.DbServices
                 .ToListAsync();
         }
 
+        public async Task CreateBoardAsync(BoardDto board)
+        {
+            throwHelper.ThrowIfNull(board, nameof(board));
+
+            var boardEntity = mapper.Map<Board>(board);
+            try
+            {
+                context.Boards.Add(boardEntity);
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+                when (ex.InnerException is Npgsql.PostgresException x && x.SqlState == "23505")
+            {
+                throw new ArgumentException($"Board with key '{board.Key}' already exists.", ex);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task UpdateBoardAsync(string key, BoardDto board)
+        {
+            throwHelper.ThrowIfNullOrWhiteSpace(key, nameof(key));
+            throwHelper.ThrowIfNull(board, nameof(board));
+
+            using var transaction = await context.Database.BeginTransactionAsync();
+            try
+            {
+                //update key
+                if (board.Key != null && board.Key != key)
+                {
+                    var cnt = await context.Database.ExecuteSqlInterpolatedAsync($@"UPDATE ""Boards"" b SET ""Key"" = {board.Key} WHERE b.""Key"" = {key}");
+                    key = board.Key;
+                }
+
+                //update other properties
+                var boardEntity = context.Boards.Find(key);
+                var x = context.Attach(boardEntity);
+                mapper.Map(board, boardEntity);
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+
+        public async Task DeleteBoardAsync(string boardKey)
+        {
+            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
+
+            var board = await context.Boards.FindAsync(boardKey);
+            if (board == null)
+            {
+                throw new ArgumentException($"Board with key '{board.Key}' do not exist.");
+            }
+
+            var attachments = await context.Boards
+                .Where(b => b.Key == boardKey)
+                .SelectMany(b => b.Threads.SelectMany(t => t.Posts))
+                .SelectMany(p => p.Attachments)
+                .AsNoTracking()
+                .ToListAsync();
+
+            context.Boards.Remove(board);
+            await context.SaveChangesAsync();
+
+            foreach (var attachment in attachments)
+            {
+                try
+                {
+                    await storage.DeleteImageAsync(attachment.Name);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError($"Can't delete attachment {attachment.Id}:{attachment.Name}", ex);
+                }
+            }
+        }
+
+
         private IQueryable<Post> GetFirstAndLastPostsQuery(IEnumerable<int> threadIds, int recentPostsCount)
         {
             var idsString = string.Join(", ", threadIds);
@@ -111,5 +205,6 @@ WHERE t.""Id"" IN({idsString})
 ";
             return context.Posts.FromSqlRaw(queryString);
         }
+
     }
 }

@@ -8,9 +8,12 @@ namespace OakChan.DAL.Entities.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            builder.HasOne<AuthorToken>()
+            builder.Property(u => u.AuthorTokenId)
+                .HasColumnName("AuthorToken");
+
+            builder.HasOne(u => u.AuthorToken)
                 .WithOne()
-                .HasForeignKey<ApplicationUser>(u => u.AuthorToken);
+                .HasForeignKey<ApplicationUser>(u => u.AuthorTokenId);
         }
     }
 }

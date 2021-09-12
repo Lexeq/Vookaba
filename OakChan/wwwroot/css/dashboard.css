@@ -1,0 +1,80 @@
+﻿.dashboard h1 {
+    text-align: center;
+}
+
+.dash-section {
+    margin: 1em 2.5em;
+}
+
+
+#boards-control {
+    border-collapse: collapse;
+    width: 75%;
+    max-width: 50em;
+}
+
+    #boards-control td, #boards-control th {
+        border: 1px dashed #aaa;
+        padding: 8px;
+    }
+
+    #boards-control tr:nth-child(even) {
+        background-color: #e0cf85;
+    }
+
+    #boards-control tr:not(:last-child):hover {
+        background-color: #d0aa7d;
+    }
+
+    #boards-control th {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        text-align: center;
+        background-color: #bd9f7a;
+        color: white;
+    }
+
+    #boards-control tr:last-child {
+        text-align: center;
+    }
+
+.invite-form .form-button {
+    display: inline-block;
+    width: 80px;
+    height: 20px;
+}
+
+.invite-form input[type=submit]:disabled + label {
+    color: gray;
+    background: lightgray;
+    border-color: darkgray;
+    cursor: default;
+}
+.invite-form{
+    margin-bottom:5px;
+}
+.invite-form input {
+    text-align: right;
+    width: 4em;
+}
+
+.invite-info-block {
+    border: 1px solid brown;
+    width: 75%;
+    max-width: 50em;
+    display: table;
+    margin: 3px 0px;
+}
+
+.invite-info-block__row {
+    margin: 3px 1%;
+}
+
+    .invite-info-block__row input[readonly=true] {
+        width: 74%;
+    }
+
+    .invite-info-block__row span {
+        width: 24%;
+        display: inline-block;
+    }
