@@ -1,10 +1,8 @@
 ﻿document.forms["invForm"].addEventListener("submit", e => {
     e.preventDefault();
     const form = document.forms["invForm"];
-    let err = document.getElementById("inv-error");
-    if (err) {
-        err.parentNode.removeChild(err);
-    }
+    document.getElementById("inv-error").innerHTML = "";
+    document.getElementById("inv-error").style.display = "none";
     createInvitation(form.elements["expDays"].value);
 });
 
@@ -33,11 +31,8 @@ function createInvitation(days) {
             form.parentNode.appendChild(createInvitationInfoBlock(inv));
         })
         .catch(er => {
-            let errSpan = document.createElement("span");
-            errSpan.classList.add("inv-error");
-            errSpan.setAttribute("id", "inv-error");
-            errSpan.append(er);
-            form.parentNode.appendChild(errSpan);
+            document.getElementById("inv-error").append(er);
+            document.getElementById("inv-error").style.display = "block";
         })
         .finally(() => submitBtn.disabled = false);
 }
