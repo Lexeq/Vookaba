@@ -8,7 +8,7 @@ namespace OakChan.Deanon
     {
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, DeanonRequirement requirement)
         {
-            if (context.User.HasClaim(claim => claim.Type == OakConstants.AuthorTokenClaimType))
+            if (context.User.HasClaim(claim => claim.Type == OakConstants.ClaimTypes.AuthorToken))
             {
                 context.Succeed(requirement);
             }

@@ -26,6 +26,10 @@ hr {
     text-align: center;
 }
 
+.text-right {
+    text-align: center;
+}
+
 .footer {
     position: absolute;
     bottom: 0;

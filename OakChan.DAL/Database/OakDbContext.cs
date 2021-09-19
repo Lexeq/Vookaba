@@ -77,7 +77,7 @@ namespace OakChan.DAL.Database
                     ha.UserAgent ??= httpContextAccessor.HttpContext.Request.Headers["User-Agent"];
                     if (ha.AuthorToken == default)
                     {
-                        ha.AuthorToken = Guid.Parse(httpContextAccessor.HttpContext.User.FindFirst(OakConstants.AuthorTokenClaimType).Value);
+                        ha.AuthorToken = Guid.Parse(httpContextAccessor.HttpContext.User.FindFirst(OakConstants.ClaimTypes.AuthorToken).Value);
                     }
                 }
                 if (entry.Entity is IHasCreationTime ct && ct.Created == default)

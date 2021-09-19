@@ -4,8 +4,6 @@
     {
         public const int MinPasswordLength = 8;
         public const string AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+абвгдеёжзийклмнопрстуфхцчшщъыьэюяФБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
-        public const string DefaultAdministratorRole = "Administrator";
-        public const string AuthorTokenClaimType = "atkn";
 
         public static class PostConstants
         {
@@ -25,6 +23,20 @@
             public const int DefaultBumpLimit = 250;
             public const int MaxKeyLength = 10;
             public const int MaxNameLength = 64;
+        }
+
+        public static class Roles
+        {
+            public const string Administrator = "Administrator";
+            public const string Moderator = "Moderator";
+            public const string Janitor = "Janitor";
+            public const string NotInRole = "none";
+        }
+
+        public static class ClaimTypes
+        {
+            public const string AuthorToken = "atkn";
+            public const string BoardPermission = "brdPerm";
         }
     }
 }

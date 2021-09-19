@@ -14,7 +14,7 @@ namespace OakChan.Policies
                     name: "CanInvite",
                     policy =>
                     {
-                        policy.AddRequirements(new RoleRequirement(OakConstants.DefaultAdministratorRole));
+                        policy.AddRequirements(new RoleRequirement(OakConstants.Roles.Administrator));
                     });
             });
 

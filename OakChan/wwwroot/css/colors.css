@@ -13,4 +13,10 @@
     --colors_btn-dis-alt: gray;
     --colors_btn-dis-brd: darkgray;
     --colors_error: red;
+    --colors_table: #e9de91;
+    --colors_table-alt: #e3d286;
+    --colors_table-head: #bd9f7a;
+    --colors_table-head-text: #fdfdfd;
+    --colors_table-subtitle: #d6bd80;
+    --colors_table-hover: #d0aa7d;
 }

@@ -7,35 +7,35 @@
 }
 
 
-#boards-control {
+.dashboard-table {
     border-collapse: collapse;
     width: 75%;
     max-width: 50em;
+    background: var(--colors_table)
 }
 
-    #boards-control td, #boards-control th {
-        border: 1px dashed #aaa;
+    .dashboard-table td, #boards-control th {
         padding: 8px;
     }
 
-    #boards-control tr:nth-child(even) {
-        background-color: #e0cf85;
+    .dashboard-table tr:nth-child(even) {
+        background-color: var(--colors_table-alt);
     }
 
-    #boards-control tr:not(:last-child):hover {
-        background-color: #d0aa7d;
+    .dashboard-table tbody tr:not(.subtitle):hover {
+        background-color: var(--colors_table-hover);
     }
 
-    #boards-control th {
+    .dashboard-table th {
         padding-top: 8px;
         padding-bottom: 8px;
-        text-align: center;
-        background-color: #bd9f7a;
-        color: white;
+        background-color: var(--colors_table-head);
+        color: var(--colors_table-head-text);
     }
 
-    #boards-control tr:last-child {
-        text-align: center;
+    .dashboard-table .subtitle {
+        background-color: var(--colors_table-subtitle);
+        font-weight: 600;
     }
 
 .invite-form .form-button {
@@ -44,22 +44,17 @@
     height: 20px;
 }
 
-.invite-form input[type=submit]:disabled + label {
-    color: gray;
-    background: lightgray;
-    border-color: darkgray;
-    cursor: default;
-}
-.invite-form{
-    margin-bottom:5px;
-}
-.invite-form input {
-    text-align: right;
-    width: 4em;
+.invite-form {
+    margin-bottom: 5px;
 }
 
+    .invite-form input {
+        text-align: right;
+        width: 4em;
+    }
+
 .invite-info-block {
-    border: 1px solid brown;
+    border: 1px solid var(--colors_border);
     width: 75%;
     max-width: 50em;
     display: table;

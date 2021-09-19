@@ -39,7 +39,7 @@ namespace OakChan.Controllers
 
         public async Task<IActionResult> Index(string board, int thread)
         {
-            var showAll = User.IsInRole(OakConstants.DefaultAdministratorRole);
+            var showAll = User.IsInRole(OakConstants.Roles.Administrator);
             var boardDto = await boards.GetBoardInfoAsync(board);
             if (boardDto?.IsDisabled == false || showAll)
             {
@@ -72,13 +72,13 @@ namespace OakChan.Controllers
                         return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
                     }
                 }
-                logger.LogWarning($"Invalid arguments from {User.FindFirst(OakConstants.AuthorTokenClaimType)}({IP}) to {nameof(CreatePostAsync)}. " +
+                logger.LogWarning($"Invalid arguments from {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)}({IP}) to {nameof(CreatePostAsync)}. " +
                     string.Join(Environment.NewLine, $"board: {board}", $"thread: {thread}."));
                 return BadRequest();
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {User.FindFirst(OakConstants.AuthorTokenClaimType)}({IP}) to {nameof(CreatePostAsync)}. " +
+                logger.LogWarning($"Invalid model state from {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)}({IP}) to {nameof(CreatePostAsync)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }

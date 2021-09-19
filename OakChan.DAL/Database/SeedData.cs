@@ -5,8 +5,6 @@ namespace OakChan.DAL.Database
 {
     public class SeedData
     {
-        public string AdminRoleName { get; set; } = "Administrator";
-
         public string AdministratorUserName { get; set; } = "Administrator";
 
         public string AdministratorPassword { get; set; }

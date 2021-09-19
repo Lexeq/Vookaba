@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using OakChan.Common;
 using OakChan.Identity;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +14,6 @@ namespace OakChan.DAL.Database
         private OakDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
-
         private readonly SeedData options;
 
         public DatabaseSeeder(OakDbContext context,
@@ -30,23 +29,37 @@ namespace OakChan.DAL.Database
 
         public async Task SeedAsync()
         {
+            await SeedRoles();
             await SeedAdminUser();
             await SeedBoards();
         }
 
-        private async Task SeedAdminUser()
+        private async Task SeedRoles()
         {
-            var adminRole = await roleManager.FindByNameAsync(options.AdminRoleName);
-            if (adminRole == null)
+            if (!await roleManager.Roles.AnyAsync())
             {
-                adminRole = new ApplicationRole(options.AdminRoleName);
-                var result = await roleManager.CreateAsync(adminRole);
-                if (!result.Succeeded)
+                var roles = new[]
                 {
-                    throw new Exception($"Can't create admin role: {string.Join(", ", result.Errors.Select(e => $"{e.Code}:{e.Description}"))}");
+                    new ApplicationRole(OakConstants.Roles.Administrator),
+                    new ApplicationRole(OakConstants.Roles.Moderator),
+                    new ApplicationRole(OakConstants.Roles.Janitor)
+                };
+
+                foreach (var role in roles)
+                {
+                    var result = await roleManager.CreateAsync(role);
+                    if (!result.Succeeded)
+                    {
+                        throw new Exception($"Can't create role '{role.Name}': {string.Join(", ", result.Errors.Select(e => $"{e.Code} : {e.Description}"))}");
+                    }
                 }
             }
+        }
 
+
+        private async Task SeedAdminUser()
+        {
+            var adminRole = await roleManager.FindByNameAsync(OakConstants.Roles.Administrator);
             var adminUserToRole = await context.UserRoles.FirstOrDefaultAsync(ur => ur.RoleId == adminRole.Id);
 
             if (adminUserToRole == null)

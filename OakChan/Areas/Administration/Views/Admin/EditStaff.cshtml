@@ -1,0 +1,29 @@
+﻿@model EditStaffViewModel
+<div class="staff-edit">
+    <h3>@Localizer[$"Edit permissions for '{Model.UserName}'"]</h3>
+    <div class="column">
+        <form id="upd-usr-form" asp-area="Administration" asp-controller="Admin" asp-action="UpdateStaff">
+            @Html.HiddenFor(x => x.UserId)
+
+            <fieldset>
+                <legend>@Localizer["Role"]</legend>
+                @foreach (var role in Model.Roles)
+                {
+            <label> <input type="radio" asp-for="UserRole" value="@role"/>@Localizer[role]</label>
+                }
+            </fieldset>
+            <fieldset>
+                <legend>@Localizer["Boards"]</legend>
+                @for (int i = 0; i < Model.Boards.Count; i++)
+                {
+                    <input type="hidden" asp-for="Boards[i].Item" />
+                    <label><input asp-for="Boards[i].IsChecked" checked="@(Model.Boards[i].IsChecked)" />@Model.Boards[i].Item</label>
+                }
+            </fieldset>
+        </form>
+        <form id="go-to-dash" method="get" asp-area="Administration" asp-controller="Admin" asp-action="Dashboard">
+        </form>
+        <button type="submit" form="go-to-dash" class="oakbutton" title="@Localizer["Back to dashboard"]">@(Localizer["Dashboard"])</button>
+        <button type="submit" form="upd-usr-form" class="oakbutton right">@Localizer["Save"]</button>
+    </div>
+</div>

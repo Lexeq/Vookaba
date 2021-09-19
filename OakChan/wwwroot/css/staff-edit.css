@@ -1,0 +1,30 @@
+﻿.staff-edit h3 {
+    margin-left: 0.75em;
+}
+
+.staff-edit fieldset {
+    border-color: var(--colors_border);
+    border-radius: 0.33em;
+    margin-bottom: 1em;
+}
+
+    .staff-edit fieldset label {
+        line-height: 160%;
+        display: block;
+    }
+
+.staff-edit .column {
+    width: 20%;
+    min-width: 15em;
+    margin-left: 1.5em;
+    position: relative;
+}
+
+.staff-edit button {
+    position: absolute;
+    width: 100px;
+}
+
+.staff-edit .right {
+    right: 0px;
+}

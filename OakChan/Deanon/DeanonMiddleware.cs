@@ -22,7 +22,7 @@ namespace OakChan.Deanon
 
         public async Task InvokeAsync(HttpContext context, IAuthorTokenManager postingTokens)
         {
-            if (!context.User.HasClaim(c => c.Type == OakConstants.AuthorTokenClaimType))
+            if (!context.User.HasClaim(c => c.Type == OakConstants.ClaimTypes.AuthorToken))
             {
                 var anonAuth = await context.AuthenticateAsync(DeanonConstants.AuthenticationScheme);
 
@@ -30,7 +30,7 @@ namespace OakChan.Deanon
                 {
                     var token = await postingTokens.CreateTokenAsync();
                     var identity = new ClaimsIdentity(
-                        claims: new[] { new Claim(OakConstants.AuthorTokenClaimType, token.Token.ToString()) },
+                        claims: new[] { new Claim(OakConstants.ClaimTypes.AuthorToken, token.Token.ToString()) },
                         authenticationType: DeanonConstants.AuthenticationScheme);
                     await context.SignInAsync(DeanonConstants.AuthenticationScheme,
                         new ClaimsPrincipal(identity),

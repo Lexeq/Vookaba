@@ -47,11 +47,11 @@ namespace OakChan.Controllers
             {
                 return PageNotFound(board, page);
             }
-            
+
             BoardInfoDto boardInfo = await boardService.GetBoardInfoAsync(board);
 
             if (boardInfo == null ||
-                boardInfo.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
+                boardInfo.IsDisabled && !User.IsInRole(OakConstants.Roles.Administrator))
             {
                 return BoardDoesNotExist(board);
             }
@@ -91,7 +91,7 @@ namespace OakChan.Controllers
                 var boardInfo = await boardService.GetBoardInfoAsync(board);
                 if (boardInfo == null || boardInfo.IsDisabled)
                 {
-                    logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.AuthorTokenClaimType)} to {nameof(CreateThreadAsync)}. Bad board key {board}");
+                    logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)} to {nameof(CreateThreadAsync)}. Bad board key {board}");
 
                     return BadRequest();
                 }
@@ -100,7 +100,7 @@ namespace OakChan.Controllers
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {OakConstants.AuthorTokenClaimType} to {nameof(CreateThreadAsync)}. " +
+                logger.LogWarning($"Invalid model state from {OakConstants.ClaimTypes.AuthorToken} to {nameof(CreateThreadAsync)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }

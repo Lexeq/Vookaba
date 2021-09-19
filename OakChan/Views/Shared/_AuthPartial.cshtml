@@ -3,7 +3,7 @@
 @if (signInManager.IsSignedIn(User))
 {
     <div>
-        @if(User.IsInRole(OakChan.Common.OakConstants.DefaultAdministratorRole))
+        @if(User.IsInRole(OakChan.Common.OakConstants.Roles.Administrator))
         {
             <a asp-area="Administration" asp-controller="Admin" asp-action="Dashboard">@Localizer["Administration"]</a>
         }

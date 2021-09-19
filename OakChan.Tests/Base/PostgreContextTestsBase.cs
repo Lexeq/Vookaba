@@ -93,7 +93,7 @@ namespace OakChan.Tests.Base
             var httpContext = new DefaultHttpContext();
             httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Loopback;
             httpContext.Request.Headers["User-Agent"] = nameof(PostgreContextTestsBase);
-            httpContext.User.Identities.First().AddClaim(new System.Security.Claims.Claim(OakConstants.AuthorTokenClaimType, "11111111-1111-1111-1111-111111111111"));
+            httpContext.User.Identities.First().AddClaim(new System.Security.Claims.Claim(OakConstants.ClaimTypes.AuthorToken, "11111111-1111-1111-1111-111111111111"));
             var httpAM = new Mock<IHttpContextAccessor>(MockBehavior.Strict);
             httpAM.Setup(m => m.HttpContext).Returns(httpContext);
             return new OakDbContext(_dbContextOptions, httpAM.Object);
