@@ -16,7 +16,7 @@ namespace OakChan.Controllers.Base
         protected virtual ViewResult Error(int code, string caption, string message)
         {
             var vm = new ErrorViewModel(code, caption, message);
-
+            HttpContext.Response.StatusCode = code;
             return View("Error", vm);
         }
     }

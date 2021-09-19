@@ -124,6 +124,7 @@ namespace OakChan
             });
 
             services.AddChanPolicies();
+            services.AddScoped<HttpStatusCodeDescriber>();
 
             services.Configure<ChanOptions>(o => o.PublicRegistrationEnabled = false);
             services.AddOptions();
