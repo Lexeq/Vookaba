@@ -38,44 +38,6 @@
     max-height: 18em;
 }
 
-.hidden-input {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-}
-
-.form-button {
-    height: 25px;
-    min-width: 80px;
-}
-
-    .hidden-input:focus + label,
-    .form-button label:hover {
-        background: #91672c;
-        cursor: pointer;
-        color: white;
-    }
-
-    .form-button label {
-        background: white;
-        color: #71470c;
-        border: 2px solid #71470c;
-        border-radius: 6px;
-        font-size: 15px;
-        font-weight: 200;
-        height: 100%;
-        width: 100%;
-        display: inline-flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        overflow: hidden;
-    }
-
 .preview-container {
     width: 100px;
     height: 100px;
@@ -121,7 +83,7 @@
 
 .error-list li {
     list-style: none;
-    color: red;
+    color: var(--colors_error);
     margin: 3px 0 0;
     font-size: 0.9em;
 }
@@ -145,7 +107,7 @@
     }
 
 .authform-error {
-    color: red;
+    color: var(--colors_error);
 }
 
 .authform .field-validation-error {
@@ -160,7 +122,7 @@
     width: 500px;
     display: block;
     margin: auto;
-    border-color: darkred;
+    border-color: var(--colors_border);
 }
 
     .auth__fieldset legend {

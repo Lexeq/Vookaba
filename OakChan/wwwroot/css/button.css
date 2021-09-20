@@ -1,0 +1,44 @@
+﻿.hidden-input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.form-button {
+    height: 25px;
+    min-width: 80px;
+}
+
+    .hidden-input:focus + label,
+    .form-button label:hover {
+        background: var(--colors_btn-alt);
+        cursor: pointer;
+        color: var(--colors_btn);
+    }
+
+    .form-button label {
+        background: var(--colors_btn);
+        color: var(--colors_btn-alt);
+        border: 2px solid var(--colors_btn-brd);
+        border-radius: 6px;
+        font-size: 15px;
+        font-weight: 200;
+        height: 100%;
+        width: 100%;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .form-button input:disabled + label {
+        color: var(--colors_btn-dis-alt);
+        background: var(--colors_btn-dis);
+        border-color: var(--colors_btn-dis-brd);
+        cursor: default;
+    }
