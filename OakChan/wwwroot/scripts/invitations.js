@@ -9,7 +9,7 @@
 function createInvitation(days) {
     const uri = '/administration/account/createinvitation';
     const form = document.forms["invForm"];
-    const submitBtn = form.querySelector("input[type='submit']");
+    const submitBtn = form.querySelector("button[type='submit']");
     const antiforgey = form.querySelector("input[name='__RequestVerificationToken']").value;
     submitBtn.disabled = true;
     fetch(uri, {

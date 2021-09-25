@@ -7,25 +7,24 @@
     z-index: -1;
 }
 
-.form-button {
+.fake-button {
     height: 25px;
     min-width: 80px;
 }
 
     .hidden-input:focus + label,
-    .form-button label:hover {
+    .fake-button label:hover {
         background: var(--colors_btn-alt);
         cursor: pointer;
         color: var(--colors_btn);
     }
 
-    .form-button label {
+    .fake-button label {
         background: var(--colors_btn);
         color: var(--colors_btn-alt);
         border: 2px solid var(--colors_btn-brd);
         border-radius: 6px;
         font-size: 15px;
-        font-weight: 200;
         height: 100%;
         width: 100%;
         display: inline-flex;
@@ -34,9 +33,33 @@
         align-items: center;
         cursor: pointer;
         overflow: hidden;
+        box-sizing: border-box;
     }
 
-    .form-button input:disabled + label {
+    .fake-button input:disabled + label {
+        color: var(--colors_btn-dis-alt);
+        background: var(--colors_btn-dis);
+        border-color: var(--colors_btn-dis-brd);
+        cursor: default;
+    }
+
+.oakbutton {
+    height: 25px;
+    min-width: 80px;
+    background-color: var(--colors_btn);
+    color: var(--colors_btn-alt);
+    border: 2px solid var(--colors_btn-brd);
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+    .oakbutton:hover, .oakbutton:focus {
+        background: var(--colors_btn-alt);
+        cursor: pointer;
+        color: var(--colors_btn);
+    }
+
+    .oakbutton:disabled {
         color: var(--colors_btn-dis-alt);
         background: var(--colors_btn-dis);
         border-color: var(--colors_btn-dis-brd);
