@@ -29,6 +29,13 @@ namespace OakChan
 {
     public class Startup
     {
+#if DEBUG
+        public ILoggerFactory EfLoggerFactory = LoggerFactory.Create(o =>
+        {
+            o.ClearProviders();
+            o.AddDebug();
+        });
+#endif
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Environment { get; }
 
@@ -41,7 +48,12 @@ namespace OakChan
         public void ConfigureServices(IServiceCollection services)
         {
             //TODO: clean up this mess
-            services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
+            services.AddDbContext<OakDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("Postgre"))
+#if DEBUG
+                .UseLoggerFactory(EfLoggerFactory)
+#endif
+                );
             services.AddSingleton<IAttachmentsStorage>(
                 svc => new MediaStorage(svc.GetRequiredService<IWebHostEnvironment>().WebRootPath, svc.GetRequiredService<ILogger<MediaStorage>>()));
 
