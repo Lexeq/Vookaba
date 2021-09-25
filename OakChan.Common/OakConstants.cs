@@ -30,7 +30,7 @@
             public const string Administrator = "Administrator";
             public const string Moderator = "Moderator";
             public const string Janitor = "Janitor";
-            public const string NotInRole = "none";
+            public const string NotInRole = "No role";
         }
 
         public static class ClaimTypes
