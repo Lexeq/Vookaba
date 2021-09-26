@@ -52,7 +52,7 @@ namespace OakChan.Areas.Administration.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel vm, string returnUrl = null)
+        public async Task<IActionResult> Register(RegisterViewModel vm)
         {
             if (!chanOptions.PublicRegistrationEnabled)
             {
@@ -73,8 +73,7 @@ namespace OakChan.Areas.Administration.Controllers
                     await userManager.CreateAsync(user, vm.Password, (vm as RegisterWithInvitationViewModel).Invitaion);
                 if (result.Succeeded)
                 {
-                    await signInManager.SignInAsync(user, false);
-                    return RedirectToReturnUrlOrDefault(returnUrl);
+                    return View(nameof(Login), new LoginViewModel { Login = vm.Login });
                 }
 
                 foreach (var error in result.Errors)

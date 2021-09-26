@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -120,6 +121,8 @@ namespace OakChan
                 options.LoginPath = "/Administration/Account/Login";
                 options.Cookie.IsEssential = true;
                 options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(15);
+                options.Cookie.MaxAge = TimeSpan.FromDays(90);
             });
 
             services.Configure<IdentityOptions>(o =>

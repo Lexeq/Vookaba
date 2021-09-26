@@ -9,7 +9,7 @@
 <h1 class="text-center">@Localizer["Login"]</h1>
 <fieldset class="auth__fieldset">
     <legend>@Localizer["Fill in the fields"]</legend>
-    <form class="authform" method="post">
+    <form class="authform" method="post" asp-area="Administration" asp-controller="Account" asp-action="Login">
         <div class="authform-error" asp-validation-summary="ModelOnly"></div>
 
         <div class="form-row">
