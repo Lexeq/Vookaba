@@ -38,6 +38,8 @@ namespace OakChan.DAL.Database
 
         public DbSet<Report> Reports { get; set; }
 
+        public DbSet<ModAction> ModActions { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
