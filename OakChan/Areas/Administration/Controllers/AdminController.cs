@@ -11,6 +11,7 @@ using OakChan.Identity;
 using OakChan.Services;
 using OakChan.Services.DTO;
 using OakChan.Utils;
+using OakChan.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -226,17 +227,25 @@ namespace OakChan.Areas.Administration.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SelectUser(int page)
+        public async Task<IActionResult> SelectUser(int page = 1)
         {
-            const int usersPerPage = 20;
+            const int usersPerPage = 50;
             var count = userManager.Users.Count();
-            var pages = Math.Ceiling((double)count / usersPerPage);
+            var pages = (int)Math.Ceiling((double)count / usersPerPage);
             var users = await userManager.Users
                 .OrderBy(x => x.UserName)
-                .Skip(page * usersPerPage)
+                .Skip((page - 1) * usersPerPage)
                 .Take(usersPerPage)
                 .ToListAsync();
-            return View(users);
+            return View(new SelectUserViewModel
+            {
+                Users = users,
+                PagesInfo = new PaginatorViewModel
+                {
+                    TotalPages = pages,
+                    PageNumber = page
+                }
+            });
         }
 
         [NonAction]
