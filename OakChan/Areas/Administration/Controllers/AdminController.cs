@@ -217,6 +217,21 @@ namespace OakChan.Areas.Administration.Controllers
 
             return RedirectToAction(nameof(EditStaff), new { vm.UserId });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SelectUser(int page)
+        {
+            const int usersPerPage = 2;
+            var count = userManager.Users.Count();
+            var pages = Math.Ceiling((double)count / usersPerPage);
+            var users = await userManager.Users
+                .OrderBy(x => x.UserName)
+                .Skip(page * usersPerPage)
+                .Take(usersPerPage)
+                .ToListAsync();
+            return View(users);
+        }
+
         [NonAction]
         private async Task<IdentityResult> UpdateUserRoleAsync(ApplicationUser user, string newRole)
         {

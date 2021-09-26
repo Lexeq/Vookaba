@@ -1,0 +1,24 @@
+﻿@model IEnumerable<OakChan.Identity.ApplicationUser>
+
+<h3>@Localizer["Select user"]</h3>
+<div class="dashboard-section">
+    <table class="dashboard-table">
+        <thead>
+            <tr>
+                <th>@Localizer["ID"]</th>
+                <th>@Localizer["Name"]</th>
+                <th>@Localizer["Actions"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td class="text-center"><a asp-action="EditStaff" asp-route-userId="@user.Id">[@Localizer["Select"]]</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
