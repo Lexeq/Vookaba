@@ -176,15 +176,18 @@ namespace OakChan.Areas.Administration.Controllers
                 .Select(x => x.Value)
                 .ToHashSet();
 
+            var isAdmin = await userManager.IsInRoleAsync(user, OakConstants.Roles.Administrator);
+
+
             var vm = new EditStaffViewModel
             {
                 UserId = user.Id.ToString(),
                 UserName = user.UserName,
                 Boards = (await boardService.GetBoardsAsync(true))
-                      .Select(x => new CheckableItem<string>(x.Key, boards.Contains(x.Key)))
+                      .Select(x => new CheckableItem<string>(x.Key, isAdmin || boards.Contains(x.Key)))
                       .ToList(),
-                Roles = new[] { OakConstants.Roles.NotInRole, OakConstants.Roles.Moderator, OakConstants.Roles.Janitor },
-                UserRole = (await userManager.GetRolesAsync(user)).FirstOrDefault() ?? OakConstants.Roles.NotInRole
+                Roles = isAdmin ? new[] { OakConstants.Roles.Administrator } : new[] { OakConstants.Roles.NotInRole, OakConstants.Roles.Moderator, OakConstants.Roles.Janitor },
+                UserRole = isAdmin ? OakConstants.Roles.Administrator : (await userManager.GetRolesAsync(user)).FirstOrDefault() ?? OakConstants.Roles.NotInRole
             };
 
             return View(vm);
@@ -198,6 +201,10 @@ namespace OakChan.Areas.Administration.Controllers
             {
                 return Error((int)HttpStatusCode.BadRequest, statusCodeDescriber.GetStatusCodeDescription((int)HttpStatusCode.BadRequest), "Incorrect user id.");
             }
+            if (await userManager.IsInRoleAsync(user, OakConstants.Roles.Administrator))
+            {
+                return RedirectToAction(nameof(EditStaff), new { vm.UserId });
+            }
             if (string.IsNullOrEmpty(vm.UserRole))
             {
                 return Error((int)HttpStatusCode.BadRequest, statusCodeDescriber.GetStatusCodeDescription((int)HttpStatusCode.BadRequest), "Incorrect new user role.");
@@ -206,7 +213,7 @@ namespace OakChan.Areas.Administration.Controllers
             var roleResult = await UpdateUserRoleAsync(user, vm.UserRole);
             if (!roleResult.Succeeded)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
+                return StatusCode((int)HttpStatusCode.BadRequest);
             }
 
             var claimsResult = await UpdateClaimsAsync(user, vm.UserRole == OakConstants.Roles.NotInRole ? Enumerable.Empty<string>() : vm.Boards.Where(b => b.IsChecked).Select(x => x.Item));
@@ -221,7 +228,7 @@ namespace OakChan.Areas.Administration.Controllers
         [HttpGet]
         public async Task<IActionResult> SelectUser(int page)
         {
-            const int usersPerPage = 2;
+            const int usersPerPage = 20;
             var count = userManager.Users.Count();
             var pages = Math.Ceiling((double)count / usersPerPage);
             var users = await userManager.Users
