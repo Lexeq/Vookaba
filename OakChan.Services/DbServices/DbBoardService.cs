@@ -114,8 +114,9 @@ namespace OakChan.Services.DbServices
             {
                 throw new ArgumentException($"Board with key '{board.Key}' already exists.", ex);
             }
-            catch
+            catch (Exception ex)
             {
+                logger.LogError(ex, $"Can't create board {board.Key}");
                 throw;
             }
         }
@@ -142,8 +143,9 @@ namespace OakChan.Services.DbServices
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
             }
-            catch
+            catch (Exception ex)
             {
+                logger.LogError(ex, $"Can't update board {key}");
                 await transaction.RollbackAsync();
                 throw;
             }
