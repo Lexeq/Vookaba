@@ -62,38 +62,6 @@ hr {
         height: 1em;
     }
 
-.page-number-info,
-.page-link {
-    background-color: var(--colors_bg-substrate);
-    margin: 2px 0.1em;
-    padding: 3px 0.33em;
-    display: inline-block;
-    border-radius: 3px;
-}
-
-    .page-link a {
-        color: white;
-        text-decoration: none;
-    }
-
-.page-number-info {
-    color: white;
-    margin-right: 15px;
-}
-
-.page-first {
-    border-radius: 40% 0px 0px 40%;
-}
-
-.page-last {
-    border-radius: 0px 20px 20px 0px;
-}
-
-.page-current {
-    background-color: var(--colors_bg-nav);
-    font-weight: bold;
-}
-
 .auth-action {
     font-weight: 500;
 }

@@ -10,8 +10,6 @@ namespace OakChan.ViewModels
 
         public IEnumerable<ThreadPreviewViewModel> Threads { get; set; }
 
-        public int PageNumber { get; set; }
-
-        public int TotalPages { get; set; }
+        public PaginatorViewModel PagesInfo { get; set; }
     }
 }

@@ -71,9 +71,12 @@ namespace OakChan.Controllers
             {
                 Key = board,
                 Name = boardInfo.Name,
-                PageNumber = page,
                 Threads = mapper.Map<IEnumerable<ThreadPreviewViewModel>>(threads),
-                TotalPages = pagesCount
+                PagesInfo = new PaginatorViewModel
+                {
+                    PageNumber = page,
+                    TotalPages = pagesCount
+                }
             };
 
             return View(vm);
