@@ -49,7 +49,7 @@ namespace OakChan.Tests.Controllers
             Assert.IsNotNull(page);
             StringAssert.AreEqualIgnoringCase(key, page.Key);
             StringAssert.AreEqualIgnoringCase(name, page.Name);
-            Assert.AreEqual(1, page.PageNumber);
+            Assert.AreEqual(1, page.PagesInfo.PageNumber);
         }
 
         [Test]
@@ -102,7 +102,7 @@ namespace OakChan.Tests.Controllers
             var viewModel = viewResult.Model as BoardPageViewModel;
 
             Assert.IsNotNull(viewModel);
-            Assert.AreEqual(expected, viewModel.TotalPages);
+            Assert.AreEqual(expected, viewModel.PagesInfo.TotalPages);
         }
 
         [Test]

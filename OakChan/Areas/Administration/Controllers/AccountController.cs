@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OakChan.Areas.Administration.ViewModels;
 using OakChan.Common;
 using OakChan.Identity;
+using OakChan.Services;
 using OakChan.Utils;
 using System;
 using System.Net;
@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 namespace OakChan.Areas.Administration.Controllers
 {
     [Area("Administration")]
+    [AutoValidateAntiforgeryToken]
     public class AccountController : Controller
     {
         private readonly ApplicationUserManager userManager;
@@ -23,6 +24,7 @@ namespace OakChan.Areas.Administration.Controllers
         private readonly ChanOptions chanOptions;
         private readonly ClaimsIdentityOptions claimOptions;
         private readonly InvitationManager<ApplicationInvitation> invitations;
+        private readonly IModLogService modLogs;
         private readonly IStringLocalizer<AccountController> localizer;
         private readonly ILogger<AccountController> logger;
 
@@ -31,12 +33,14 @@ namespace OakChan.Areas.Administration.Controllers
             IOptions<ChanOptions> chanOptionsAccessor,
             IOptions<ClaimsIdentityOptions> claimOptionsAccessor,
             InvitationManager<ApplicationInvitation> invitations,
+            IModLogService modLogs,
             IStringLocalizer<AccountController> localizer,
             ILogger<AccountController> logger)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.invitations = invitations;
+            this.modLogs = modLogs;
             this.chanOptions = chanOptionsAccessor.Value;
             this.claimOptions = claimOptionsAccessor.Value;
             this.localizer = localizer;
@@ -73,6 +77,7 @@ namespace OakChan.Areas.Administration.Controllers
                     await userManager.CreateAsync(user, vm.Password, (vm as RegisterWithInvitationViewModel).Invitaion);
                 if (result.Succeeded)
                 {
+                    await modLogs.LogAsync(ApplicationEvent.AccountCreate, user.Id.ToString());
                     return View(nameof(Login), new LoginViewModel { Login = vm.Login });
                 }
 
@@ -98,6 +103,8 @@ namespace OakChan.Areas.Administration.Controllers
                 var signInResult = await signInManager.PasswordSignInAsync(vm.Login, vm.Password, vm.Remember, false);
                 if (signInResult.Succeeded)
                 {
+                    var user = await userManager.FindByNameAsync(vm.Login);
+                    await modLogs.LogAsync(ApplicationEvent.AccountLogin, user.Id.ToString());
                     return RedirectToReturnUrlOrDefault(returnUrl);
                 }
                 ModelState.AddModelError(string.Empty, localizer["Unsuccessful login attempt. Please check login and password."]);
@@ -115,7 +122,6 @@ namespace OakChan.Areas.Administration.Controllers
 
         [HttpPost]
         [Authorize(Policy = "CanInvite")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateInvitation([FromBody] int days)
         {
             var expirationDate = days < 1 ? DateTime.MaxValue : DateTime.UtcNow.AddDays(days);
@@ -134,6 +140,7 @@ namespace OakChan.Areas.Administration.Controllers
                 logger.LogError(ex, "Can't create invitation.");
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
+            await modLogs.LogAsync(ApplicationEvent.InvitationCreate, invitation.Id.ToString());
             return Ok(new
             {
                 Token = new

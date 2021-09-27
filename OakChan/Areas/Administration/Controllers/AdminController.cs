@@ -31,6 +31,7 @@ namespace OakChan.Areas.Administration.Controllers
         private readonly ILogger<AdminController> logger;
         private readonly ApplicationUserManager userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
+        private readonly IModLogService modLogs;
         private readonly HttpStatusCodeDescriber statusCodeDescriber;
 
         public AdminController(IBoardService boardService,
@@ -38,13 +39,15 @@ namespace OakChan.Areas.Administration.Controllers
                                ILogger<AdminController> logger,
                                HttpStatusCodeDescriber statusCodeDescriber,
                                ApplicationUserManager users,
-                               RoleManager<ApplicationRole> roles)
+                               RoleManager<ApplicationRole> roles,
+                               IModLogService modLogs)
         {
             this.boardService = boardService;
             this.mapper = mapper;
             this.logger = logger;
             this.userManager = users;
             this.roleManager = roles;
+            this.modLogs = modLogs;
             this.statusCodeDescriber = statusCodeDescriber;
         }
 
@@ -82,6 +85,7 @@ namespace OakChan.Areas.Administration.Controllers
                 try
                 {
                     await boardService.CreateBoardAsync(dto);
+                    await modLogs.LogAsync(ApplicationEvent.BoardCreate, vm.BoardKey);
                     logger.LogInformation($"Board '{dto.Key}' created by {User.Identity.Name}.");
                 }
                 catch (Exception ex)
@@ -108,6 +112,7 @@ namespace OakChan.Areas.Administration.Controllers
             try
             {
                 await boardService.DeleteBoardAsync(boardKey);
+                await modLogs.LogAsync(ApplicationEvent.BoardDelete, boardKey);
                 logger.LogInformation($"Board '{boardKey}' deleted by {User.Identity.Name}.");
             }
             catch (Exception ex)
@@ -145,6 +150,7 @@ namespace OakChan.Areas.Administration.Controllers
                 try
                 {
                     await boardService.UpdateBoardAsync(editingBoard, dto);
+                    await modLogs.LogAsync(ApplicationEvent.BoardCreate, editingBoard);
                 }
                 catch (Exception ex)
                 {
@@ -263,6 +269,7 @@ namespace OakChan.Areas.Administration.Controllers
             {
                 result = await userManager.AddToRoleAsync(user, newRole);
             }
+            await modLogs.LogAsync(ApplicationEvent.AccountChangeRole, user.Id.ToString(), $"-- {string.Join(",", rolesToDelete)} ++ {newRole}");
             return result;
         }
 
@@ -282,6 +289,7 @@ namespace OakChan.Areas.Administration.Controllers
             {
                 result = await userManager.AddClaimsAsync(user, claimsToAdd);
             }
+            await modLogs.LogAsync(ApplicationEvent.AccountChangeBoardsPermission, user.Id.ToString(), $"-- {string.Join(",", claimsToRemove)} ++ {string.Join(",", claimsToAdd)}");
             return result;
         }
     }

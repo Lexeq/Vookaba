@@ -7,6 +7,7 @@ using OakChan.Identity;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace OakChan.DAL.Database
@@ -36,6 +37,8 @@ namespace OakChan.DAL.Database
         public DbSet<BoardModerator> BoardModerators { get; set; }
 
         public DbSet<Report> Reports { get; set; }
+
+        public DbSet<ModAction> ModActions { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -71,14 +74,18 @@ namespace OakChan.DAL.Database
             ChangeTracker.DetectChanges();
             foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Added))
             {
-                if (entry.Entity is IHasAuthor ha)
+                if (entry.Entity is ICreatedByAnonymous entAnon && entAnon.AuthorToken == default)
                 {
-                    ha.IP ??= httpContextAccessor.HttpContext.Connection.RemoteIpAddress;
-                    ha.UserAgent ??= httpContextAccessor.HttpContext.Request.Headers["User-Agent"];
-                    if (ha.AuthorToken == default)
-                    {
-                        ha.AuthorToken = Guid.Parse(httpContextAccessor.HttpContext.User.FindFirst(OakConstants.ClaimTypes.AuthorToken).Value);
-                    }
+                    entAnon.AuthorToken = Guid.Parse(httpContextAccessor.HttpContext.User.FindFirst(OakConstants.ClaimTypes.AuthorToken).Value);
+                }
+                if (entry.Entity is ICreatedByUser entUser && entUser.UserId == default)
+                {
+                    entUser.UserId = int.Parse(httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                }
+                if (entry.Entity is IHasClientInfo entClient)
+                {
+                    entClient.IP ??= httpContextAccessor.HttpContext.Connection.RemoteIpAddress;
+                    entClient.UserAgent ??= httpContextAccessor.HttpContext.Request.Headers["User-Agent"];
                 }
                 if (entry.Entity is IHasCreationTime ct && ct.Created == default)
                 {

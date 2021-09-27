@@ -5,7 +5,7 @@ using System.Net;
 
 namespace OakChan.DAL.Entities
 {
-    public class Post : IHasCreationTime, IHasAuthor
+    public class Post : IHasCreationTime, ICreatedByAnonymous, IHasClientInfo
     {
         public int Id { get; set; }
 
