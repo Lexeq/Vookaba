@@ -1,4 +1,5 @@
 ﻿'use strict';
+hideHidden();
 $('.thread').on('click', ".post__menu-button", showMenu);
 $(document).click(hideMenu);
 
@@ -38,6 +39,13 @@ function generatePosition($el) {
 function fillMenu($menu) {
     let $root = $('<ul>');
 
+    //hide/show post
+    let $post = $('#p' + $menu.data('pnum'));
+    let isHidden = $post.hasClass('post_hidden');
+    let $hiddingSwitchRow = $(`<li>${getLocalizedString(isHidden ? 'show' : 'hide')}</li>`);
+    $hiddingSwitchRow.click(() => setPostIsHidden($post, !isHidden));
+    $root.append($hiddingSwitchRow);
+
     $menu.append($root);
 }
 
@@ -46,4 +54,66 @@ function hideMenu() {
     let btnSelector = '#mb' + $menu.data('pid');
     $(btnSelector).removeClass('post__menu-button_opened');
     $menu.remove();
+}
+
+function setPostIsHidden($post, isHidden) {
+    let bid = $post.closest('.thread').data('bid');
+    let tid = $post.closest('.thread').data('tid');
+    let pnum = $post.find('.post__number').data('pnum');
+
+    let hiddens = JSON.parse(localStorage.getItem('ignoring'));
+    updatePostVisibility($post, isHidden);
+    if (isHidden) {
+        if (!hiddens) {
+            hiddens = {};
+        }
+
+        if (!hiddens[bid]) {
+            hiddens[bid] = {};
+        }
+        if (!hiddens[bid][tid]) {
+            hiddens[bid][tid] = {};
+        }
+        hiddens[bid][tid][pnum] = Date.now();
+    }
+    else {
+        delete hiddens[bid][tid][pnum];
+        if (!Object.keys(hiddens[bid][tid]).length) {
+            delete hiddens[bid][tid];
+        }
+        if (!Object.keys(hiddens[bid]).length) {
+            delete hiddens[bid];
+        }
+    }
+    localStorage.setItem('ignoring', JSON.stringify(hiddens));
+}
+
+//wow such a great function's name
+function hideHidden() {
+    let hidden = JSON.parse(localStorage.getItem('ignoring'));
+    $('.thread').each(function () {
+        let bid = $(this).data('bid');
+        let tid = $(this).data('tid');
+        if (hidden[bid]?.[tid]) {
+            for (const pnum in hidden[bid][tid]) {
+                let $post = $('#p' + pnum);
+                updatePostVisibility($post, true);
+            }
+        }
+    });
+}
+
+function updatePostVisibility($post, isHidden) {
+    if (isHidden) {
+        $post.addClass('post_hidden');
+        if ($post.hasClass('oppost')) {
+            $post.closest('.thread').addClass('thread_hidden');
+        }
+    }
+    else {
+        $post.removeClass('post_hidden');
+        if ($post.hasClass('oppost')) {
+            $post.closest('.thread').removeClass('thread_hidden');
+        }
+    }
 }

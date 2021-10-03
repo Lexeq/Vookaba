@@ -2,6 +2,15 @@
 .threads-container hr {
     clear: both;
 }
+
+.thread_hidden > :not(.post-container:first-of-type, .thread__subject) {
+    display: none;
+}
+
+.thread_hidden .post-container {
+    display: inline-block;
+}
+
 .thread__subject {
     font-weight: bolder;
     font-size: 0.85em;

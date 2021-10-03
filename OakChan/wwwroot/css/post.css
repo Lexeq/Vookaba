@@ -12,6 +12,16 @@
         background: #d5b484;
     }
 
+.post_hidden {
+    opacity: 0.25;
+}
+
+    .post_hidden .post__images,
+    .post_hidden .post__message,
+    .post_hidden .refmap-body{
+        display: none;
+    }
+
 .post-owned {
     border-left: 3px solid brown;
 }
