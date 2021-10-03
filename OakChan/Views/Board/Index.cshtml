@@ -15,16 +15,19 @@
 <div class="threads-container" data-board="@Model.Key">
     @foreach (var thread in Model.Threads)
     {
-        <div class="thread" id="thread-@thread.ThreadId">
-            <div class="oppost-container">
-                <partial name="_PostView" model="thread.OpPost" />
-                <div class="to-thread">
-                    @if (thread.PostsOmmited > 0)
-                    {
-                        <span>@Localizer["{0} post omited, {1} with image.", thread.PostsOmmited, thread.ImagesOmmited]</span>
-                    }
-                    <a asp-route="thread" asp-route-board="@Model.Key" asp-route-thread="@thread.ThreadId">[@Localizer["To thread"]]</a>
-                </div>
+        //TODO: Unify and extract thread template on board and thread pages
+        <div class="thread" id="thread-@thread.ThreadId" data-bid="@(thread.BoardKey)" data-tid="@(thread.ThreadId)">
+            @if (!string.IsNullOrWhiteSpace(thread.Subject))
+            {
+                <span class="thread__subject">#@thread.Subject</span>
+            }
+            <partial name="_PostView" model="thread.OpPost" />
+            <div class="to-thread">
+                @if (thread.PostsOmmited > 0)
+                {
+                    <span>@Localizer["{0} post omited, {1} with image.", thread.PostsOmmited, thread.ImagesOmmited]</span>
+                }
+                <a asp-route="thread" asp-route-board="@Model.Key" asp-route-thread="@thread.ThreadId">[@Localizer["To thread"]]</a>
             </div>
             @foreach (var post in thread.RecentPosts)
             {

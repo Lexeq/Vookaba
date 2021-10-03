@@ -58,19 +58,19 @@ function subscribeReplyOnClick() {
         let container = postNumber.closest('.threads-container');
         if (!container) {
             postNumber.onclick = () => {
-                reply(postNumber.dataset.pid);
+                reply(postNumber.dataset.pnum);
                 return false;
             }
         }
     }
 }
 
-function reply(postId) {
+function reply(postNumber) {
     let input = document.getElementById('form-msg');
-    let text = '>>' + postId + ' ';
+    let text = '>>' + postNumber + ' ';
     let sel = window.getSelection();
 
-    if (sel && sel.anchorNode == sel.focusNode && document.getElementById("m" + postId).contains(sel.anchorNode)) {
+    if (sel && sel.anchorNode == sel.focusNode && document.getElementById("m" + postNumber).contains(sel.anchorNode)) {
         text += '\n' + document.getSelection();
     }
     text += '\n';

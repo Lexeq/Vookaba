@@ -1,3 +1,8 @@
-﻿.thread__subject {
+﻿.thread,
+.threads-container hr {
+    clear: both;
+}
+.thread__subject {
     font-weight: bolder;
+    font-size: 0.85em;
 }

@@ -2,7 +2,7 @@
     margin: 5px 5px 5px 20px;
     padding: 3px 30px 3px 3px;
     border-radius: 0.25rem;
-    background: #e0ca75;
+    background: var(--colors_post-reply);
     max-width: 80vw;
     display: inline-block;
 }
@@ -39,10 +39,6 @@
 .post__number {
     cursor: pointer;
     user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -ms-user-select: none;
 }
 
 .post__details {
@@ -135,18 +131,17 @@
     display: inline-block;
 }
 
-.oppost-container::after,
+.oppost::after,
 .post-body::after {
     content: '';
     display: block;
-    clear: both;
 }
 
-.oppost-container .post-body::after {
+.oppost .post-body::after {
     display: none;
 }
 
-.oppost-container .post {
+.oppost {
     display: block;
 }
 

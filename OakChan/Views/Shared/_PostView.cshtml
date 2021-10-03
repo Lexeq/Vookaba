@@ -9,12 +9,15 @@
 }
 
 <div class="post-container" id="@($"pc{Model.Number}")">
-    <div id="@($"p{Model.Number}")" class="post@(usid == Model.AuthorId ? " post-owned" : "")@(Model.HasImage ? " post-withimage" : "")">
+    <div id="@($"p{Model.Number}")"
+         class="post@(usid == Model.AuthorId ? " post-owned" : "")@(Model.HasImage ? " post-withimage" : "")@(Model.IsOpening ? " oppost" : "")">
 
         <div class="post__details">
             <span class="post__author">@(Model.AuthorName ?? Localizer["Anonymous"].Value)</span>
             <span class="post__date" data-timestamp="@Model.Date.GetUnixEpochOffset()">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss") UTC</span>
-            <span class="post__number" data-pid="@Model.Number"><a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a></span>
+            <span class="post__number" data-pnum="@Model.Number">
+                <a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a>
+            </span>
         </div>
 
         @if (Model.HasImage)
