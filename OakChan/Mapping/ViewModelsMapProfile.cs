@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
-using OakChan.Deanon;
 using OakChan.Areas.Administration.ViewModels;
 using OakChan.Services.DTO;
 using OakChan.ViewModels;
@@ -13,6 +12,8 @@ namespace OakChan.Mapping
         public ViewModelsMapProfile()
         {
             CreateMap<PostDto, PostViewModel>()
+                .ForMember(vm => vm.Id, opt => opt.MapFrom(dto => dto.PostId))
+                .ForMember(vm => vm.IsOpening, opt => opt.MapFrom(dto => dto.IsOpening))
                 .ForMember(vm => vm.AuthorId, opt => opt.MapFrom(dto => dto.AuthorId))
                 .ForMember(vm => vm.Number, opt => opt.MapFrom(dto => dto.PostNumber))
                 .ForMember(vm => vm.Date, opt => opt.MapFrom(dto => dto.Created))
