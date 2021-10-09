@@ -9,7 +9,7 @@ namespace OakChan.Identity
         {
             return new IdentityError
             {
-                Code = "InvatationExpired",
+                Code = "InvitationExpired",
                 Description = $"The invitation expired on {expired}."
             };
         }
@@ -18,7 +18,7 @@ namespace OakChan.Identity
         {
             return new IdentityError
             {
-                Code = "InvatatioUsed",
+                Code = "InvitationUsed",
                 Description = $"The invitation has already been used ."
             };
         }
