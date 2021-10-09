@@ -1,15 +1,15 @@
-﻿@model EditStaffViewModel
+﻿@model EditUserViewModel
 <div class="staff-edit">
     <h3>@Localizer[$"Edit permissions for '{Model.UserName}'"]</h3>
     <div class="column">
-        <form id="upd-usr-form" asp-area="Administration" asp-controller="Admin" asp-action="UpdateStaff">
+        <form id="upd-usr-form" asp-area="Administration" asp-controller="Account" asp-action="UpdateUserPermissions">
             @Html.HiddenFor(x => x.UserId)
 
             <fieldset>
                 <legend>@Localizer["Role"]</legend>
                 @foreach (var role in Model.Roles)
                 {
-            <label> <input type="radio" asp-for="UserRole" value="@role"/>@Localizer[role]</label>
+            <label> <input type="radio" asp-for="UserRole" name="role" value="@role"/>@Localizer[role]</label>
                 }
             </fieldset>
             <fieldset>

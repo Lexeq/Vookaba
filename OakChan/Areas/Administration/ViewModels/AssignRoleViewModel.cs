@@ -1,17 +1,16 @@
 ﻿using OakChan.Utils;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace OakChan.Areas.Administration.ViewModels
 {
-    public class EditStaffViewModel
+    public class AssignRoleViewModel
     {
+        [Required]
         public string UserId { get; set; }
 
-        public string UserName { get; set; }
-
-        public string UserRole { get; set; }
-
-        public IEnumerable<string> Roles { get; set; }
+        [Required]
+        public string Role { get; set; }
 
         public IList<CheckableItem<string>> Boards { get; set; }
     }
