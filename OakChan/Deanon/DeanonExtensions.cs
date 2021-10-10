@@ -37,17 +37,6 @@ namespace OakChan.Deanon
                     o.SlidingExpiration = true;
                 });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(
-                    name: DeanonConstants.DeanonPolicy,
-                    policy =>
-                    {
-                        policy.AddRequirements(new DeanonRequirement());
-                    });
-            });
-
-            services.AddSingleton<IAuthorizationHandler, DeanonClaimHandler>();
             services.TryAddScoped<IAuthorTokenFactory, AuthorTokenManager>();
             return services;
         }

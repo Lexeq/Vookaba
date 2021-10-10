@@ -38,5 +38,14 @@
             public const string AuthorToken = "atkn";
             public const string BoardPermission = "brdPerm";
         }
+
+        public static class Policies
+        {
+            public const string CanPost = "CanPost";
+            public const string CanInviteUsers = "CanInvitePolicy";
+            public const string CanEditBoards = "EditBoardPolicy";
+            public const string CanDeletePosts = "DeletePostPolicy";
+            public const string CanEditUsers = "EditUserPolicy";
+        }
     }
 }

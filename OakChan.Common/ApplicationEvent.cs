@@ -2,18 +2,19 @@
 {
     public enum ApplicationEvent
     {
-        //Boards events
+        //Boards events 10_xxx
         BoardCreate = 10_001,
         BoardDelete = 10_002,
         BoardEdit = 10_100,
 
-        //Account events
+        //Account events 20_xxx
         AccountCreate = 20_001,
         AccountLogin = 20_002,
-        AccountChangeRole = 20_101,
-        AccountChangeBoardsPermission = 20_102,
+        AccountRoleRemove = 20_101,
+        AccountRoleAdd = 20_102,
+        AccountBoardsPermissionAdd = 20_111,
+        AccountBoardsPermissionRemove = 20_112,
+        InvitationCreate = 20_201
 
-        //Invitation event
-        InvitationCreate = 30_001
     }
 }

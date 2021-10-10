@@ -1,12 +1,12 @@
-﻿using OakChan.Identity;
+﻿using OakChan.Services.DTO;
 using System.Collections.Generic;
 
 namespace OakChan.Areas.Administration.ViewModels
 {
     public class StuffViewModel
     {
-        public IEnumerable<ApplicationUser> Moderators { get; init; }
+        public IEnumerable<StaffDTO> Moderators { get; init; }
 
-        public IEnumerable<ApplicationUser> Janitors { get; init; }
+        public IEnumerable<StaffDTO> Janitors { get; init; }
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OakChan.Areas.Administration.ViewModels;
 using OakChan.Common;
@@ -11,12 +10,9 @@ using OakChan.Identity;
 using OakChan.Services;
 using OakChan.Services.DTO;
 using OakChan.Utils;
-using OakChan.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace OakChan.Areas.Administration.Controllers
@@ -27,6 +23,7 @@ namespace OakChan.Areas.Administration.Controllers
     public class AdminController : OakController
     {
         private readonly IBoardService boardService;
+        private readonly IStaffAggregationService staff;
         private readonly IMapper mapper;
         private readonly ILogger<AdminController> logger;
         private readonly ApplicationUserManager userManager;
@@ -40,7 +37,8 @@ namespace OakChan.Areas.Administration.Controllers
                                HttpStatusCodeDescriber statusCodeDescriber,
                                ApplicationUserManager users,
                                RoleManager<ApplicationRole> roles,
-                               IModLogService modLogs)
+                               IModLogService modLogs,
+                               IStaffAggregationService staff)
         {
             this.boardService = boardService;
             this.mapper = mapper;
@@ -49,18 +47,20 @@ namespace OakChan.Areas.Administration.Controllers
             this.roleManager = roles;
             this.modLogs = modLogs;
             this.statusCodeDescriber = statusCodeDescriber;
+            this.staff = staff;
         }
 
         [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
+            var staff = (await this.staff.GetStaffAsync()).ToLookup(s => s.Role);
             var dash = new AdminDashboardViemModel()
             {
                 Boards = await boardService.GetBoardsAsync(true),
                 Staff = new StuffViewModel
                 {
-                    Moderators = await userManager.GetUsersInRoleAsync(OakConstants.Roles.Moderator),
-                    Janitors = await userManager.GetUsersInRoleAsync(OakConstants.Roles.Janitor)
+                    Moderators = staff[OakConstants.Roles.Moderator],
+                    Janitors = staff[OakConstants.Roles.Janitor]
                 }
             };
 
@@ -165,133 +165,11 @@ namespace OakChan.Areas.Administration.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> EditStaff(string userId)
-        {
-            if (string.IsNullOrEmpty(userId))
-            {
-                return BadRequest("No user id provided.");
-            }
-
-            var user = await userManager.FindByIdAsync(userId);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            var boards = (await userManager.GetClaimsAsync(user))
-                .Where(c => c.Type == OakConstants.ClaimTypes.BoardPermission)
-                .Select(x => x.Value)
-                .ToHashSet();
-
-            var isAdmin = await userManager.IsInRoleAsync(user, OakConstants.Roles.Administrator);
 
 
-            var vm = new EditStaffViewModel
-            {
-                UserId = user.Id.ToString(),
-                UserName = user.UserName,
-                Boards = (await boardService.GetBoardsAsync(true))
-                      .Select(x => new CheckableItem<string>(x.Key, isAdmin || boards.Contains(x.Key)))
-                      .ToList(),
-                Roles = isAdmin ? new[] { OakConstants.Roles.Administrator } : new[] { OakConstants.Roles.NotInRole, OakConstants.Roles.Moderator, OakConstants.Roles.Janitor },
-                UserRole = isAdmin ? OakConstants.Roles.Administrator : (await userManager.GetRolesAsync(user)).FirstOrDefault() ?? OakConstants.Roles.NotInRole
-            };
 
-            return View(vm);
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> UpdateStaff(EditStaffViewModel vm)
-        {
-            var user = await userManager.FindByIdAsync(vm.UserId);
-            if (user == null)
-            {
-                return Error((int)HttpStatusCode.BadRequest, statusCodeDescriber.GetStatusCodeDescription((int)HttpStatusCode.BadRequest), "Incorrect user id.");
-            }
-            if (await userManager.IsInRoleAsync(user, OakConstants.Roles.Administrator))
-            {
-                return RedirectToAction(nameof(EditStaff), new { vm.UserId });
-            }
-            if (string.IsNullOrEmpty(vm.UserRole))
-            {
-                return Error((int)HttpStatusCode.BadRequest, statusCodeDescriber.GetStatusCodeDescription((int)HttpStatusCode.BadRequest), "Incorrect new user role.");
-            }
 
-            var roleResult = await UpdateUserRoleAsync(user, vm.UserRole);
-            if (!roleResult.Succeeded)
-            {
-                return StatusCode((int)HttpStatusCode.BadRequest);
-            }
-
-            var claimsResult = await UpdateClaimsAsync(user, vm.UserRole == OakConstants.Roles.NotInRole ? Enumerable.Empty<string>() : vm.Boards.Where(b => b.IsChecked).Select(x => x.Item));
-            if (!claimsResult.Succeeded)
-            {
-                return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
-
-            return RedirectToAction(nameof(EditStaff), new { vm.UserId });
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> SelectUser(int page = 1)
-        {
-            const int usersPerPage = 50;
-            var count = userManager.Users.Count();
-            var pages = (int)Math.Ceiling((double)count / usersPerPage);
-            var users = await userManager.Users
-                .OrderBy(x => x.UserName)
-                .Skip((page - 1) * usersPerPage)
-                .Take(usersPerPage)
-                .ToListAsync();
-            return View(new SelectUserViewModel
-            {
-                Users = users,
-                PagesInfo = new PaginatorViewModel
-                {
-                    TotalPages = pages,
-                    PageNumber = page
-                }
-            });
-        }
-
-        [NonAction]
-        private async Task<IdentityResult> UpdateUserRoleAsync(ApplicationUser user, string newRole)
-        {
-            IdentityResult result = IdentityResult.Success;
-            var userRoles = await userManager.GetRolesAsync(user);
-            var rolesToDelete = userRoles.Where(r => r != newRole);
-            if (rolesToDelete.Any())
-            {
-                result = await userManager.RemoveFromRolesAsync(user, rolesToDelete);
-            }
-
-            if (result.Succeeded && !userRoles.Contains(newRole, StringComparer.InvariantCultureIgnoreCase) && newRole != OakConstants.Roles.NotInRole)
-            {
-                result = await userManager.AddToRoleAsync(user, newRole);
-            }
-            await modLogs.LogAsync(ApplicationEvent.AccountChangeRole, user.Id.ToString(), $"-- {string.Join(",", rolesToDelete)} ++ {newRole}");
-            return result;
-        }
-
-        [NonAction]
-        private async Task<IdentityResult> UpdateClaimsAsync(ApplicationUser user, IEnumerable<string> boards)
-        {
-            IdentityResult result = IdentityResult.Success;
-            var userClaims = (await userManager.GetClaimsAsync(user)).Where(c => c.Type == OakConstants.ClaimTypes.BoardPermission).ToList();
-
-            var claimsToAdd = boards.Where(b => !userClaims.Any(uc => uc.Value == b)).Select(x => new Claim(OakConstants.ClaimTypes.BoardPermission, x));
-            var claimsToRemove = userClaims.Where(c => !boards.Any(x => x == c.Value));
-            if (claimsToRemove.Any())
-            {
-                result = await userManager.RemoveClaimsAsync(user, claimsToRemove);
-            }
-            if (result.Succeeded && claimsToAdd.Any())
-            {
-                result = await userManager.AddClaimsAsync(user, claimsToAdd);
-            }
-            await modLogs.LogAsync(ApplicationEvent.AccountChangeBoardsPermission, user.Id.ToString(), $"-- {string.Join(",", claimsToRemove)} ++ {string.Join(",", claimsToAdd)}");
-            return result;
-        }
     }
 
 }
