@@ -41,6 +41,7 @@
 
         public static class Policies
         {
+            public const string CanPost = "CanPost";
             public const string CanInviteUsers = "CanInvitePolicy";
             public const string CanEditBoards = "EditBoardPolicy";
             public const string CanDeletePosts = "DeletePostPolicy";

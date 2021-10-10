@@ -83,7 +83,7 @@ namespace OakChan.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = DeanonConstants.DeanonPolicy)]
+        [Authorize(Policy = OakConstants.Policies.CanPost)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
         {

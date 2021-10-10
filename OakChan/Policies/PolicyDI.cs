@@ -36,6 +36,11 @@ namespace OakChan.Policies
                 {
                     policy.RequireRole(OakConstants.Roles.Administrator);
                 });
+
+                options.AddPolicy(OakConstants.Policies.CanPost, policy =>
+                {
+                    policy.RequireClaim(OakConstants.ClaimTypes.AuthorToken);
+                });
             });
 
             services.AddSingleton<IAuthorizationHandler, BoardPermissionHandler>();
