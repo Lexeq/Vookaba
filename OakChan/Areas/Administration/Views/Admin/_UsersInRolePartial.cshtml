@@ -1,13 +1,13 @@
-﻿@model IEnumerable<OakChan.Identity.ApplicationUser>
+﻿@model IEnumerable<OakChan.Services.DTO.StaffDTO>
 
-@foreach (var user in Model)
+@foreach (var staff in Model)
 {
     <tr>
-        <td>@user.UserName</td>
-        <td>@user.Email</td>
-        <td class="text-center">boards</td>
+        <td>@staff.Name</td>
+        <td>@staff.Email</td>
+        <td class="text-center">@string.Join(", ", staff.Boards)</td>
         <td class="text-center">
-            <span> <a asp-controller="Account" asp-action="EditUser" asp-route-userId="@user.Id">[@Localizer["Edit"]]</a></span>
+            <span> <a asp-controller="Account" asp-action="EditUser" asp-route-userId="@staff.Id">[@Localizer["Edit"]]</a></span>
         </td>
     </tr>
 }

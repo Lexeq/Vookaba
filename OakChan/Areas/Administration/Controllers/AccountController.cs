@@ -220,7 +220,7 @@ namespace OakChan.Areas.Administration.Controllers
             {
                 UserId = user.Id.ToString(),
                 UserName = user.UserName,
-                Boards = (await boardService.GetBoardsAsync(true))
+                Boards = isAdmin ? Array.Empty<CheckableItem<string>>() : (await boardService.GetBoardsAsync(true))
                       .Select(x => new CheckableItem<string>(x.Key, isAdmin || boards.Contains(x.Key)))
                       .ToList(),
                 UserRole = isAdmin ? OakConstants.Roles.Administrator : (await userManager.GetRolesAsync(user)).FirstOrDefault() ?? OakConstants.Roles.NotInRole,

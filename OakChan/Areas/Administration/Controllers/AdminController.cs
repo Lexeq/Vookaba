@@ -23,6 +23,7 @@ namespace OakChan.Areas.Administration.Controllers
     public class AdminController : OakController
     {
         private readonly IBoardService boardService;
+        private readonly IStaffAggregationService staff;
         private readonly IMapper mapper;
         private readonly ILogger<AdminController> logger;
         private readonly ApplicationUserManager userManager;
@@ -36,7 +37,8 @@ namespace OakChan.Areas.Administration.Controllers
                                HttpStatusCodeDescriber statusCodeDescriber,
                                ApplicationUserManager users,
                                RoleManager<ApplicationRole> roles,
-                               IModLogService modLogs)
+                               IModLogService modLogs,
+                               IStaffAggregationService staff)
         {
             this.boardService = boardService;
             this.mapper = mapper;
@@ -45,18 +47,20 @@ namespace OakChan.Areas.Administration.Controllers
             this.roleManager = roles;
             this.modLogs = modLogs;
             this.statusCodeDescriber = statusCodeDescriber;
+            this.staff = staff;
         }
 
         [HttpGet]
         public async Task<IActionResult> Dashboard()
         {
+            var staff = (await this.staff.GetStaffAsync()).ToLookup(s => s.Role);
             var dash = new AdminDashboardViemModel()
             {
                 Boards = await boardService.GetBoardsAsync(true),
                 Staff = new StuffViewModel
                 {
-                    Moderators = await userManager.GetUsersInRoleAsync(OakConstants.Roles.Moderator),
-                    Janitors = await userManager.GetUsersInRoleAsync(OakConstants.Roles.Janitor)
+                    Moderators = staff[OakConstants.Roles.Moderator],
+                    Janitors = staff[OakConstants.Roles.Janitor]
                 }
             };
 
@@ -166,6 +170,6 @@ namespace OakChan.Areas.Administration.Controllers
 
 
 
-         }
+    }
 
 }

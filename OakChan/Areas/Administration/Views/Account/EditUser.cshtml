@@ -9,17 +9,20 @@
                 <legend>@Localizer["Role"]</legend>
                 @foreach (var role in Model.Roles)
                 {
-            <label> <input type="radio" asp-for="UserRole" name="role" value="@role"/>@Localizer[role]</label>
+                    <label> <input type="radio" asp-for="UserRole" name="role" value="@role" />@Localizer[role]</label>
                 }
             </fieldset>
-            <fieldset>
-                <legend>@Localizer["Boards"]</legend>
-                @for (int i = 0; i < Model.Boards.Count; i++)
-                {
-                    <input type="hidden" asp-for="Boards[i].Item" />
-                    <label><input asp-for="Boards[i].IsChecked" checked="@(Model.Boards[i].IsChecked)" />@Model.Boards[i].Item</label>
-                }
-            </fieldset>
+            @if (Model.Boards.Any())
+            {
+                <fieldset>
+                    <legend>@Localizer["Boards"]</legend>
+                    @for (int i = 0; i < Model.Boards.Count; i++)
+                    {
+                        <input type="hidden" asp-for="Boards[i].Item" />
+                        <label><input asp-for="Boards[i].IsChecked" checked="@(Model.Boards[i].IsChecked)" />@Model.Boards[i].Item</label>
+                    }
+                </fieldset>
+            }
         </form>
         <form id="go-to-dash" method="get" asp-area="Administration" asp-controller="Admin" asp-action="Dashboard">
         </form>

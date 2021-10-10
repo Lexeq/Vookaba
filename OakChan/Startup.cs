@@ -60,6 +60,7 @@ namespace OakChan
 
             services.AddScoped<IBoardService, DbBoardService>();
             services.AddScoped<IThreadService, DbThreadService>();
+            services.AddScoped<IStaffAggregationService, DbStaffAggregationService>();
             services.AddScoped<IModLogService, DbModLogService>();
             services.AddScoped<ITopThreadsService, TopThreadsService>();
             services.AddSingleton<IHashService>(new HashService());
