@@ -202,7 +202,7 @@ namespace OakChan.Areas.Administration.Controllers
         [Authorize(Policy = OakConstants.Policies.CanEditUsers)]
         public async Task<IActionResult> UserDetails(string userId, [FromQuery(Name = "page")] int logsPage = 1)
         {
-            const int logsOnPage = 3;
+            const int logsOnPage = 10;
             logsPage = logsPage < 1 ? 1 : logsPage;
 
             if (string.IsNullOrEmpty(userId))
