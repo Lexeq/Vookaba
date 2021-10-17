@@ -65,6 +65,7 @@ namespace OakChan
             services.AddScoped<ITopThreadsService, TopThreadsService>();
             services.AddSingleton<IHashService>(new HashService());
             services.AddSingleton<ThrowHelper>();
+            services.AddSingleton<ModLogDescriber>();
 
             services.AddDeanon();
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
