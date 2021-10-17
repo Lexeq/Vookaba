@@ -199,8 +199,11 @@ namespace OakChan.Areas.Administration.Controllers
 
         [HttpGet]
         [Authorize(Policy = OakConstants.Policies.CanEditUsers)]
-        public async Task<IActionResult> UserDetails(string userId)
+        public async Task<IActionResult> UserDetails(string userId, [FromQuery(Name = "page")] int logsPage = 1)
         {
+            const int logsOnPage = 3;
+            logsPage = logsPage < 1 ? 1 : logsPage;
+
             if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("No user id provided.");
@@ -216,6 +219,8 @@ namespace OakChan.Areas.Administration.Controllers
                 .Select(x => x.Value)
                 .ToHashSet();
 
+            var logs = await modLogs.GetLogsForUserAsync(int.Parse(userId), (logsPage - 1) * logsOnPage, logsOnPage + 1);
+
             var isAdmin = await userManager.IsInRoleAsync(user, OakConstants.Roles.Administrator);
 
             var vm = new UserDetailsViewModel
@@ -227,6 +232,13 @@ namespace OakChan.Areas.Administration.Controllers
                       .ToList(),
                 UserRole = isAdmin ? OakConstants.Roles.Administrator : (await userManager.GetRolesAsync(user)).FirstOrDefault() ?? OakConstants.Roles.NotInRole,
                 Roles = isAdmin ? new[] { OakConstants.Roles.Administrator } : new[] { OakConstants.Roles.NotInRole, OakConstants.Roles.Janitor, OakConstants.Roles.Moderator },
+                Logs = logs.Take(logsOnPage),
+                IsEditable = !isAdmin,
+                PageInfo = new PaginatorViewModel
+                {
+                    PageNumber = logsPage,
+                    TotalPages = logs.Count() > logsOnPage ? logsPage + 1 : logsPage
+                }
             };
 
             return View(vm);

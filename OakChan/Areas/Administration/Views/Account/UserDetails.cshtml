@@ -31,5 +31,35 @@
             <button type="submit" form="go-to-dash" class="oakbutton" title="@Localizer["Back to dashboard"]">@(Localizer["Dashboard"])</button>
             <button type="submit" form="upd-usr-form" class="oakbutton right" disabled="@(!Model.IsEditable)">@Localizer["Save"]</button>
         </div>
+        <div class="column">
+            <fieldset>
+                <legend>@Localizer["Logs"]</legend>
+                @if (Model.Logs.Any())
+                {
+                    @foreach (var log in Model.Logs)
+                    {
+                        <p>
+                            @(Html.Raw($"{log.IP} {log.Created} {modlogFormatter.ToHtmlString(log)}"))
+                        </p>
+                    }
+                }
+                else
+                {
+                    <p>@Localizer["No action yet."]</p>
+                }
+                @if (Model.PageInfo.TotalPages > Model.PageInfo.PageNumber)
+                {
+                    <a class="nav" asp-action="UserDetails"
+                       asp-route-userId="@Model.UserId"
+                       asp-route-page="@(Model.PageInfo.PageNumber + 1)">&lt; @Localizer["Prev"]</a>
+                }
+                @if (Model.PageInfo.PageNumber > 1)
+                {
+                    <a class="nav" asp-action="UserDetails"
+                       asp-route-userId="@Model.UserId"
+                       asp-route-page="@(Model.PageInfo.PageNumber - 1)">@Localizer["Next"] &gt;</a>
+                }
+            </fieldset>
+        </div>
     </div>
 </div>

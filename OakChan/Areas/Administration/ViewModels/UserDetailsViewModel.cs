@@ -16,5 +16,11 @@ namespace OakChan.Areas.Administration.ViewModels
         public IEnumerable<string> Roles { get; set; }
 
         public IList<CheckableItem<string>> Boards { get; set; }
+
+        public IEnumerable<ModLogDto> Logs { get; set; }
+
+        public bool IsEditable { get; set; }
+
+        public PaginatorViewModel PageInfo { get; set; }
     }
 }
