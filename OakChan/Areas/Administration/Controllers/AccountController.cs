@@ -18,6 +18,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace OakChan.Areas.Administration.Controllers
 {
@@ -248,6 +249,7 @@ namespace OakChan.Areas.Administration.Controllers
         [Authorize(Policy = OakConstants.Policies.CanEditUsers)]
         public async Task<IActionResult> UpdateUserPermissions(AssignRoleViewModel vm)
         {
+            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             ApplicationUser user = null;
             if (ModelState.IsValid && (user = await userManager.FindByIdAsync(vm.UserId)) != null)
             {
@@ -261,7 +263,8 @@ namespace OakChan.Areas.Administration.Controllers
                             vm.Boards.Where(b => b.IsChecked).Select(x => x.Item));
                     if (claimsResult.Succeeded)
                     {
-                        return RedirectToAction(nameof(EditUser), new { vm.UserId });
+                        scope.Complete();
+                        return RedirectToAction(nameof(UserDetails), new { vm.UserId });
                     }
                     else
                     {
