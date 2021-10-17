@@ -220,33 +220,6 @@ namespace OakChan.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BoardModerators",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BoardKey = table.Column<string>(type: "character varying(10)", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BoardModerators", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BoardModerators_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BoardModerators_Boards_BoardKey",
-                        column: x => x.BoardKey,
-                        principalTable: "Boards",
-                        principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade,
-                        onUpdate: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -400,17 +373,6 @@ namespace OakChan.DAL.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BoardModerators_BoardKey",
-                table: "BoardModerators",
-                column: "BoardKey");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BoardModerators_UserId_BoardKey",
-                table: "BoardModerators",
-                columns: new[] { "UserId", "BoardKey" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Posts_AuthorToken",
                 table: "Posts",
                 column: "AuthorToken");
@@ -489,9 +451,6 @@ namespace OakChan.DAL.Migrations
 
             migrationBuilder.DropTable(
                 name: "Attachment");
-
-            migrationBuilder.DropTable(
-                name: "BoardModerators");
 
             migrationBuilder.DropTable(
                 name: "Reports");

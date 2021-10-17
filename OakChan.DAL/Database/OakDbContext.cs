@@ -34,8 +34,6 @@ namespace OakChan.DAL.Database
 
         public DbSet<Image> Images { get; set; }
 
-        public DbSet<BoardModerator> BoardModerators { get; set; }
-
         public DbSet<Report> Reports { get; set; }
 
         public DbSet<ModAction> ModActions { get; set; }
