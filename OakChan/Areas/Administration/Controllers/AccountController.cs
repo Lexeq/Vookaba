@@ -300,7 +300,7 @@ namespace OakChan.Areas.Administration.Controllers
             if (claimsToRemove.Any())
             {
                 result = await userManager.RemoveClaimsAsync(user, claimsToRemove);
-                await modLogs.LogAsync(ApplicationEvent.AccountBoardsPermissionRemove, user.Id.ToString(), string.Join(", ", claimsToRemove));
+                await modLogs.LogAsync(ApplicationEvent.AccountBoardsPermissionRemove, user.Id.ToString(), string.Join(", ", claimsToRemove.Select(c => c.Value)));
             }
             var claimsToAdd = boards
                 .Where(b => !userClaims.Any(uc => uc.Value == b))
@@ -308,7 +308,7 @@ namespace OakChan.Areas.Administration.Controllers
             if (result.Succeeded && claimsToAdd.Any())
             {
                 result = await userManager.AddClaimsAsync(user, claimsToAdd);
-                await modLogs.LogAsync(ApplicationEvent.AccountBoardsPermissionAdd, user.Id.ToString(), string.Join(", ", claimsToAdd));
+                await modLogs.LogAsync(ApplicationEvent.AccountBoardsPermissionAdd, user.Id.ToString(), string.Join(", ", claimsToAdd.Select(c => c.Value)));
             }
 
             return result;
