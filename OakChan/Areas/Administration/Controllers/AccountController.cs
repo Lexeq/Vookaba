@@ -18,6 +18,7 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace OakChan.Areas.Administration.Controllers
 {
@@ -88,6 +89,7 @@ namespace OakChan.Areas.Administration.Controllers
                     await userManager.CreateAsync(user, vm.Password, (vm as RegisterWithInvitationViewModel).Invitaion);
                 if (result.Succeeded)
                 {
+                    User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }));
                     await modLogs.LogAsync(ApplicationEvent.AccountCreate, user.Id.ToString());
                     return View(nameof(Login), new LoginViewModel { Login = vm.Login });
                 }
@@ -111,10 +113,11 @@ namespace OakChan.Areas.Administration.Controllers
         {
             if (ModelState.IsValid)
             {
-                var signInResult = await signInManager.PasswordSignInAsync(vm.Login, vm.Password, vm.Remember, false);
+                var user = await userManager.FindByNameAsync(vm.Login);
+                var signInResult = await signInManager.PasswordSignInAsync(user, vm.Password, vm.Remember, false);
                 if (signInResult.Succeeded)
                 {
-                    var user = await userManager.FindByNameAsync(vm.Login);
+                    User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }));
                     await modLogs.LogAsync(ApplicationEvent.AccountLogin, user.Id.ToString());
                     return RedirectToReturnUrlOrDefault(returnUrl);
                 }
@@ -197,8 +200,11 @@ namespace OakChan.Areas.Administration.Controllers
 
         [HttpGet]
         [Authorize(Policy = OakConstants.Policies.CanEditUsers)]
-        public async Task<IActionResult> EditUser(string userId)
+        public async Task<IActionResult> UserDetails(string userId, [FromQuery(Name = "page")] int logsPage = 1)
         {
+            const int logsOnPage = 3;
+            logsPage = logsPage < 1 ? 1 : logsPage;
+
             if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("No user id provided.");
@@ -214,9 +220,11 @@ namespace OakChan.Areas.Administration.Controllers
                 .Select(x => x.Value)
                 .ToHashSet();
 
+            var logs = await modLogs.GetLogsForUserAsync(int.Parse(userId), (logsPage - 1) * logsOnPage, logsOnPage + 1);
+
             var isAdmin = await userManager.IsInRoleAsync(user, OakConstants.Roles.Administrator);
 
-            var vm = new EditUserViewModel
+            var vm = new UserDetailsViewModel
             {
                 UserId = user.Id.ToString(),
                 UserName = user.UserName,
@@ -225,6 +233,13 @@ namespace OakChan.Areas.Administration.Controllers
                       .ToList(),
                 UserRole = isAdmin ? OakConstants.Roles.Administrator : (await userManager.GetRolesAsync(user)).FirstOrDefault() ?? OakConstants.Roles.NotInRole,
                 Roles = isAdmin ? new[] { OakConstants.Roles.Administrator } : new[] { OakConstants.Roles.NotInRole, OakConstants.Roles.Janitor, OakConstants.Roles.Moderator },
+                Logs = logs.Take(logsOnPage),
+                IsEditable = !isAdmin,
+                PageInfo = new PaginatorViewModel
+                {
+                    PageNumber = logsPage,
+                    TotalPages = logs.Count() > logsOnPage ? logsPage + 1 : logsPage
+                }
             };
 
             return View(vm);
@@ -234,6 +249,7 @@ namespace OakChan.Areas.Administration.Controllers
         [Authorize(Policy = OakConstants.Policies.CanEditUsers)]
         public async Task<IActionResult> UpdateUserPermissions(AssignRoleViewModel vm)
         {
+            using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             ApplicationUser user = null;
             if (ModelState.IsValid && (user = await userManager.FindByIdAsync(vm.UserId)) != null)
             {
@@ -247,7 +263,8 @@ namespace OakChan.Areas.Administration.Controllers
                             vm.Boards.Where(b => b.IsChecked).Select(x => x.Item));
                     if (claimsResult.Succeeded)
                     {
-                        return RedirectToAction(nameof(EditUser), new { vm.UserId });
+                        scope.Complete();
+                        return RedirectToAction(nameof(UserDetails), new { vm.UserId });
                     }
                     else
                     {
@@ -298,7 +315,7 @@ namespace OakChan.Areas.Administration.Controllers
             if (claimsToRemove.Any())
             {
                 result = await userManager.RemoveClaimsAsync(user, claimsToRemove);
-                await modLogs.LogAsync(ApplicationEvent.AccountBoardsPermissionRemove, user.Id.ToString(), string.Join(", ", claimsToRemove));
+                await modLogs.LogAsync(ApplicationEvent.AccountBoardsPermissionRemove, user.Id.ToString(), string.Join(", ", claimsToRemove.Select(c => c.Value)));
             }
             var claimsToAdd = boards
                 .Where(b => !userClaims.Any(uc => uc.Value == b))
@@ -306,7 +323,7 @@ namespace OakChan.Areas.Administration.Controllers
             if (result.Succeeded && claimsToAdd.Any())
             {
                 result = await userManager.AddClaimsAsync(user, claimsToAdd);
-                await modLogs.LogAsync(ApplicationEvent.AccountBoardsPermissionAdd, user.Id.ToString(), string.Join(", ", claimsToAdd));
+                await modLogs.LogAsync(ApplicationEvent.AccountBoardsPermissionAdd, user.Id.ToString(), string.Join(", ", claimsToAdd.Select(c => c.Value)));
             }
 
             return result;

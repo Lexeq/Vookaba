@@ -21,6 +21,15 @@
         {
             <tr>
                 <td colspan="4" class="subtitle text-center">
+                    @Localizer["Administrators"]
+                </td>
+            </tr>
+            <partial name="_UsersInRolePartial" model="Model.Administrators" />
+        }
+        @if (Model.Moderators.Any())
+        {
+            <tr>
+                <td colspan="4" class="subtitle text-center">
                     @Localizer["Moderators"]
                 </td>
             </tr>

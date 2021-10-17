@@ -70,6 +70,7 @@ namespace OakChan.Services.Mapping
                 .ForMember(b => b.Threads, opt => opt.Ignore())
                 .ForMember(b => b.Key, opt => opt.MapFrom(dto => dto.Key.ToLowerInvariant()));
 
+            CreateMap<ModAction, ModLogDto>();
         }
     }
 }

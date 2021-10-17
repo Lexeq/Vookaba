@@ -7,7 +7,7 @@
         <td>@staff.Email</td>
         <td class="text-center">@string.Join(", ", staff.Boards)</td>
         <td class="text-center">
-            <span> <a asp-controller="Account" asp-action="EditUser" asp-route-userId="@staff.Id">[@Localizer["Edit"]]</a></span>
+            <span> <a asp-controller="Account" asp-action="UserDetails" asp-route-userId="@staff.Id">[@Localizer["Edit"]]</a></span>
         </td>
     </tr>
 }
