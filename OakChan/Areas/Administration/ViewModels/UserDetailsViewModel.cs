@@ -1,9 +1,11 @@
-﻿using OakChan.Utils;
+﻿using OakChan.Services.DTO;
+using OakChan.Utils;
+using OakChan.ViewModels;
 using System.Collections.Generic;
 
 namespace OakChan.Areas.Administration.ViewModels
 {
-    public class EditUserViewModel
+    public class UserDetailsViewModel
     {
         public string UserId { get; set; }
 

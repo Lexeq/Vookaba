@@ -1,0 +1,41 @@
+﻿.user-details h3 {
+    margin-left: 1.75em;
+}
+
+.user-details .row {
+    display: flex;
+}
+
+.user-details > .row > :nth-child(2) {
+    min-width: 30em;
+}
+
+.user-details fieldset {
+    border-color: var(--colors_border);
+    border-radius: 0.33em;
+    margin-bottom: 1em;
+}
+
+    .user-details fieldset label {
+        line-height: 160%;
+        display: block;
+    }
+
+.user-details .column {
+    min-width: 15em;
+    margin-left: 1.5em;
+    position: relative;
+}
+
+.user-details button {
+    position: absolute;
+    width: 100px;
+}
+
+.user-details .right {
+    right: 0px;
+}
+
+.user-details .nav {
+    margin-right: 5px;
+}

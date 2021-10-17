@@ -199,7 +199,7 @@ namespace OakChan.Areas.Administration.Controllers
 
         [HttpGet]
         [Authorize(Policy = OakConstants.Policies.CanEditUsers)]
-        public async Task<IActionResult> EditUser(string userId)
+        public async Task<IActionResult> UserDetails(string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -218,7 +218,7 @@ namespace OakChan.Areas.Administration.Controllers
 
             var isAdmin = await userManager.IsInRoleAsync(user, OakConstants.Roles.Administrator);
 
-            var vm = new EditUserViewModel
+            var vm = new UserDetailsViewModel
             {
                 UserId = user.Id.ToString(),
                 UserName = user.UserName,
