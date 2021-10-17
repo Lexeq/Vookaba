@@ -88,6 +88,7 @@ namespace OakChan.Areas.Administration.Controllers
                     await userManager.CreateAsync(user, vm.Password, (vm as RegisterWithInvitationViewModel).Invitaion);
                 if (result.Succeeded)
                 {
+                    User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }));
                     await modLogs.LogAsync(ApplicationEvent.AccountCreate, user.Id.ToString());
                     return View(nameof(Login), new LoginViewModel { Login = vm.Login });
                 }
@@ -111,10 +112,11 @@ namespace OakChan.Areas.Administration.Controllers
         {
             if (ModelState.IsValid)
             {
-                var signInResult = await signInManager.PasswordSignInAsync(vm.Login, vm.Password, vm.Remember, false);
+                var user = await userManager.FindByNameAsync(vm.Login);
+                var signInResult = await signInManager.PasswordSignInAsync(user, vm.Password, vm.Remember, false);
                 if (signInResult.Succeeded)
                 {
-                    var user = await userManager.FindByNameAsync(vm.Login);
+                    User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }));
                     await modLogs.LogAsync(ApplicationEvent.AccountLogin, user.Id.ToString());
                     return RedirectToReturnUrlOrDefault(returnUrl);
                 }
