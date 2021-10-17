@@ -165,12 +165,6 @@ namespace OakChan.Areas.Administration.Controllers
                 return View(board);
             }
         }
-
-
-
-
-
-
     }
 
 }
