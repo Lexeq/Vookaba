@@ -5,6 +5,8 @@ namespace OakChan.Areas.Administration.ViewModels
 {
     public class StuffViewModel
     {
+        public IEnumerable<StaffDTO> Administrators { get; init; }
+
         public IEnumerable<StaffDTO> Moderators { get; init; }
 
         public IEnumerable<StaffDTO> Janitors { get; init; }

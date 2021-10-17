@@ -59,6 +59,7 @@ namespace OakChan.Areas.Administration.Controllers
                 Boards = await boardService.GetBoardsAsync(true),
                 Staff = new StuffViewModel
                 {
+                    Administrators = staff[OakConstants.Roles.Administrator],
                     Moderators = staff[OakConstants.Roles.Moderator],
                     Janitors = staff[OakConstants.Roles.Janitor]
                 }
