@@ -151,7 +151,7 @@ namespace OakChan.Areas.Administration.Controllers
                 try
                 {
                     await boardService.UpdateBoardAsync(editingBoard, dto);
-                    await modLogs.LogAsync(ApplicationEvent.BoardCreate, editingBoard);
+                    await modLogs.LogAsync(ApplicationEvent.BoardEdit, editingBoard);
                 }
                 catch (Exception ex)
                 {

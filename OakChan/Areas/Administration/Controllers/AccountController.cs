@@ -114,12 +114,15 @@ namespace OakChan.Areas.Administration.Controllers
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByNameAsync(vm.Login);
-                var signInResult = await signInManager.PasswordSignInAsync(user, vm.Password, vm.Remember, false);
-                if (signInResult.Succeeded)
+                if (user != null)
                 {
-                    User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }));
-                    await modLogs.LogAsync(ApplicationEvent.AccountLogin, user.Id.ToString());
-                    return RedirectToReturnUrlOrDefault(returnUrl);
+                    var signInResult = await signInManager.PasswordSignInAsync(user, vm.Password, vm.Remember, false);
+                    if (signInResult.Succeeded)
+                    {
+                        User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }));
+                        await modLogs.LogAsync(ApplicationEvent.AccountLogin, user.Id.ToString());
+                        return RedirectToReturnUrlOrDefault(returnUrl);
+                    }
                 }
                 ModelState.AddModelError(string.Empty, localizer["Unsuccessful login attempt. Please check login and password."]);
             }
