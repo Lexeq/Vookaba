@@ -1,7 +1,0 @@
-﻿@model string
-@{
-    <form method="post" asp-controller="Admin" asp-action="DeleteBoard">
-        <input type="hidden" value="@Model" name="boardKey" />
-        <button type="submit">@Localizer["Delete"]</button>
-    </form>
-}

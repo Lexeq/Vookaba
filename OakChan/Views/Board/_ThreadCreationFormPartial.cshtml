@@ -10,9 +10,8 @@
           class="posting-form"
           method="post"
           enctype="multipart/form-data"
-          asp-route="boardAction"
-          asp-route-board="@Context.Request.RouteValues["board"]"
-          asp-route-action="CreateThread">
+          asp-route="createThread"
+          asp-route-board="@Context.Request.RouteValues["board"]">
 
         <div class="form-row theme-row">
             <label asp-for="Subject">@Localizer["Subject"]</label>

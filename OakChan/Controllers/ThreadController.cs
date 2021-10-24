@@ -54,6 +54,33 @@ namespace OakChan.Controllers
 
         [HttpPost]
         [Authorize(Policy = OakConstants.Policies.CanPost)]
+        [Route("{board:alpha}/createThread", Name = "createThread")]
+        public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
+        {
+            if (ModelState.IsValid)
+            {
+                var threadData = mapper.Map<ThreadCreationDto>(opPost);
+
+                var boardInfo = await boards.GetBoardInfoAsync(board);
+                if (boardInfo == null || boardInfo.IsDisabled)
+                {
+                    logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)} to {nameof(CreateThreadAsync)}. Bad board key {board}");
+
+                    return BadRequest();
+                }
+                var t = await threads.CreateThreadAsync(boardInfo.Key, threadData);
+                return RedirectToRoute("thread", new { Board = boardInfo.Key, Thread = t.ThreadId });
+            }
+            else
+            {
+                logger.LogWarning($"Invalid model state from {OakConstants.ClaimTypes.AuthorToken} to {nameof(CreateThreadAsync)}. " +
+                      string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Policy = OakConstants.Policies.CanPost)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreatePostAsync(string board, int thread, PostFormViewModel postFormVM)
         {

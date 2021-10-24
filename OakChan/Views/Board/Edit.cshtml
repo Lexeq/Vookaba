@@ -1,12 +1,11 @@
-﻿@model BoardPropertiesViewModel
+﻿@model OakChan.ViewModels.BoardPropertiesViewModel
 @section Scripts
 {
     <partial name="_ValidationScriptsPartial" />
 }
 <h2>@Localizer["Edit board"] /@Model.BoardKey/</h2>
 <fieldset>
-    <form method="post" asp-action="UpdateBoard">
-        <input type="hidden" asp-for="BoardKey" name="editingBoard"/>
+    <form method="post" asp-action="Update">
         <partial name="_BoardPropertiesPartial" model="Model" />
         <button type="submit">@Localizer["Update"]</button>
     </form>

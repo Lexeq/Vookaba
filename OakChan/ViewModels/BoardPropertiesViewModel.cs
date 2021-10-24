@@ -1,7 +1,7 @@
 ﻿using OakChan.Common;
 using System.ComponentModel.DataAnnotations;
 
-namespace OakChan.Areas.Administration.ViewModels
+namespace OakChan.ViewModels
 {
     public class BoardPropertiesViewModel
     {
