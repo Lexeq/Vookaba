@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Localization;
 using OakChan.Areas.Administration.Controllers;
 using OakChan.Common;
+using OakChan.Controllers;
 using OakChan.Services.DTO;
 
 namespace OakChan.Utils
@@ -48,10 +49,9 @@ namespace OakChan.Utils
 
         private string GetBoardEditionLink(string key)
         {
-            return linkGenerator.GetUriByAction(httpContextAccessor.HttpContext,
-                action: nameof(AdminController.EditBoard),
-                controller: "Admin",
-                new { Area = nameof(Areas.Administration), BoardKey = key });
+            return linkGenerator.GetUriByRouteValues(httpContextAccessor.HttpContext,
+                routeName: "boardAction",
+                new { board = key, action = nameof(BoardController.Edit) });
         }
 
         private string GetUsetEditionTag(string id)

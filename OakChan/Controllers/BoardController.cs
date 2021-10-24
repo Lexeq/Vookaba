@@ -1,43 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using OakChan.Common;
 using OakChan.Controllers.Base;
-using OakChan.Deanon;
-using OakChan.Identity;
-using OakChan.Mapping;
 using OakChan.Services;
 using OakChan.Services.DTO;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class BoardController : OakController
     {
         private readonly IBoardService boardService;
-        private readonly IThreadService threadService;
         private readonly IStringLocalizer<BoardController> localizer;
         private readonly IMapper mapper;
+        private readonly IModLogService modLogs;
         private readonly ILogger<BoardController> logger;
 
         public BoardController(
             IBoardService boardService,
-            IThreadService threadService,
             IStringLocalizer<BoardController> localizer,
             IMapper mapper,
+            IModLogService modLogs,
             ILogger<BoardController> logger)
         {
             this.boardService = boardService;
-            this.threadService = threadService;
             this.localizer = localizer;
             this.mapper = mapper;
+            this.modLogs = modLogs;
             this.logger = logger;
         }
 
@@ -82,31 +78,109 @@ namespace OakChan.Controllers
             return View(vm);
         }
 
+        [HttpGet]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        [Route("board/create", Name = "createBoard")]
+        public IActionResult Create()
+        {
+            return View(new BoardPropertiesViewModel
+            {
+                BumpLimit = OakConstants.BoardConstants.DefaultBumpLimit
+            });
+        }
+
         [HttpPost]
-        [Authorize(Policy = OakConstants.Policies.CanPost)]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        [Route("board/create", Name = "createBoard")]
+        public async Task<IActionResult> Create(BoardPropertiesViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                var threadData = mapper.Map<ThreadCreationDto>(opPost);
-
-                var boardInfo = await boardService.GetBoardInfoAsync(board);
-                if (boardInfo == null || boardInfo.IsDisabled)
+                var dto = mapper.Map<BoardDto>(vm);
+                try
                 {
-                    logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)} to {nameof(CreateThreadAsync)}. Bad board key {board}");
-
-                    return BadRequest();
+                    await boardService.CreateBoardAsync(dto);
+                    await modLogs.LogAsync(ApplicationEvent.BoardCreate, vm.BoardKey);
+                    logger.LogInformation($"Board '{dto.Key}' created by {User.Identity.Name}.");
                 }
-                var t = await threadService.CreateThreadAsync(boardInfo.Key, threadData);
-                return RedirectToRoute("thread", new { Board = boardInfo.Key, Thread = t.ThreadId });
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, $"Cant't create the board '{dto.Key}'.");
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View(vm);
+                }
+                return RedirectToRoute("board", new { Board = dto.Key });
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {OakConstants.ClaimTypes.AuthorToken} to {nameof(CreateThreadAsync)}. " +
-                      string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
+                return View(vm);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        public async Task<IActionResult> Edit([FromRoute(Name = "board")] string boardKey)
+        {
+            if (string.IsNullOrWhiteSpace(boardKey))
+            {
                 return BadRequest();
             }
+            var board = await boardService.GetBoardInfoAsync(boardKey);
+            if (board == null)
+            {
+                return Error(404, $"Board '{boardKey}' not found.");
+            }
+
+            var upd = mapper.Map<BoardPropertiesViewModel>(board);
+            return View(upd);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        public async Task<IActionResult> Update(BoardPropertiesViewModel boardProps, string board)
+        {
+            if (ModelState.IsValid)
+            {
+                var dto = mapper.Map<BoardDto>(boardProps);
+                try
+                {
+                    await boardService.UpdateBoardAsync(board, dto);
+                    await modLogs.LogAsync(ApplicationEvent.BoardEdit, board);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View();
+                }
+                return RedirectToRoute("board", new { Board = boardProps.BoardKey });
+            }
+            else
+            {
+                return View(board);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        public async Task<IActionResult> Delete(string board)
+        {
+            if (string.IsNullOrEmpty(board))
+            {
+                return BadRequest();
+            }
+            try
+            {
+                await boardService.DeleteBoardAsync(board);
+                await modLogs.LogAsync(ApplicationEvent.BoardDelete, board);
+                logger.LogInformation($"Board '{board}' deleted by {User.Identity.Name}.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Cant't delete the board '{board}'.");
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return base.Error(500, "Cant't delete the board. See logs for details.", ex.Message);
+            }
+            return RedirectToRoute(new { Area = "Administration", Controller = "Admin", Action = "Dashboard" });
         }
 
         private IActionResult BoardDoesNotExist(string board)
