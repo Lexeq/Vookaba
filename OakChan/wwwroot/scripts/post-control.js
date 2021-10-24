@@ -94,7 +94,7 @@ function hideHidden() {
     $('.thread').each(function () {
         let bid = $(this).data('bid');
         let tid = $(this).data('tid');
-        if (hidden[bid]?.[tid]) {
+        if (hidden?.[bid]?.[tid]) {
             for (const pnum in hidden[bid][tid]) {
                 let $post = $('#p' + pnum);
                 updatePostVisibility($post, true);
