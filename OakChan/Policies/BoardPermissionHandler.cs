@@ -16,9 +16,10 @@ namespace OakChan.Policies
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, BoardPermissionRequirement requirement)
         {
-            var board = accessor.HttpContext.Request.RouteValues["board"].ToString();
-            if (context.User.IsInRole(OakConstants.Roles.Administrator) ||
-                context.User.HasClaim(OakConstants.ClaimTypes.BoardPermission, board))
+            var board = accessor.HttpContext.Request.RouteValues["board"]?.ToString();
+            if (board != null &&
+                (context.User.IsInRole(OakConstants.Roles.Administrator) ||
+                context.User.HasClaim(OakConstants.ClaimTypes.BoardPermission, board)))
 
             {
                 context.Succeed(requirement);
