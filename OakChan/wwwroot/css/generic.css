@@ -65,3 +65,7 @@ hr {
 .auth-action {
     font-weight: 500;
 }
+
+.error-text {
+    color: var(--colors_error);
+}
