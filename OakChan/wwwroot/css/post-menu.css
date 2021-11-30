@@ -18,8 +18,6 @@
 
 .post-menu {
     position: absolute;
-    background-color: var(--colors_post-reply);
-    border: 1px solid var(--colors_border);
     border-bottom: 2px;
     font-size: 0.85em;
 }
@@ -29,11 +27,15 @@
         margin: 0;
         padding: 0;
         white-space: nowrap;
+        background-color: var(--colors_post-reply);
+        border: 1px solid var(--colors_border);
     }
 
         .post-menu ul ul {
             position: absolute;
             display: none;
+            margin: -2px 0 0 -1px;
+            border: 1px solid var(--colors_border);
         }
 
     .post-menu li {
@@ -41,6 +43,7 @@
         padding: 1px 10px 2px;
         box-sizing: content-box;
         border-bottom: 1px solid var(--colors_border);
+        margin-left: 1px;
     }
 
         .post-menu li:hover {
