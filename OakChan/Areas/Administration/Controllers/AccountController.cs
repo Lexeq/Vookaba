@@ -282,6 +282,15 @@ namespace OakChan.Areas.Administration.Controllers
             return BadRequest();
         }
 
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return Error(
+                403, 
+                localizer["Access Denied"],
+                localizer["You are not allowed to do this."]);
+        }
+
         private async Task<IdentityResult> UpdateUserRoleAsync(ApplicationUser user, string newRole)
         {
             var userRoles = await userManager.GetRolesAsync(user);

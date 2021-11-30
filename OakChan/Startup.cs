@@ -118,7 +118,7 @@ namespace OakChan
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.AccessDeniedPath = "/Administration/AccessDenied";
+                options.AccessDeniedPath = "/Administration/Account/AccessDenied";
                 options.Cookie.Name = "passport";
                 options.Cookie.HttpOnly = true;
                 options.LoginPath = "/Administration/Account/Login";
