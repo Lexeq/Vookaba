@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
@@ -168,6 +169,99 @@ namespace OakChan.Tests.Controllers
             Assert.IsInstanceOf<BadRequestResult>(res);
 
             threadServiceMock.Verify(m => m.AddPostToThreadAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<PostCreationDto>()), Times.Never());
+        }
+
+
+        [Test]
+        public async Task CreateThread()
+        {
+            var boardServiceMock = new Mock<IBoardService>();
+            boardServiceMock
+                 .Setup(m => m.GetBoardInfoAsync("b"))
+                 .ReturnsAsync(new BoardInfoDto
+                 {
+                     Key = "b"
+                 });
+
+            var threadServiceMock = new Mock<IThreadService>();
+            threadServiceMock
+                 .Setup(m => m.CreateThreadAsync("b", It.Is<ThreadCreationDto>(d => d.Subject == "test thread")))
+                 .ReturnsAsync(new ThreadDto
+                 {
+                     ThreadId = 100,
+                     BoardKey = "b"
+                 });
+
+            var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
+            const string subj = "test thread";
+
+
+            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel
+            {
+                Subject = subj,
+                Text = "Hello, world!"
+            }) as ViewResult;
+
+            threadServiceMock.Verify(m => m.CreateThreadAsync("b", It.Is<ThreadCreationDto>(d => d.Subject == subj)), Times.Once());
+            boardServiceMock.Verify(m => m.GetBoardInfoAsync("b"), Times.Once());
+        }
+
+        [Test]
+        public async Task CreateThreadWithInvalidModel()
+        {
+            var boardServiceMock = new Mock<IBoardService>();
+            var threadServiceMock = new Mock<IThreadService>();
+            var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
+            controller.ModelState.AddModelError(string.Empty, "test error");
+
+            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel()) as ViewResult;
+
+            threadServiceMock.Verify(m => m.CreateThreadAsync(It.IsAny<string>(), It.IsAny<ThreadCreationDto>()), Times.Never());
+            boardServiceMock.Verify(m => m.GetBoardInfoAsync(It.IsAny<string>()), Times.Never());
+        }
+
+        [Test]
+        public async Task CreateThreadOnNotExistingBoard()
+        {
+            var boardServiceMock = new Mock<IBoardService>();
+            boardServiceMock
+                .Setup(x => x.GetBoardInfoAsync(It.IsAny<string>()))
+                .ReturnsAsync((BoardInfoDto)null);
+            var threadServiceMock = new Mock<IThreadService>();
+            var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
+
+            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel
+            {
+                Subject = "test thread",
+                Text = "hello, world",
+                Image = Mock.Of<IFormFile>()
+            }) as BadRequestResult;
+
+            Assert.NotNull(result);
+            threadServiceMock.Verify(m => m.CreateThreadAsync(It.IsAny<string>(), It.IsAny<ThreadCreationDto>()), Times.Never);
+            boardServiceMock.Verify(m => m.GetBoardInfoAsync(It.IsAny<string>()), Times.Once());
+        }
+
+        [Test]
+        public async Task CreateThreadOnDeletedBoard()
+        {
+            var threadServiceMock = new Mock<IThreadService>();
+            var boardServiceMock = new Mock<IBoardService>();
+            boardServiceMock
+                .Setup(x => x.GetBoardInfoAsync(It.IsAny<string>()))
+                .ReturnsAsync(new BoardInfoDto { IsDisabled = true });
+            var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
+
+            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel
+            {
+                Subject = "test thread",
+                Text = "hello, world",
+                Image = Mock.Of<IFormFile>()
+            });
+
+            Assert.NotNull(result);
+            threadServiceMock.Verify(m => m.CreateThreadAsync(It.IsAny<string>(), It.IsAny<ThreadCreationDto>()), Times.Never);
+            boardServiceMock.Verify(m => m.GetBoardInfoAsync(It.IsAny<string>()), Times.Once());
         }
     }
 }
