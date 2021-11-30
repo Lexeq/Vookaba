@@ -45,12 +45,16 @@ namespace OakChan.Tests.Services
             _hashMock.Setup(h => h.ComputeHash((byte[])null)).Returns(new byte[] { 100 });
             _hashMock.Setup(h => h.ComputeHash((Stream)null)).Returns(new byte[] { 100 });
             storageMock = new Mock<IAttachmentsStorage>();
-            storageMock.Setup(x => x.AddImageAsync(It.IsAny<Stream>(), It.IsAny<string>())).ReturnsAsync(new ImageInfo
-            {
-                Height = 100,
-                Name = "xx",
-                Width = 100
-            });
+            storageMock.Setup(x => x.AddImageAsync(It.IsAny<Stream>(), It.IsAny<string>()))
+                .ReturnsAsync(new ImageSavingResult
+                {
+                    Image = new ImageInfo
+                    {
+                        Height = 100,
+                        Name = "xx",
+                        Width = 100
+                    }
+                });
         }
 
 
