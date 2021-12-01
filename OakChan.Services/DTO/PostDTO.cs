@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace OakChan.Services.DTO
@@ -13,6 +14,8 @@ namespace OakChan.Services.DTO
         public bool IsOpening { get; set; }
 
         public Guid AuthorId { get; set; }
+
+        public IPAddress AuthorIP { get; set; }
 
         public string AuthorName { get; set; }
 

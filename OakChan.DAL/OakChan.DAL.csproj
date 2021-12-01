@@ -7,7 +7,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\Sql\00_down_triggers.sql" />
     <EmbeddedResource Include="Migrations\Sql\00_up_triggers.sql" />
+    <EmbeddedResource Include="Migrations\Sql\02_down_procedures.sql" />
     <EmbeddedResource Include="Migrations\Sql\01_down_views.sql" />
+    <EmbeddedResource Include="Migrations\Sql\02_up_procedures.sql" />
     <EmbeddedResource Include="Migrations\Sql\01_up_views.sql" />
   </ItemGroup>
   

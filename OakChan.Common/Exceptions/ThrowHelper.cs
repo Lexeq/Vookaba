@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 
 namespace OakChan.Common.Exceptions
 {
@@ -41,6 +43,22 @@ namespace OakChan.Common.Exceptions
                 }
             }
             return obj;
+        }
+
+        public T ThrowIfEnumIsNotCorrect<T>(T value) where T : struct, Enum
+        {
+            if (typeof(T).IsDefined(typeof(FlagsAttribute)))
+            {
+                if (value.ToString().All(char.IsDigit))
+                {
+                    throw new ArgumentException("Invalid combination of flags.");
+                }
+            }
+            else if (!Enum.IsDefined(value))
+            {
+                throw new ArgumentException($"'{value}' is not defined in {typeof(T).Name}.");
+            }
+            return value;
         }
     }
 }

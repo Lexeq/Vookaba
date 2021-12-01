@@ -14,6 +14,7 @@ namespace OakChan.Services.Mapping
             CreateMap<Post, PostDto>()
                 .ForMember(dto => dto.PostId, opt => opt.MapFrom(post => post.Id))
                 .ForMember(dto => dto.AuthorId, opt => opt.MapFrom(post => post.AuthorToken))
+                .ForMember(dto => dto.AuthorIP, opt => opt.MapFrom(post => post.IP))
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(post => post.Name))
                 .ForMember(dto => dto.Created, opt => opt.MapFrom(post => post.Created))
                 .ForMember(dto => dto.ThreadId, opt => opt.MapFrom(post => post.ThreadId))

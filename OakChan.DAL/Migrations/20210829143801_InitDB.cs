@@ -427,10 +427,12 @@ namespace OakChan.DAL.Migrations
 
             migrationBuilder.SqlFromResource("OakChan.DAL.Migrations.Sql.00_up_triggers.sql");
             migrationBuilder.SqlFromResource("OakChan.DAL.Migrations.Sql.01_up_views.sql");
+            migrationBuilder.SqlFromResource("OakChan.DAL.Migrations.Sql.02_up_procedures.sql");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.SqlFromResource("OakChan.DAL.Migrations.Sql.02_down_procedures.sql");
             migrationBuilder.SqlFromResource("OakChan.DAL.Migrations.Sql.01_down_views.sql");
             migrationBuilder.SqlFromResource("OakChan.DAL.Migrations.Sql.00_down_triggers.sql");
 
