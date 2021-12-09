@@ -1,0 +1,14 @@
+﻿@using OakChan.Common
+
+@{
+    var accountLevel = User.FindFirst(System.Security.Claims.ClaimTypes.Role).Value switch
+    {
+        OakConstants.Roles.Janitor => 1,
+        OakConstants.Roles.Moderator => 3,
+        OakConstants.Roles.Administrator => 5,
+        _ => -1
+    };
+}
+<input id="accountLevel"
+       type="hidden"
+       value="@accountLevel" />

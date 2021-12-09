@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using OakChan.Common
+@inject Microsoft.AspNetCore.Authorization.IAuthorizationService authorizationService
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -25,7 +28,12 @@
     <script src="~/scripts/notifications.js"></script>
     <script src="~/scripts/modal.js"></script>
     <script src="~/scripts/post-numeration.js"></script>
-
+    @if ((await authorizationService.AuthorizeAsync(User, null, OakConstants.Policies.HasBoardPermission)).Succeeded)
+    {
+        <script src="~/scripts/mod/post-deletion.js"></script>
+        <partial name="_AccountLevel" />
+        @Html.AntiForgeryToken();
+    }
     @RenderSection("Scripts", required: false)
 </body>
 </html>

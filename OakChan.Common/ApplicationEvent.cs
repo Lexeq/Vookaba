@@ -14,7 +14,13 @@
         AccountRoleAdd = 20_102,
         AccountBoardsPermissionAdd = 20_111,
         AccountBoardsPermissionRemove = 20_112,
-        InvitationCreate = 20_201
+        InvitationCreate = 20_201,
+
+        //thread events 30_xxx
+
+        //posts events 40_xxx
+        PostDelete = 40_001,
+        PostBulkDelete = 40_002
 
     }
 }

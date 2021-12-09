@@ -18,6 +18,7 @@ namespace OakChan.Tests.Controllers
     {
         private BoardController CreateContorller(
             IBoardService boardService = null,
+            IPostService postService = null,
             IStringLocalizer<BoardController> stringLocalizer = null,
             IMapper mapper = null,
             IModLogService modLogService = null,
@@ -25,6 +26,7 @@ namespace OakChan.Tests.Controllers
         {
             var controller = new BoardController(
                 boardService ?? Mock.Of<IBoardService>(),
+                postService ?? Mock.Of<IPostService>(),
                 stringLocalizer ?? Mock.Of<IStringLocalizer<BoardController>>(),
                 mapper ?? Mapper,
                 modLogService ?? Mock.Of<IModLogService>(),

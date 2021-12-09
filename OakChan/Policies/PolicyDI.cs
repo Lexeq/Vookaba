@@ -17,6 +17,11 @@ namespace OakChan.Policies
                         policy.RequireRole(OakConstants.Roles.Administrator);
                     });
 
+                options.AddPolicy(OakConstants.Policies.HasBoardPermission, policy =>
+                {
+                    policy.AddRequirements(new BoardPermissionRequirement());
+                });
+
                 options.AddPolicy(OakConstants.Policies.CanEditBoards, policy =>
                 {
                     policy.RequireRole(OakConstants.Roles.Administrator);
@@ -29,7 +34,10 @@ namespace OakChan.Policies
                         OakConstants.Roles.Moderator,
                         OakConstants.Roles.Janitor);
 
-                    policy.AddRequirements(new BoardPermissionRequirement());
+                    policy.Combine(options.GetPolicy(OakConstants.Policies.HasBoardPermission));
+
+                    policy.AddRequirements(new PostDeletingPermissionRequirement());
+
                 });
 
                 options.AddPolicy(OakConstants.Policies.CanEditUsers, policy =>
@@ -44,6 +52,7 @@ namespace OakChan.Policies
             });
 
             services.AddSingleton<IAuthorizationHandler, BoardPermissionHandler>();
+            services.AddSingleton<IAuthorizationHandler, PostDeletingPermissionHandler>();
             return services;
         }
     }
