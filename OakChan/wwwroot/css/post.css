@@ -73,6 +73,11 @@
     max-height: 100%;
 }
 
+.post span.numbering {
+    font-weight: 500;
+    margin-right: 0.5em;
+}
+
 
 
 .post__file-info {

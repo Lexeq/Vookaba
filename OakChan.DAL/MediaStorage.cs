@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Memory;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
@@ -24,24 +25,35 @@ namespace OakChan.DAL
             this.logger = logger;
         }
 
-        public Task<ImageInfo> AddImageAsync(byte[] bytes, string imageName)
-            => AddImageAsync(Image.Load(bytes), imageName);
-
-        public Task<ImageInfo> AddImageAsync(Stream source, string imageName)
-            => AddImageAsync(Image.Load(source), imageName);
-
-        private async Task<ImageInfo> AddImageAsync(Image image, string name)
+        public Task<ImageSavingResult> AddImageAsync(byte[] bytes, string imageName)
         {
+            using var image = Image.Load(bytes);
+            return AddImageAsync(image, imageName);
+        }
+
+        public async Task<ImageSavingResult> AddImageAsync(Stream source, string imageName)
+        {
+            using var image = await Image.LoadAsync(source);
+            return await AddImageAsync(image, imageName);
+        }
+
+        private async Task<ImageSavingResult> AddImageAsync(Image image, string name)
+        { 
             var imagePath = GetImagePath(name);
             var thumbPath = GetThumbnailPath(name);
             await image.SaveAsync(imagePath);
             var thumb = CreateThumbnail(image);
             await thumb.SaveAsync(thumbPath);
-            return new ImageInfo
+
+
+            var result = new ImageSavingResult
             {
-                Height = image.Height,
-                Name = name,
-                Width = image.Width,
+                Image = new ImageInfo
+                {
+                    Height = image.Height,
+                    Name = name,
+                    Width = image.Width
+                },
                 Thumbnail = new ImageInfo
                 {
                     Height = thumb.Height,
@@ -49,6 +61,8 @@ namespace OakChan.DAL
                     Width = thumb.Width
                 }
             };
+
+            return result;
         }
 
         public string GetImageLinkByName(string name)

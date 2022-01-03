@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -20,7 +21,7 @@ using OakChan.DAL.Database;
 using OakChan.Deanon;
 using OakChan.Identity;
 using OakChan.Mapping;
-using OakChan.Policies;
+using OakChan.Security.DependecyInjection;
 using OakChan.Services;
 using OakChan.Services.DbServices;
 using OakChan.Services.Mapping;
@@ -60,6 +61,7 @@ namespace OakChan
 
             services.AddScoped<IBoardService, DbBoardService>();
             services.AddScoped<IThreadService, DbThreadService>();
+            services.AddScoped<IPostService, DbPostService>();
             services.AddScoped<IStaffAggregationService, DbStaffAggregationService>();
             services.AddScoped<IModLogService, DbModLogService>();
             services.AddScoped<ITopThreadsService, TopThreadsService>();
@@ -118,23 +120,25 @@ namespace OakChan
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.AccessDeniedPath = "/Administration/AccessDenied";
+                options.AccessDeniedPath = "/Administration/Account/AccessDenied";
+                options.LoginPath = "/Administration/Account/Login";
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(OakConstants.Identity.CookieExpireInDays);
                 options.Cookie.Name = "passport";
                 options.Cookie.HttpOnly = true;
-                options.LoginPath = "/Administration/Account/Login";
                 options.Cookie.IsEssential = true;
-                options.SlidingExpiration = true;
-                options.ExpireTimeSpan = TimeSpan.FromDays(15);
-                options.Cookie.MaxAge = TimeSpan.FromDays(90);
+                options.Cookie.MaxAge = TimeSpan.FromDays(OakConstants.Identity.CookieMaxAgeInDays);
+                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
             });
+
 
             services.Configure<IdentityOptions>(o =>
             {
                 o.User.RequireUniqueEmail = true;
-                o.User.AllowedUserNameCharacters = OakConstants.AllowedUserNameCharacters;
+                o.User.AllowedUserNameCharacters = OakConstants.Identity.AllowedUserNameCharacters;
 
                 o.Password.RequireDigit = true;
-                o.Password.RequiredLength = OakConstants.MinPasswordLength;
+                o.Password.RequiredLength = OakConstants.Identity.MinPasswordLength;
                 o.Password.RequiredUniqueChars = 2;
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequireUppercase = false;
@@ -162,8 +166,20 @@ namespace OakChan
             }
 
             app.UseForwardedHeaders();
-            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseStaticFiles();
+            app.Use(async (x, y) =>
+            {
+                var path = x.Request.Path.Value;
+                if (path.StartsWith("/res/") && path.LastIndexOf(".") > 0)
+                {
+                    x.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                }
+                else
+                {
+                    await y.Invoke();
+                }
+            });
+            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseRequestLocalization();
             app.UseRouting();
             app.UseAuthentication();

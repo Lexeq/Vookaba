@@ -1,12 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using OakChan.Common;
-using OakChan.DAL;
-using OakChan.Identity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace OakChan.Deanon
+namespace OakChan.Identity
 {
     public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
     {

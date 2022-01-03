@@ -19,7 +19,9 @@
                 <a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a>
             </span>
             <span class="post__control-panel">
-                <a id="@("mb" + Model.Id)" data-pid="@Model.Id" data-pnum="@($"{Model.Number}")" class="post__menu-button" href="#">▶</a>
+                <a data-pnum="@(Model.Number)"
+                   class="post__menu-button"
+                   href="#">▶</a>
             </span>
         </div>
 

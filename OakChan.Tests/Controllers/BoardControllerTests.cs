@@ -18,16 +18,18 @@ namespace OakChan.Tests.Controllers
     {
         private BoardController CreateContorller(
             IBoardService boardService = null,
-            IThreadService threadService = null,
+            IPostService postService = null,
             IStringLocalizer<BoardController> stringLocalizer = null,
             IMapper mapper = null,
+            IModLogService modLogService = null,
             ILogger<BoardController> logger = null)
         {
             var controller = new BoardController(
                 boardService ?? Mock.Of<IBoardService>(),
-                threadService ?? Mock.Of<IThreadService>(),
+                postService ?? Mock.Of<IPostService>(),
                 stringLocalizer ?? Mock.Of<IStringLocalizer<BoardController>>(),
                 mapper ?? Mapper,
+                modLogService ?? Mock.Of<IModLogService>(),
                 logger ?? Mock.Of<ILogger<BoardController>>());
             SetHttpContext(controller);
             return controller;
@@ -103,93 +105,6 @@ namespace OakChan.Tests.Controllers
 
             Assert.IsNotNull(viewModel);
             Assert.AreEqual(expected, viewModel.PagesInfo.TotalPages);
-        }
-
-        [Test]
-        public async Task CreateThread()
-        {
-            var boardServiceMock = new Mock<IBoardService>();
-            boardServiceMock
-                 .Setup(m => m.GetBoardInfoAsync("b"))
-                 .ReturnsAsync(new BoardInfoDto
-                 {
-                     Key = "b"
-                 });
-
-            var threadServiceMock = new Mock<IThreadService>();
-            threadServiceMock
-                 .Setup(m => m.CreateThreadAsync("b", It.Is<ThreadCreationDto>(d => d.Subject == "test thread")))
-                 .ReturnsAsync(new ThreadDto
-                 {
-                     ThreadId = 100,
-                     BoardKey = "b"
-                 });
-
-            var controller = CreateContorller(boardServiceMock.Object, threadServiceMock.Object);
-            const string subj = "test thread";
-
-
-            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel
-            {
-                Subject = subj,
-                Text = "Hello, world!"
-            }) as ViewResult;
-
-            threadServiceMock.Verify(m => m.CreateThreadAsync("b", It.Is<ThreadCreationDto>(d => d.Subject == subj)), Times.Once());
-            boardServiceMock.Verify(m => m.GetBoardInfoAsync("b"), Times.Once());
-        }
-
-        [Test]
-        public async Task CreateThreadWithInvalidModel()
-        {
-            var boardServiceMock = new Mock<IBoardService>();
-            var threadServiceMock = new Mock<IThreadService>();
-            var controller = CreateContorller(boardServiceMock.Object, threadServiceMock.Object);
-            controller.ModelState.AddModelError(string.Empty, "test error");
-
-            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel()) as ViewResult;
-
-            threadServiceMock.Verify(m => m.CreateThreadAsync(It.IsAny<string>(), It.IsAny<ThreadCreationDto>()), Times.Never());
-            boardServiceMock.Verify(m => m.GetBoardInfoAsync(It.IsAny<string>()), Times.Never());
-        }
-
-        [Test]
-        public async Task CreateThreadOnNotExistingBoard()
-        {
-            var boardServiceMock = new Mock<IBoardService>();
-            boardServiceMock
-                .Setup(x => x.GetBoardInfoAsync(It.IsAny<string>()))
-                .ReturnsAsync((BoardInfoDto)null);
-            var threadServiceMock = new Mock<IThreadService>();
-            var controller = CreateContorller(boardServiceMock.Object, threadServiceMock.Object);
-
-            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel
-            {
-                Subject = "test thread",
-                Text = "hello, world",
-                Image = Mock.Of<IFormFile>()
-            }) as BadRequestResult;
-
-            Assert.NotNull(result);
-            threadServiceMock.Verify(m => m.CreateThreadAsync(It.IsAny<string>(), It.IsAny<ThreadCreationDto>()), Times.Never);
-            boardServiceMock.Verify(m => m.GetBoardInfoAsync(It.IsAny<string>()), Times.Once());
-        }
-
-        [Test]
-        public async Task CreateThreadOnDeletedBoard()
-        {
-            var threadServiceMock = new Mock<IThreadService>();
-            var boardServiceMock = new Mock<IBoardService>();
-            boardServiceMock
-                .Setup(x => x.GetBoardInfoAsync(It.IsAny<string>()))
-                .ReturnsAsync(new BoardInfoDto { IsDisabled = true });
-            var controller = CreateContorller(boardServiceMock.Object, threadServiceMock.Object);
-
-            var result = await controller.Index("b");
-
-            Assert.NotNull(result);
-            threadServiceMock.Verify(m => m.CreateThreadAsync(It.IsAny<string>(), It.IsAny<ThreadCreationDto>()), Times.Never);
-            boardServiceMock.Verify(m => m.GetBoardInfoAsync(It.IsAny<string>()), Times.Once());
         }
     }
 }

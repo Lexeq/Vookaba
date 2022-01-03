@@ -266,6 +266,7 @@ namespace OakChan.Areas.Administration.Controllers
                             vm.Boards.Where(b => b.IsChecked).Select(x => x.Item));
                     if (claimsResult.Succeeded)
                     {
+                        await userManager.UpdateSecurityStampAsync(user);
                         scope.Complete();
                         return RedirectToAction(nameof(UserDetails), new { vm.UserId });
                     }
@@ -280,6 +281,15 @@ namespace OakChan.Areas.Administration.Controllers
                 }
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return Error(
+                403, 
+                localizer["Access Denied"],
+                localizer["You are not allowed to do this."]);
         }
 
         private async Task<IdentityResult> UpdateUserRoleAsync(ApplicationUser user, string newRole)

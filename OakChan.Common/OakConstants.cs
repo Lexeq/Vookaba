@@ -2,8 +2,13 @@
 {
     public static class OakConstants
     {
-        public const int MinPasswordLength = 8;
-        public const string AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+абвгдеёжзийклмнопрстуфхцчшщъыьэюяФБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+        public static class Identity
+        {
+            public const int MinPasswordLength = 8;
+            public const string AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+абвгдеёжзийклмнопрстуфхцчшщъыьэюяФБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+            public const int CookieMaxAgeInDays = 15;
+            public const int CookieExpireInDays = 30;
+        }
 
         public static class PostConstants
         {
@@ -46,6 +51,8 @@
             public const string CanEditBoards = "EditBoardPolicy";
             public const string CanDeletePosts = "DeletePostPolicy";
             public const string CanEditUsers = "EditUserPolicy";
+            public const string HasStaffRole = "StaffRole";
+            public const string HasBoardPermission = "BoardPermissionPolicy";
         }
     }
 }

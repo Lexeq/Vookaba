@@ -118,7 +118,7 @@ namespace OakChan.Services.DbServices
         {
             var extension = Path.GetExtension(file.FileName).TrimStart('.').ToLowerInvariant();
             string imageFullName = $"{GenerateFileName()}.{extension}";
-            var image = await attachmentsStorage.AddImageAsync(file.OpenReadStream(), imageFullName);
+            var result = await attachmentsStorage.AddImageAsync(file.OpenReadStream(), imageFullName);
 
             var imageEntity = new Image
             {
@@ -126,8 +126,8 @@ namespace OakChan.Services.DbServices
                 Hash = HashBytesToString(hashService.ComputeHash(file.OpenReadStream())),
                 OriginalName = file.FileName,
                 Extension = extension,
-                Width = image.Width,
-                Height = image.Height,
+                Width = result.Image.Width,
+                Height = result.Image.Height,
                 FileSize = (int)file.Length
             };
             return imageEntity;

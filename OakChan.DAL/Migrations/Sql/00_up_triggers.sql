@@ -126,8 +126,8 @@ BEGIN
         RETURN NEW;
     ELSIF (TG_OP = 'DELETE') THEN
         UPDATE "Threads"
-        SET"PostsCount" = "PostsCount" - 1
-        WHERE "Id" = NEW."ThreadId";
+        SET "PostsCount" = "PostsCount" - 1
+        WHERE "Id" = OLD."ThreadId";
        	RETURN OLD;
     END IF;
 END;

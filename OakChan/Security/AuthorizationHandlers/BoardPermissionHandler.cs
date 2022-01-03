@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Http;
 using OakChan.Common;
 using System.Threading.Tasks;
 
-namespace OakChan.Policies
+namespace OakChan.Security.AuthorizationHandlers
 {
+    public class BoardPermissionRequirement : IAuthorizationRequirement { }
+
     public class BoardPermissionHandler : AuthorizationHandler<BoardPermissionRequirement>
     {
         private readonly IHttpContextAccessor accessor;
@@ -16,9 +18,10 @@ namespace OakChan.Policies
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, BoardPermissionRequirement requirement)
         {
-            var board = accessor.HttpContext.Request.RouteValues["board"].ToString();
-            if (context.User.IsInRole(OakConstants.Roles.Administrator) ||
-                context.User.HasClaim(OakConstants.ClaimTypes.BoardPermission, board))
+            var board = accessor.HttpContext.Request.RouteValues["board"]?.ToString();
+            if (board != null &&
+                (context.User.IsInRole(OakConstants.Roles.Administrator) ||
+                context.User.HasClaim(OakConstants.ClaimTypes.BoardPermission, board)))
 
             {
                 context.Succeed(requirement);
