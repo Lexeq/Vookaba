@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace OakChan.Policies
 {
+    public class BoardPermissionRequirement : IAuthorizationRequirement { }
+
     public class BoardPermissionHandler : AuthorizationHandler<BoardPermissionRequirement>
     {
         private readonly IHttpContextAccessor accessor;

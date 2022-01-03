@@ -9,6 +9,8 @@ using System;
 
 namespace OakChan.Policies
 {
+    public class PostDeletingPermissionRequirement : IAuthorizationRequirement { }
+
     public class PostDeletingPermissionHandler : AuthorizationHandler<PostDeletingPermissionRequirement>
     {
         private readonly ILogger<PostDeletingPermissionHandler> logger;
@@ -24,17 +26,14 @@ namespace OakChan.Policies
             {
                 return;
             }
-            var httpContext = (context.Resource as HttpContext);
-            httpContext.Request.EnableBuffering();
-            var vm = await httpContext.Request.ReadFromJsonAsync<PostsDeletionViewModel>();
-            httpContext.Request.Body.Position = 0;
 
-
+            var area = (await ReadViewModelAsync(context.Resource as HttpContext)).Area;
             var role = context.User.FindFirstValue(ClaimTypes.Role);
-            if (!Enum.IsDefined(vm.Area))
+
+            if (!Enum.IsDefined(area))
             {
                 context.Fail();
-                logger.LogWarning($"Bad enum '{vm.Area.GetType().Name}: {vm.Area}'.");
+                logger.LogWarning($"Bad enum '{area.GetType().Name}: {area}'.");
                 return;
             }
             if (role == OakConstants.Roles.Administrator)
@@ -42,12 +41,12 @@ namespace OakChan.Policies
                 context.Succeed(requirement);
             }
             else if (role == OakConstants.Roles.Moderator
-                    && vm.Area != PostsDeletionViewModel.DeletingArea.All)
+                     && area != PostsDeletionViewModel.DeletingArea.All)
             {
                 context.Succeed(requirement);
             }
             else if (role == OakConstants.Roles.Janitor
-                   && vm.Area == PostsDeletionViewModel.DeletingArea.Single)
+                     && area == PostsDeletionViewModel.DeletingArea.Single)
             {
                 context.Succeed(requirement);
             }
@@ -55,6 +54,19 @@ namespace OakChan.Policies
             {
                 context.Fail();
             }
+        }
+
+        private async Task<PostsDeletionViewModel> ReadViewModelAsync(HttpContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            context.Request.EnableBuffering();
+            var vm = await context.Request.ReadFromJsonAsync<PostsDeletionViewModel>();
+            context.Request.Body.Position = 0;
+            return vm;
         }
     }
 }

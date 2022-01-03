@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using OakChan.Common;
+using PoliciesNames = OakChan.Common.OakConstants.Policies;
 
 namespace OakChan.Policies
 {
@@ -11,48 +12,51 @@ namespace OakChan.Policies
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(
-                    name: OakConstants.Policies.CanInviteUsers,
+                    name: PoliciesNames.CanInviteUsers,
                     policy =>
                     {
                         policy.RequireRole(OakConstants.Roles.Administrator);
                     });
 
-                options.AddPolicy(OakConstants.Policies.HasBoardPermission, policy =>
-                {
-                    policy.AddRequirements(new BoardPermissionRequirement());
-                });
-
-                options.AddPolicy(OakConstants.Policies.CanEditBoards, policy =>
-                {
-                    policy.RequireRole(OakConstants.Roles.Administrator);
-                });
-
-                options.AddPolicy(OakConstants.Policies.CanDeletePosts, policy =>
+                options.AddPolicy(PoliciesNames.HasStaffRole, policy =>
                 {
                     policy.RequireRole(
                         OakConstants.Roles.Administrator,
                         OakConstants.Roles.Moderator,
                         OakConstants.Roles.Janitor);
-
-                    policy.Combine(options.GetPolicy(OakConstants.Policies.HasBoardPermission));
-
-                    policy.AddRequirements(new PostDeletingPermissionRequirement());
-
                 });
 
-                options.AddPolicy(OakConstants.Policies.CanEditUsers, policy =>
+                options.AddPolicy(PoliciesNames.HasBoardPermission, policy =>
+                {
+                    policy.AddRequirements(new BoardPermissionRequirement());
+                });
+
+                options.AddPolicy(PoliciesNames.CanEditBoards, policy =>
                 {
                     policy.RequireRole(OakConstants.Roles.Administrator);
                 });
 
-                options.AddPolicy(OakConstants.Policies.CanPost, policy =>
+                options.AddPolicy(PoliciesNames.CanDeletePosts, policy =>
+                {
+                    policy.Combine(options.GetPolicy(PoliciesNames.HasStaffRole))
+                          .Combine(options.GetPolicy(PoliciesNames.HasBoardPermission))
+                          .AddRequirements(new PostDeletingPermissionRequirement());
+
+                });
+
+                options.AddPolicy(PoliciesNames.CanEditUsers, policy =>
+                {
+                    policy.RequireRole(OakConstants.Roles.Administrator);
+                });
+
+                options.AddPolicy(PoliciesNames.CanPost, policy =>
                 {
                     policy.RequireClaim(OakConstants.ClaimTypes.AuthorToken);
                 });
             });
 
-            services.AddSingleton<IAuthorizationHandler, BoardPermissionHandler>();
-            services.AddSingleton<IAuthorizationHandler, PostDeletingPermissionHandler>();
+            services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
+            services.AddScoped<IAuthorizationHandler, PostDeletingPermissionHandler>();
             return services;
         }
     }
