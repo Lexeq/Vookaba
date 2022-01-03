@@ -121,22 +121,23 @@ namespace OakChan
             services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/Administration/Account/AccessDenied";
+                options.LoginPath = "/Administration/Account/Login";
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(OakConstants.Identity.CookieExpireInDays);
                 options.Cookie.Name = "passport";
                 options.Cookie.HttpOnly = true;
-                options.LoginPath = "/Administration/Account/Login";
                 options.Cookie.IsEssential = true;
-                options.SlidingExpiration = true;
-                options.ExpireTimeSpan = TimeSpan.FromDays(15);
-                options.Cookie.MaxAge = TimeSpan.FromDays(90);
+                options.Cookie.MaxAge = TimeSpan.FromDays(OakConstants.Identity.CookieMaxAgeInDays);
+                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
             });
 
             services.Configure<IdentityOptions>(o =>
             {
                 o.User.RequireUniqueEmail = true;
-                o.User.AllowedUserNameCharacters = OakConstants.AllowedUserNameCharacters;
+                o.User.AllowedUserNameCharacters = OakConstants.Identity.AllowedUserNameCharacters;
 
                 o.Password.RequireDigit = true;
-                o.Password.RequiredLength = OakConstants.MinPasswordLength;
+                o.Password.RequiredLength = OakConstants.Identity.MinPasswordLength;
                 o.Password.RequiredUniqueChars = 2;
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequireUppercase = false;
