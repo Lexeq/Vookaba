@@ -129,7 +129,11 @@ namespace OakChan
                 options.Cookie.IsEssential = true;
                 options.Cookie.MaxAge = TimeSpan.FromDays(OakConstants.Identity.CookieMaxAgeInDays);
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+
+                options.EventsType = typeof(CookieValidator);
             });
+
+            services.AddScoped<CookieValidator>();
 
             services.Configure<IdentityOptions>(o =>
             {
