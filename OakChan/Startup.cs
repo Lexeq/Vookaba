@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -163,8 +164,20 @@ namespace OakChan
             }
 
             app.UseForwardedHeaders();
-            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseStaticFiles();
+            app.Use(async (x, y) =>
+            {
+                var path = x.Request.Path.Value;
+                if (path.StartsWith("/res/") && path.LastIndexOf(".") > 0)
+                {
+                    x.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                }
+                else
+                {
+                    await y.Invoke();
+                }
+            });
+            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseRequestLocalization();
             app.UseRouting();
             app.UseAuthentication();
