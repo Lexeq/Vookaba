@@ -21,7 +21,7 @@ using OakChan.DAL.Database;
 using OakChan.Deanon;
 using OakChan.Identity;
 using OakChan.Mapping;
-using OakChan.Policies;
+using OakChan.Security.DependecyInjection;
 using OakChan.Services;
 using OakChan.Services.DbServices;
 using OakChan.Services.Mapping;
@@ -129,11 +129,8 @@ namespace OakChan
                 options.Cookie.IsEssential = true;
                 options.Cookie.MaxAge = TimeSpan.FromDays(OakConstants.Identity.CookieMaxAgeInDays);
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
-
-                options.EventsType = typeof(CookieValidator);
             });
 
-            services.AddScoped<CookieValidator>();
 
             services.Configure<IdentityOptions>(o =>
             {

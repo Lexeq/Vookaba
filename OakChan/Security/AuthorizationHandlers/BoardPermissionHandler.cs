@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using OakChan.Common;
 using System.Threading.Tasks;
 
-namespace OakChan.Policies
+namespace OakChan.Security.AuthorizationHandlers
 {
     public class BoardPermissionRequirement : IAuthorizationRequirement { }
 

@@ -13,7 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace OakChan.Utils
+namespace OakChan.Security
 {
     public class CookieValidator : CookieAuthenticationEvents
     {

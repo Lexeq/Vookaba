@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using OakChan.Common;
+using OakChan.Security.AuthorizationHandlers;
 using PoliciesNames = OakChan.Common.OakConstants.Policies;
 
-namespace OakChan.Policies
+namespace OakChan.Security.DependecyInjection
 {
-    public static class PolicyDI
+    public static class SecurityInjection
     {
         public static IServiceCollection AddChanPolicies(this IServiceCollection services)
         {
@@ -57,6 +59,11 @@ namespace OakChan.Policies
 
             services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
             services.AddScoped<IAuthorizationHandler, PostDeletingPermissionHandler>();
+            services.AddScoped<CookieValidator>();
+            services.PostConfigure<CookieAuthenticationOptions>(options =>
+                options.EventsType = typeof(CookieValidator)
+            );
+
             return services;
         }
     }

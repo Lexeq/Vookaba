@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System;
 
-namespace OakChan.Policies
+namespace OakChan.Security.AuthorizationHandlers
 {
     public class PostDeletingPermissionRequirement : IAuthorizationRequirement { }
 
