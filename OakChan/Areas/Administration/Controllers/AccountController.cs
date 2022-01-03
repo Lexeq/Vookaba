@@ -266,6 +266,7 @@ namespace OakChan.Areas.Administration.Controllers
                             vm.Boards.Where(b => b.IsChecked).Select(x => x.Item));
                     if (claimsResult.Succeeded)
                     {
+                        await userManager.UpdateSecurityStampAsync(user);
                         scope.Complete();
                         return RedirectToAction(nameof(UserDetails), new { vm.UserId });
                     }
