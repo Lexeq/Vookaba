@@ -6,9 +6,13 @@
 })
 
 function deletePosts(board, number, reason, area, mode) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+
     const uri = `/${board}/BulkDeletePosts`;
     let antiforgery = $("input[name='__RequestVerificationToken']").val();
     return fetch(uri, {
+        signal: timeoutId.signal,
         method: "POST",
         headers: {
             "Accept": "application/json",
