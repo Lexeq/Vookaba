@@ -3,7 +3,7 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="@OakConstants.Culture">
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
@@ -22,7 +22,8 @@
     <script src="~/lib/jquery/jquery.min.js"></script>
     <script src="~/scripts/acorn.js"></script>
     <script src="~/scripts/dates.js"></script>
-    <script src="~/scripts/lang.js"></script>
+    <script src="~/scripts/lang/@(OakConstants.Culture).js"></script>
+    <script src="~/scripts/localizer.js"></script>
     <script src="~/scripts/post-menu.js"></script>
     <script src="~/scripts/post-ignoring.js"></script>
     <script src="~/scripts/notifications.js"></script>
