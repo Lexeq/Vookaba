@@ -4,7 +4,8 @@ namespace OakChan.Areas.Administration.ViewModels
 {
     public class RegisterWithInvitationViewModel : RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Field is required")]
+        [Display(Name = "Invitaion")]
         public string Invitaion { get; set; }
 
         public RegisterWithInvitationViewModel() { }

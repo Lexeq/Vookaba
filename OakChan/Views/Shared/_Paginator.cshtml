@@ -5,13 +5,13 @@
 
     @if (Model.PageNumber > 4)
     {
-    <span class="page-link page-first" title="@Localizer[" first page"]">
+    <span class="page-link page-first" title="@Localizer["First page"]">
         <a asp-route-page="1">&lt;&lt;</a>
     </span>
     }
     @if (Model.PageNumber > 1)
     {
-    <span class="page-link" title="@Localizer[" previous page"]">
+    <span class="page-link" title="@Localizer["Previous page"]">
         <a asp-route-page="@(Model.PageNumber - 1)">&lt;</a>
     </span>
     }
@@ -26,13 +26,13 @@
     }
     @if (Model.PageNumber != Model.TotalPages)
     {
-    <span class="page-link" title="@Localizer[" next page"]">
+    <span class="page-link" title="@Localizer["Next page"]">
         <a  asp-route-page="@(Model.PageNumber + 1)">&gt;</a>
     </span>
     }
     @if (Model.PageNumber + 4 < Model.TotalPages)
     {
-    <span class="page-link page-last" title="@Localizer[" last page"]">
+    <span class="page-link page-last" title="@Localizer["Last page"]">
         <a asp-route-page="@Model.TotalPages">&gt;&gt;</a>
     </span>
     }

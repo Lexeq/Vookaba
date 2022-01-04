@@ -2,6 +2,8 @@
 {
     public static class OakConstants
     {
+        public const string Culture = "ru";
+
         public static class Identity
         {
             public const int MinPasswordLength = 8;

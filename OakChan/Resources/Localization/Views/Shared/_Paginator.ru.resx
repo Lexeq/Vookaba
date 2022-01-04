@@ -117,19 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Create thread" xml:space="preserve">
-    <value>Создать тред</value>
+  <data name="First page" xml:space="preserve">
+    <value>Первая страница</value>
   </data>
-  <data name="Hide form" xml:space="preserve">
-    <value>Скрыть форму</value>
+  <data name="Last page" xml:space="preserve">
+    <value>Последняя страница</value>
   </data>
-  <data name="To thread" xml:space="preserve">
-    <value>В тред</value>
+  <data name="Next page" xml:space="preserve">
+    <value>Следующая страница</value>
+  </data>
+  <data name="Previous page" xml:space="preserve">
+    <value>Предыдущая страница</value>
   </data>
   <data name="{0} of {1}" xml:space="preserve">
     <value>{0} из {1}</value>
-  </data>
-  <data name="{0} post omited, {1} with image." xml:space="preserve">
-    <value>Постов пропущено: {0}, с изображениями: {1}.</value>
   </data>
 </root>

@@ -117,13 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Login" xml:space="preserve">
-    <value>Вход</value>
+  <data name="Field is required" xml:space="preserve">
+    <value>Обязательно для заполнения.</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Выход</value>
-  </data>
-  <data name="Register" xml:space="preserve">
-    <value>Регистрация</value>
+  <data name="Invitaion" xml:space="preserve">
+    <value>Инвайт</value>
   </data>
 </root>

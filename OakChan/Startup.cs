@@ -1,11 +1,9 @@
 using System;
-using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -78,12 +76,10 @@ namespace OakChan
 
             #region Localization
 
-            var supportedCultures = new[] { new CultureInfo("ru-ru") };
             services.Configure<RequestLocalizationOptions>(o =>
             {
-                o.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                o.SupportedCultures = supportedCultures;
-                o.SupportedUICultures = supportedCultures;
+                o.RequestCultureProviders.Clear();
+                o.SetDefaultCulture(OakConstants.Culture);
             });
 
             services.AddLocalization(o => o.ResourcesPath = "resources/localization");
@@ -179,8 +175,8 @@ namespace OakChan
                     await y.Invoke();
                 }
             });
-            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseRequestLocalization();
+            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseRouting();
             app.UseAuthentication();
             app.UseDeanon();
