@@ -7,7 +7,7 @@ function setPostIsHidden(data, isHidden) {
     let num = data.number;
 
     let hiddens = JSON.parse(localStorage.getItem('ignoring'));
-    updatePostVisibility(num, isHidden);
+    updatePostVisibility(num, bid, isHidden);
     if (isHidden) {
         if (!hiddens) {
             hiddens = {};
