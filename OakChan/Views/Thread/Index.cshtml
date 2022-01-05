@@ -9,14 +9,18 @@
     <partial name="_ValidationScriptsPartial" />
 }
 <hr />
-<p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
+<p class="switcher"
+   tabindex="0"
+   id="switcher"
+   onclick="switchFormVisibility()"
+   data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
 
 <partial name="_PostCreationFormPartial" model="new PostFormViewModel()" />
-<div class="thread" data-bid="@(Model.BoardKey)" data-tid="@(Model.ThreadId)">
-    @if (!string.IsNullOrWhiteSpace(Model.Subject))
-    {
-        <span class="thread__subject">#@Model.Subject</span>
-    }
+<div id="@($"thread-{Model.ThreadId}")"
+     class="thread"
+     data-bid="@(Model.BoardKey)"
+     data-tid="@(Model.ThreadId)">
+    <span class="thread__subject">@Model.Subject</span>
     <partial name="_PostView" model="Model.OpPost" />
     @foreach (var post in Model.Replies)
     {

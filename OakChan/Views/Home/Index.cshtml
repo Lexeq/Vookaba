@@ -40,11 +40,13 @@
     </div>
 </div>
 <br />
-@if (Model.LastCreatedThreads.Any())
-{
-    <partial name="_TopThreads" model="@Model.LastCreatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently created threads"] } }' />
-}
-@if (Model.LastUpdatedThreads.Any())
-{
-    <partial name="_TopThreads" model="@Model.LastUpdatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently updated threads"] } }' />
-}
+<div id="favorites">
+    @if (Model.LastCreatedThreads.Any())
+    {
+        <partial name="_TopThreads" model="@Model.LastCreatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently created threads"] } }' />
+    }
+    @if (Model.LastUpdatedThreads.Any())
+    {
+        <partial name="_TopThreads" model="@Model.LastUpdatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently updated threads"] } }' />
+    }
+</div>
