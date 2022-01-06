@@ -1,9 +1,4 @@
-﻿.pages-nav {
-    position: absolute;
-    bottom: 1em;
-}
-
-.page-number-info,
+﻿.page-number-info,
 .page-link {
     background-color: var(--colors_bg-substrate);
     margin: 2px 0.1em;

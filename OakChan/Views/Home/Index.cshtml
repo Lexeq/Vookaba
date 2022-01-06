@@ -1,7 +1,10 @@
 ﻿@model OakChan.ViewModels.HomePageViewModel
 @{
     ViewBag.Title = Localizer["Welcome"];
-    Layout = "_Layout";
+    Layout = "_BaseLayout";
+}
+@section Footer{
+    <partial name="_Footer" />
 }
 
 <div class="home__auth-panel">
