@@ -1,7 +1,8 @@
-﻿@using OakChan.Common
+﻿@model string
+@using OakChan.Common
 
 @{
-    var accountLevel = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value switch
+    var accountLevel = Model switch
     {
         OakConstants.Roles.Janitor => 1,
         OakConstants.Roles.Moderator => 3,
