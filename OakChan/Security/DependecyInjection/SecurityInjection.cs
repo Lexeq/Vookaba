@@ -60,9 +60,6 @@ namespace OakChan.Security.DependecyInjection
             services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
             services.AddScoped<IAuthorizationHandler, PostDeletingPermissionHandler>();
             services.AddScoped<CookieValidator>();
-            services.PostConfigure<CookieAuthenticationOptions>(options =>
-                options.EventsType = typeof(CookieValidator)
-            );
 
             return services;
         }
