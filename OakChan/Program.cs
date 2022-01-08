@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,9 +18,11 @@ namespace OakChan
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
+                var dbContext = services.GetRequiredService<OakDbContext>();
                 var seeder = services.GetRequiredService<DatabaseSeeder>();
                 try
                 {
+                    await dbContext.Database.MigrateAsync();
                     await seeder.SeedAsync();
                 }
                 catch (Exception ex)

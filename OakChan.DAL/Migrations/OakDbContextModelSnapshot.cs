@@ -310,60 +310,6 @@ namespace OakChan.DAL.Migrations
                     b.ToTable("Posts");
                 });
 
-            modelBuilder.Entity("OakChan.DAL.Entities.Report", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
-
-                    b.Property<Guid>("AuthorToken")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
-
-                    b.Property<IPAddress>("IP")
-                        .IsRequired()
-                        .HasColumnType("inet")
-                        .HasColumnName("ComplainantIP");
-
-                    b.Property<bool>("IsProcessed")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
-
-                    b.Property<int>("PostId")
-                        .HasColumnType("integer");
-
-                    b.Property<int?>("ProcessedById")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
-
-                    b.Property<string>("UserAgent")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("ComplainantUserAgent");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuthorToken");
-
-                    b.HasIndex("IsProcessed");
-
-                    b.HasIndex("PostId");
-
-                    b.HasIndex("ProcessedById");
-
-                    b.HasIndex("IsProcessed", "Created");
-
-                    b.ToTable("Reports");
-                });
-
             modelBuilder.Entity("OakChan.DAL.Entities.Thread", b =>
                 {
                     b.Property<int>("Id")
@@ -660,29 +606,6 @@ namespace OakChan.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Thread");
-                });
-
-            modelBuilder.Entity("OakChan.DAL.Entities.Report", b =>
-                {
-                    b.HasOne("OakChan.DAL.Entities.AuthorToken", null)
-                        .WithMany()
-                        .HasForeignKey("AuthorToken")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OakChan.DAL.Entities.Post", "Post")
-                        .WithMany()
-                        .HasForeignKey("PostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OakChan.Identity.ApplicationUser", "ProcessedBy")
-                        .WithMany()
-                        .HasForeignKey("ProcessedById");
-
-                    b.Navigation("Post");
-
-                    b.Navigation("ProcessedBy");
                 });
 
             modelBuilder.Entity("OakChan.DAL.Entities.Thread", b =>
