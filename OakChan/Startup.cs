@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
@@ -113,6 +114,11 @@ namespace OakChan
             services.AddScoped<AuthorTokenManager>();
             services.AddScoped<IAuthorTokenFactory>(s => s.GetRequiredService<AuthorTokenManager>());
             services.AddScoped<IAuthorTokenManager, AuthorTokenManager>(s => s.GetRequiredService<AuthorTokenManager>());
+
+            services.AddDataProtection(x =>
+            {
+                x.ApplicationDiscriminator = Configuration[nameof(x.ApplicationDiscriminator)];
+            });
 
             services.ConfigureApplicationCookie(options =>
             {
