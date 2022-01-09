@@ -11,7 +11,7 @@ namespace OakChan.DAL.Database
 {
     public class DatabaseSeeder
     {
-        private OakDbContext context;
+        private readonly OakDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
         private readonly SeedData options;

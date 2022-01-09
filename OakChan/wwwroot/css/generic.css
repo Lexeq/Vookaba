@@ -4,7 +4,8 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin: 0;
+    margin-bottom: 40px;
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     font-size: 16px;
     color: var(--colors_font);
@@ -22,20 +23,16 @@ hr {
     border-top: 1px solid var(--colors_separator);
 }
 
+.main{
+    margin: 5px 5px 0;
+}
+
 .text-center {
     text-align: center;
 }
 
 .text-right {
     text-align: center;
-}
-
-.footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    white-space: nowrap;
-    line-height: 60px;
 }
 
 .clear-float {
@@ -48,6 +45,7 @@ hr {
 }
 
 .navbar {
+    margin: 5px 10px;
     font-size: 1.15rem;
     display: flex;
     justify-content: space-between;

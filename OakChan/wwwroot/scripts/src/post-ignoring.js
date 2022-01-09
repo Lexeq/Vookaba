@@ -7,7 +7,7 @@ function setPostIsHidden(data, isHidden) {
     let num = data.number;
 
     let hiddens = JSON.parse(localStorage.getItem('ignoring'));
-    updatePostVisibility(num, isHidden);
+    updatePostVisibility(num, bid, isHidden);
     if (isHidden) {
         if (!hiddens) {
             hiddens = {};
@@ -36,19 +36,19 @@ function setPostIsHidden(data, isHidden) {
 //wow such a great function's name
 function hideHidden() {
     let hidden = JSON.parse(localStorage.getItem('ignoring'));
-    $('.thread').each(function () {
+    $('[id^="thread-"], #favorites .favorite-thread__item').each(function () {
         let bid = $(this).data('bid');
         let tid = $(this).data('tid');
         if (hidden?.[bid]?.[tid]) {
             for (const pnum in hidden[bid][tid]) {
-                updatePostVisibility(pnum, true);
+                updatePostVisibility(pnum, bid, true);
             }
         }
     });
 }
 
-function updatePostVisibility(number, isHidden) {
-    let $post = $('#p' + number);
+function updatePostVisibility(number, board, isHidden) {
+    let $post = $(`#p${number}, #favorites .favorite-thread__item.p${number}-${board}`);
     if (isHidden) {
         $post.addClass('post_hidden');
         if ($post.hasClass('oppost')) {

@@ -5,7 +5,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace OakChan.DAL.Migrations
 {
-    public partial class InitDB : Migration
+    public partial class CreateDatabase010 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -220,6 +220,60 @@ namespace OakChan.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Invitations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    UsedByID = table.Column<int>(type: "integer", nullable: true),
+                    PublisherId = table.Column<int>(type: "integer", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Expire = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    IsUsed = table.Column<bool>(type: "boolean", nullable: false),
+                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Invitations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Invitations_AspNetUsers_PublisherId",
+                        column: x => x.PublisherId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invitations_AspNetUsers_UsedByID",
+                        column: x => x.UsedByID,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModActions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    EventId = table.Column<int>(type: "integer", nullable: false),
+                    EntityId = table.Column<string>(type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    IP = table.Column<IPAddress>(type: "inet", nullable: false),
+                    UserAgent = table.Column<string>(type: "text", nullable: false),
+                    Note = table.Column<string>(type: "character varying(1024)", maxLength: 1024, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModActions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ModActions_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -281,44 +335,6 @@ namespace OakChan.DAL.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Reports",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsProcessed = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    ProcessedById = table.Column<int>(type: "integer", nullable: true),
-                    Reason = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
-                    PostId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    AuthorToken = table.Column<Guid>(type: "uuid", nullable: false),
-                    ComplainantIP = table.Column<IPAddress>(type: "inet", nullable: false),
-                    ComplainantUserAgent = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Reports", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Reports_AspNetUsers_ProcessedById",
-                        column: x => x.ProcessedById,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Reports_AuthorTokens_AuthorToken",
-                        column: x => x.AuthorToken,
-                        principalTable: "AuthorTokens",
-                        principalColumn: "Token",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reports_Posts_PostId",
-                        column: x => x.PostId,
-                        principalTable: "Posts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -344,6 +360,11 @@ namespace OakChan.DAL.Migrations
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUserRoles_UserId_RoleId",
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId" });
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -373,6 +394,31 @@ namespace OakChan.DAL.Migrations
                 column: "PostId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Invitations_Expire",
+                table: "Invitations",
+                column: "Expire");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_IsUsed",
+                table: "Invitations",
+                column: "IsUsed");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_PublisherId",
+                table: "Invitations",
+                column: "PublisherId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_UsedByID",
+                table: "Invitations",
+                column: "UsedByID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModActions_UserId_Created",
+                table: "ModActions",
+                columns: new[] { "UserId", "Created" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_AuthorToken",
                 table: "Posts",
                 column: "AuthorToken");
@@ -387,31 +433,6 @@ namespace OakChan.DAL.Migrations
                 name: "IX_Posts_ThreadId_Number",
                 table: "Posts",
                 columns: new[] { "ThreadId", "Number" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reports_AuthorToken",
-                table: "Reports",
-                column: "AuthorToken");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reports_IsProcessed",
-                table: "Reports",
-                column: "IsProcessed");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reports_IsProcessed_Created",
-                table: "Reports",
-                columns: new[] { "IsProcessed", "Created" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reports_PostId",
-                table: "Reports",
-                column: "PostId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reports_ProcessedById",
-                table: "Reports",
-                column: "ProcessedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Threads_BoardKey_IsPinned_Created",
@@ -455,22 +476,25 @@ namespace OakChan.DAL.Migrations
                 name: "Attachment");
 
             migrationBuilder.DropTable(
-                name: "Reports");
+                name: "Invitations");
+
+            migrationBuilder.DropTable(
+                name: "ModActions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "AuthorTokens");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Threads");
+
+            migrationBuilder.DropTable(
+                name: "AuthorTokens");
 
             migrationBuilder.DropTable(
                 name: "Boards");

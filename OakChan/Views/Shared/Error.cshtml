@@ -1,6 +1,8 @@
 ﻿@using OakChan.ViewModels;
 @using Microsoft.Extensions.FileProviders
-
+@{
+    ViewBag.Title = $"{Model.Title} - {OakChan.Common.OakConstants.Name}";
+}
 @model ErrorViewModel
 
 @inject IFileProvider files

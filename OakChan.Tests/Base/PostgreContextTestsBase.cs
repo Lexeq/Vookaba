@@ -24,6 +24,7 @@ namespace OakChan.Tests.Base
         {
             var cfg = new ConfigurationBuilder()
                 .AddUserSecrets(Assembly.GetExecutingAssembly())
+                .AddEnvironmentVariables()
                 .Build();
 
             _dbContextOptions = new DbContextOptionsBuilder<OakDbContext>()

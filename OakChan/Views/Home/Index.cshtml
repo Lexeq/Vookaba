@@ -1,7 +1,10 @@
 ﻿@model OakChan.ViewModels.HomePageViewModel
 @{
     ViewBag.Title = Localizer["Welcome"];
-    Layout = "_Layout";
+    Layout = "_BaseLayout";
+}
+@section Footer{
+    <partial name="_Footer" />
 }
 
 <div class="home__auth-panel">
@@ -40,11 +43,13 @@
     </div>
 </div>
 <br />
-@if (Model.LastCreatedThreads.Any())
-{
-    <partial name="_TopThreads" model="@Model.LastCreatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently created threads"] } }' />
-}
-@if (Model.LastUpdatedThreads.Any())
-{
-    <partial name="_TopThreads" model="@Model.LastUpdatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently updated threads"] } }' />
-}
+<div id="favorites">
+    @if (Model.LastCreatedThreads.Any())
+    {
+        <partial name="_TopThreads" model="@Model.LastCreatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently created threads"] } }' />
+    }
+    @if (Model.LastUpdatedThreads.Any())
+    {
+        <partial name="_TopThreads" model="@Model.LastUpdatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently updated threads"] } }' />
+    }
+</div>

@@ -1,11 +1,10 @@
 using System;
-using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -78,12 +77,10 @@ namespace OakChan
 
             #region Localization
 
-            var supportedCultures = new[] { new CultureInfo("ru-ru") };
             services.Configure<RequestLocalizationOptions>(o =>
             {
-                o.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                o.SupportedCultures = supportedCultures;
-                o.SupportedUICultures = supportedCultures;
+                o.RequestCultureProviders.Clear();
+                o.SetDefaultCulture(OakConstants.Culture);
             });
 
             services.AddLocalization(o => o.ResourcesPath = "resources/localization");
@@ -118,6 +115,11 @@ namespace OakChan
             services.AddScoped<IAuthorTokenFactory>(s => s.GetRequiredService<AuthorTokenManager>());
             services.AddScoped<IAuthorTokenManager, AuthorTokenManager>(s => s.GetRequiredService<AuthorTokenManager>());
 
+            services.AddDataProtection(x =>
+            {
+                x.ApplicationDiscriminator = Configuration[nameof(x.ApplicationDiscriminator)];
+            });
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.AccessDeniedPath = "/Administration/Account/AccessDenied";
@@ -129,6 +131,8 @@ namespace OakChan
                 options.Cookie.IsEssential = true;
                 options.Cookie.MaxAge = TimeSpan.FromDays(OakConstants.Identity.CookieMaxAgeInDays);
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+
+                options.EventsType = typeof(Security.CookieValidator);
             });
 
 
@@ -179,8 +183,8 @@ namespace OakChan
                     await y.Invoke();
                 }
             });
-            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseRequestLocalization();
+            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseRouting();
             app.UseAuthentication();
             app.UseDeanon();
