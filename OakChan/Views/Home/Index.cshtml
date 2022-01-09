@@ -1,9 +1,12 @@
 ﻿@model OakChan.ViewModels.HomePageViewModel
 @{
     ViewBag.Title = Localizer["Welcome"];
+    Layout = "_BaseLayout";
+}
+@section Footer{
+    <partial name="_Footer" />
 }
 
-@inject OakChan.DAL.IAttachmentsStorage attachments
 <div class="home__auth-panel">
     <partial name="_AuthPartial" />
 </div>
@@ -40,23 +43,13 @@
     </div>
 </div>
 <br />
-<div class="favorite-threads">
-    <div class="favorite-threads__head">
-        <span>@Localizer["Top threads"]</span>
-    </div>
-    <div class="favorite-threads__list">
-
-        @foreach (var thread in Model.TopThreads)
-        {
-            <div class="favorite-thread__item">
-                <a asp-route="thread" asp-route-board="@thread.BoardId" asp-route-thread="@thread.ThreadId">
-                    <p class="favorite-thread__caption">@Localizer["popular in /{0}/", thread.BoardId]</p>
-                    <div>
-                        <img class="favorite-thread__image" src="@(attachments.GetThumbnailLinkByName(thread.OpPost.Image.Name))" />
-                        <div class="favorite-thread__message">@(thread.OpPost.Message)</div>
-                    </div>
-                </a>
-            </div>
-        }
-    </div>
+<div id="favorites">
+    @if (Model.LastCreatedThreads.Any())
+    {
+        <partial name="_TopThreads" model="@Model.LastCreatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently created threads"] } }' />
+    }
+    @if (Model.LastUpdatedThreads.Any())
+    {
+        <partial name="_TopThreads" model="@Model.LastUpdatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently updated threads"] } }' />
+    }
 </div>

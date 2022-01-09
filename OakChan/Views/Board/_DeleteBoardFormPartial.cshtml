@@ -1,0 +1,9 @@
+﻿@model string
+@{
+    <form method="post"
+          asp-route="boardAction"
+          asp-route-board="@Model"
+          asp-route-action="@nameof(OakChan.Controllers.BoardController.Delete)">
+        <button type="submit">@Localizer["Delete"]</button>
+    </form>
+}

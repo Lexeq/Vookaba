@@ -6,7 +6,6 @@
 @{
     ViewBag.Title = Localizer["Register"];
 }
-<partial name="_NavigationHeaderPartial" />
 <h1 class="text-center">@Localizer["Register new user"]</h1>
 <fieldset class="auth__fieldset">
     <legend>@Localizer["Fill in the fields"]</legend>
@@ -24,12 +23,16 @@
         <div class="form-row">
             @Html.EditorFor(m => m.PasswordConfirmation, "InputRow")
         </div>
+        @if (Model is RegisterWithInvitationViewModel)
+        {
+            <div class="form-row">
+                @Html.EditorFor(m => ((RegisterWithInvitationViewModel)m).Invitaion, "InputRow")
+            </div>
+        }
+
         <br />
         <div class="form-row">
-            <div class="form-button" style="width:auto">
-                <input id="logsub" type="submit" class="hidden-input" />
-                <label for="logsub">@Localizer["Register"]</label>
-            </div>
+            <button id="regsub" type="submit" class="oakbutton">@Localizer["Register"]</button>
         </div>
     </form>
 </fieldset>

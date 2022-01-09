@@ -1,0 +1,104 @@
+{
+  "threads": [
+    {
+      "Id": 1,
+      "BoardKey": "b",
+      "Subject": "first created",
+      "IsReadOnly": false,
+      "IsPinned": false
+    },
+    {
+      "Id": 2,
+      "BoardKey": "b",
+      "Subject": "pined thread",
+      "IsReadOnly": false,
+      "IsPinned": true
+    },
+    {
+      "Id": 3,
+      "BoardKey": "b",
+      "Subject": "last created",
+      "IsReadOnly": false,
+      "IsPinned": false
+    }
+  ],
+  "posts": [
+    {
+      "Id": 1,
+      "ThreadId": 1,
+      "Created": "2021-01-01T14:00:10.000000",
+      "Message": "OP1",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false,
+      "IsDeleted": false
+    },
+    {
+      "Id": 2,
+      "ThreadId": 2,
+      "Created": "2021-01-01T15:00:10.000000",
+      "Message": "Pined",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false,
+      "IsDeleted": false
+    },
+    {
+      "Id": 3,
+      "ThreadId": 3,
+      "Created": "2021-01-01T15:00:10.000000",
+      "Message": "OP2",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false,
+      "IsDeleted": false
+    },
+    {
+      "Id": 4,
+      "ThreadId": 3,
+      "Created": "2021-01-01T17:00:00.000000",
+      "Message": "repl2",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false,
+      "IsDeleted": false
+    },
+    {
+      "Id": 5,
+      "ThreadId": 1,
+      "Created": "2021-01-01T18:00:00.000000",
+      "Message": "repl2",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false,
+      "IsDeleted": false
+    },
+    {
+      "Id": 6,
+      "ThreadId": 3,
+      "Created": "2021-01-01T20:00:00.000000",
+      "Message": "repl2",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": true,
+      "IsDeleted": false
+    },
+    {
+      "Id": 7,
+      "ThreadId": 3,
+      "Created": "2021-01-01T21:00:00.000000",
+      "Message": "repl2",
+      "AnonymousToken": "11111111-1111-1111-1111-111111111111",
+      "AuthorIP": "12.34.56.78",
+      "AuthorUserAgent": "Mozilla/5.0",
+      "IsSaged": false,
+      "IsDeleted": true
+    }
+  ]
+}

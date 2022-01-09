@@ -9,6 +9,16 @@ namespace OakChan.ViewModels
     {
         private const string ImagesFolder = "images";
 
+        public ErrorViewModel()
+        { }
+
+        public ErrorViewModel(int code, string title, string description)
+        {
+            Code = code;
+            Title = title;
+            Description = description;
+        }
+
         public int Code { get; set; }
 
         public string Title { get; set; }

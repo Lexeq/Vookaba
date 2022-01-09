@@ -1,128 +1,262 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using OakChan.Deanon;
-using OakChan.Mapping;
+using OakChan.Common;
+using OakChan.Controllers.Base;
 using OakChan.Services;
 using OakChan.Services.DTO;
-using OakChan.Utils;
 using OakChan.ViewModels;
 
 namespace OakChan.Controllers
 {
-    public class BoardController : Controller
+    [AutoValidateAntiforgeryToken]
+    public class BoardController : OakController
     {
-        private const int threadsPerPage = 10;
         private readonly IBoardService boardService;
+        private readonly IPostService postService;
         private readonly IStringLocalizer<BoardController> localizer;
         private readonly IMapper mapper;
+        private readonly IModLogService modLogs;
         private readonly ILogger<BoardController> logger;
 
         public BoardController(
             IBoardService boardService,
+            IPostService postService,
             IStringLocalizer<BoardController> localizer,
             IMapper mapper,
+            IModLogService modLogs,
             ILogger<BoardController> logger)
         {
             this.boardService = boardService;
+            this.postService = postService;
             this.localizer = localizer;
             this.mapper = mapper;
+            this.modLogs = modLogs;
             this.logger = logger;
         }
 
-        public async Task<IActionResult> Index(string board, int page = 1)
+        public async Task<IActionResult> Index(string board, int page = 1, int pageSize = 10)
         {
-            BoardInfoDto boardInfo;
-            try
-            {
-                boardInfo = await boardService.GetBoardInfoAsync(board);
-            }
-            catch (KeyNotFoundException)
-            {
-                return BoardDoesNotExist(board);
-            }
-            if (boardInfo.IsDisabled && !User.IsInRole(OakConstants.DefaultAdministratorRole))
-            {
-                return NotFound();
-            }
-            var pagesCount = Math.Max(1, (int)Math.Ceiling((double)boardInfo.ThreadsCount / threadsPerPage));
-            if (page < 1 || page - 1 >= pagesCount)
+            if (page < 1)
             {
                 return PageNotFound(board, page);
             }
 
-            var pageDto = await boardService.GetBoardPageAsync(board, page, threadsPerPage);
+            BoardInfoDto boardInfo = await boardService.GetBoardInfoAsync(board);
 
-            var vm = mapper.Map<BoardPageViewModel>(pageDto, opt =>
+            if (boardInfo == null ||
+                boardInfo.IsDisabled && !User.IsInRole(OakConstants.Roles.Administrator))
             {
-                opt.Items[StringConstants.BoardName] = boardInfo.Name;
-                opt.Items[StringConstants.PagesCount] = pagesCount;
-            });
+                return BoardDoesNotExist(board);
+            }
+
+            pageSize = CoercePageSize(pageSize);
+            var offset = (page - 1) * pageSize;
+            var pagesCount = Math.Max(1, (int)Math.Ceiling((double)boardInfo.ThreadsCount / pageSize));
+
+            if (offset >= boardInfo.ThreadsCount && page != 1)
+            {
+                return PageNotFound(board, page);
+            }
+
+            var threads = await boardService.GetThreadPreviewsAsync(boardInfo.Key, offset, pageSize, 2);
+
+            var vm = new BoardPageViewModel
+            {
+                Key = board,
+                Name = boardInfo.Name,
+                Threads = mapper.Map<IEnumerable<ThreadPreviewViewModel>>(threads),
+                PagesInfo = new PaginatorViewModel
+                {
+                    PageNumber = page,
+                    TotalPages = pagesCount
+                }
+            };
 
             return View(vm);
         }
 
-        [HttpPost]
-        [Authorize(Policy = DeanonConstants.DeanonPolicy)]
-        public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
+        [HttpGet]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        [Route("board/create", Name = "createBoard")]
+        public IActionResult Create()
         {
-            var userInfo = HttpContext.Features.Get<IDeanonFeature>();
+            return View(new BoardPropertiesViewModel
+            {
+                BumpLimit = OakConstants.BoardConstants.DefaultBumpLimit
+            });
+        }
 
+        [HttpPost]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        [Route("board/create", Name = "createBoard")]
+        public async Task<IActionResult> Create(BoardPropertiesViewModel vm)
+        {
             if (ModelState.IsValid)
             {
-                var threadData = mapper.Map<ThreadCreationDto>(opPost, opt =>
-                {
-                    opt.Items[StringConstants.UserInfo] = userInfo;
-                });
-
+                var dto = mapper.Map<BoardDto>(vm);
                 try
                 {
-                    var boardInfo = await boardService.GetBoardInfoAsync(board);
-                    if (boardInfo.IsDisabled)
-                    {
-                        return BadRequest();
-                    }
-                    var t = await boardService.CreateThreadAsync(board, threadData);
-                    return RedirectToRoute("thread", new { Board = t.BoardId, Thread = t.ThreadId });
+                    await boardService.CreateBoardAsync(dto);
+                    await modLogs.LogAsync(ApplicationEvent.BoardCreate, vm.BoardKey);
+                    logger.LogInformation($"Board '{dto.Key}' created by {User.Identity.Name}.");
                 }
-                catch (KeyNotFoundException ex)
+                catch (Exception ex)
                 {
-                    logger.LogWarning($"Bad request. From {userInfo.UserToken} to {nameof(CreateThreadAsync)}. {ex.Message}");
-                    return BadRequest();
+                    logger.LogError(ex, $"Cant't create the board '{dto.Key}'.");
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View(vm);
                 }
+                return RedirectToRoute("board", new { Board = dto.Key });
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {userInfo.UserToken} to {nameof(CreateThreadAsync)}. " +
-                      string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
-                return BadRequest();
+                return View(vm);
             }
         }
 
-        private ViewResult BoardDoesNotExist(string board)
+        [HttpGet]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        public async Task<IActionResult> Edit([FromRoute(Name = "board")] string boardKey)
         {
-            return this.ErrorView(new ErrorViewModel
+            if (string.IsNullOrWhiteSpace(boardKey))
             {
-                Code = 404,
-                Title = localizer["Not found"],
-                Description = localizer["Board {0} does not exist.", board]
-            });
+                return BadRequest();
+            }
+            var board = await boardService.GetBoardInfoAsync(boardKey);
+            if (board == null)
+            {
+                return Error(404, $"Board '{boardKey}' not found.");
+            }
+
+            var upd = mapper.Map<BoardPropertiesViewModel>(board);
+            return View(upd);
+        }
+
+        [HttpPost]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        public async Task<IActionResult> Update(BoardPropertiesViewModel boardProps, string board)
+        {
+            if (ModelState.IsValid)
+            {
+                var dto = mapper.Map<BoardDto>(boardProps);
+                try
+                {
+                    await boardService.UpdateBoardAsync(board, dto);
+                    await modLogs.LogAsync(ApplicationEvent.BoardEdit, board);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View();
+                }
+                return RedirectToRoute("board", new { Board = boardProps.BoardKey });
+            }
+            else
+            {
+                return View(board);
+            }
+        }
+
+        [HttpPost]
+        [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
+        public async Task<IActionResult> Delete(string board)
+        {
+            if (string.IsNullOrEmpty(board))
+            {
+                return BadRequest();
+            }
+            try
+            {
+                await boardService.DeleteBoardAsync(board);
+                await modLogs.LogAsync(ApplicationEvent.BoardDelete, board);
+                logger.LogInformation($"Board '{board}' deleted by {User.Identity.Name}.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, $"Cant't delete the board '{board}'.");
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return base.Error(500, "Cant't delete the board. See logs for details.", ex.Message);
+            }
+            return RedirectToRoute(new { Area = "Administration", Controller = "Admin", Action = "Dashboard" });
+        }
+
+        [HttpPost]
+        [Authorize(Policy = OakConstants.Policies.CanDeletePosts)]
+        public async Task<IActionResult> BulkDeletePosts([FromRoute] string board, [FromBody] PostsDeletionViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            var post = await postService.GetByNumberAsync(board, vm.PostNumber);
+            if (post == null)
+            {
+                return NotFound("Post not found.");
+            }
+
+            try
+            {
+                if (vm.Area == PostsDeletionViewModel.DeletingArea.Single)
+                {
+                    await postService.DeleteByIdAsync(post.PostId);
+                    await modLogs.LogAsync(
+                        ApplicationEvent.PostDelete,
+                        post.PostId.ToString(),
+                        JsonSerializer.Serialize(new { vm.Reason }));
+                }
+                else
+                {
+                    await postService.DeleteManyAsync(post.PostId, vm.Mode, (SearchArea)vm.Area);
+
+                    await modLogs.LogAsync(
+                        ApplicationEvent.PostBulkDelete,
+                        post.PostId.ToString(),
+                        JsonSerializer.Serialize(new
+                        {
+                            vm.Reason,
+                            vm.Mode,
+                            vm.Area,
+                            AuthorIp = post.AuthorIP.ToString(),
+                            post.AuthorId
+                        }));
+                }
+                return Ok();
+            }
+            catch (Exception ex)
+                when (ex is ArgumentException or ArgumentNullException)
+            {
+                return BadRequest();
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Can't delete post.");
+                throw;
+            }
+        }
+
+        private IActionResult BoardDoesNotExist(string board)
+        {
+            return Error(404, localizer["Not found"], localizer["Board {0} does not exist.", board]);
         }
 
         private IActionResult PageNotFound(string board, int page)
         {
-            return this.ErrorView(new ErrorViewModel
-            {
-                Code = 404,
-                Title = localizer["Not found"],
-                Description = localizer["Page {0} does not exist on board /{1}/.", page, board]
-            });
+            return Error(404, localizer["Not found"], localizer["Page {0} does not exist on board /{1}/.", page, board]);
+        }
+
+        private int CoercePageSize(int pageSize)
+        {
+            const int minValue = 5;
+            const int maxValue = 50;
+            return Math.Min(Math.Max(minValue, pageSize), maxValue);
         }
     }
 }

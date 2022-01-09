@@ -1,0 +1,75 @@
+﻿.dashboard h1 {
+    text-align: center;
+}
+
+.dashboard-section {
+    margin: 1em 2.5em;
+}
+
+
+.dashboard-table {
+    border-collapse: collapse;
+    width: 75%;
+    max-width: 50em;
+    background: var(--colors_table)
+}
+
+    .dashboard-table td, #boards-control th {
+        padding: 8px;
+    }
+
+    .dashboard-table tr:nth-child(even) {
+        background-color: var(--colors_table-alt);
+    }
+
+    .dashboard-table tbody tr:not(.subtitle):hover {
+        background-color: var(--colors_table-hover);
+    }
+
+    .dashboard-table th {
+        padding-top: 8px;
+        padding-bottom: 8px;
+        background-color: var(--colors_table-head);
+        color: var(--colors_table-head-text);
+    }
+
+    .dashboard-table .subtitle {
+        background-color: var(--colors_table-subtitle);
+        font-weight: 600;
+    }
+
+.invite-form .form-button {
+    display: inline-block;
+    width: 80px;
+    height: 20px;
+}
+
+.invite-form {
+    margin-bottom: 5px;
+}
+
+    .invite-form input {
+        text-align: right;
+        width: 4em;
+    }
+
+.invite-info-block {
+    border: 1px solid var(--colors_border);
+    width: 75%;
+    max-width: 50em;
+    display: table;
+    margin: 3px 0px;
+}
+
+.invite-info-block__row {
+    margin: 3px 1%;
+}
+
+    .invite-info-block__row input[readonly=true] {
+        width: 74%;
+    }
+
+    .invite-info-block__row span {
+        width: 24%;
+        display: inline-block;
+    }

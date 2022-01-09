@@ -1,23 +1,16 @@
-﻿<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    <environment include="Development">
-        <link rel="stylesheet" asp-href-include="~/css/*.css" asp-href-exclude="~/css/oak.min.css" />
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="~/css/oak.min.css" asp-append-version="true" />
-    </environment>
+﻿@{
+    Layout = "_BaseLayout";
+}
+@section Scripts{
+    @RenderSection("Scripts", false)
+}
+@section Styles{
     @RenderSection("Styles", false)
-</head>
-<body>
-    <div>
-        @RenderBody()
-    </div>
-    <script src="~/scripts/acorn.js"></script>
-    <script src="~/scripts/dates.js"></script>
-    @RenderSection("Scripts", required: false)
-</body>
-</html>
+}
+@section Header{
+    <partial name="_NavigationHeaderPartial" />
+}
+@section Footer{
+    <partial name="_Footer" />
+}
+@RenderBody()

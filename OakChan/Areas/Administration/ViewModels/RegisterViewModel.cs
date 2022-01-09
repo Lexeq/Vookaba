@@ -12,7 +12,7 @@ namespace OakChan.Areas.Administration.ViewModels
         [Required(ErrorMessage = "Field is required")]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        [MinLength(Utils.OakConstants.MinPasswordLength, ErrorMessage ="Password to short")]
+        [MinLength(Common.OakConstants.Identity.MinPasswordLength, ErrorMessage ="Password to short")]
         [RegularExpression(".*\\d.*", ErrorMessage = "Required digits")]
         public string Password { get; set; }
 
@@ -26,4 +26,5 @@ namespace OakChan.Areas.Administration.ViewModels
         [Display(Name = "Login")]
         public string Login { get; set; }
     }
+
 }

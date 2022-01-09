@@ -341,3 +341,4 @@ healthchecksdb
 OakChan/wwwroot/res/img
 /OakChan/.config/dotnet-tools.json
 /OakChan/wwwroot/css/oak.min.css
+/OakChan/wwwroot/scripts/papyrus.min.js

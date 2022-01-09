@@ -124,7 +124,7 @@
     <value>Скрыть форму</value>
   </data>
   <data name="To thread" xml:space="preserve">
-    <value>Ответить</value>
+    <value>В тред</value>
   </data>
   <data name="{0} of {1}" xml:space="preserve">
     <value>{0} из {1}</value>

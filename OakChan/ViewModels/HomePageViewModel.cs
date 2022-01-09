@@ -7,6 +7,8 @@ namespace OakChan.ViewModels
     {
         public IEnumerable<BoardInfoDto> Boards { get; set; }
 
-        public IEnumerable<TopThredInfo> TopThreads { get; set; }
+        public IEnumerable<ThreadPreviewViewModel> LastCreatedThreads { get; set; }
+
+        public IEnumerable<ThreadPreviewViewModel> LastUpdatedThreads { get; set; }
     }
 }

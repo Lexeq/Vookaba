@@ -1,10 +1,10 @@
-using System.Globalization;
-using AutoMapper;
+using System;
+using System.Net;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -13,13 +13,16 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OakChan.Attributes;
+using OakChan.Common;
 using OakChan.Common.Exceptions;
 using OakChan.DAL;
 using OakChan.DAL.Database;
 using OakChan.Deanon;
 using OakChan.Identity;
 using OakChan.Mapping;
+using OakChan.Security.DependecyInjection;
 using OakChan.Services;
+using OakChan.Services.DbServices;
 using OakChan.Services.Mapping;
 using OakChan.Utils;
 
@@ -27,6 +30,13 @@ namespace OakChan
 {
     public class Startup
     {
+#if DEBUG
+        public ILoggerFactory EfLoggerFactory = LoggerFactory.Create(o =>
+        {
+            o.ClearProviders();
+            o.AddDebug();
+        });
+#endif
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Environment { get; }
 
@@ -38,16 +48,25 @@ namespace OakChan
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<OakDbContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Postgre")));
+            //TODO: clean up this mess
+            services.AddDbContext<OakDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("Postgre"))
+#if DEBUG
+                .UseLoggerFactory(EfLoggerFactory)
+#endif
+                );
             services.AddSingleton<IAttachmentsStorage>(
                 svc => new MediaStorage(svc.GetRequiredService<IWebHostEnvironment>().WebRootPath, svc.GetRequiredService<ILogger<MediaStorage>>()));
 
             services.AddScoped<IBoardService, DbBoardService>();
             services.AddScoped<IThreadService, DbThreadService>();
             services.AddScoped<IPostService, DbPostService>();
-            services.AddScoped<FavoriteThreadsService>();
+            services.AddScoped<IStaffAggregationService, DbStaffAggregationService>();
+            services.AddScoped<IModLogService, DbModLogService>();
+            services.AddScoped<ITopThreadsService, TopThreadsService>();
             services.AddSingleton<IHashService>(new HashService());
             services.AddSingleton<ThrowHelper>();
+            services.AddSingleton<ModLogDescriber>();
 
             services.AddDeanon();
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();
@@ -58,12 +77,10 @@ namespace OakChan
 
             #region Localization
 
-            var supportedCultures = new[] { new CultureInfo("ru-ru") };
             services.Configure<RequestLocalizationOptions>(o =>
             {
-                o.DefaultRequestCulture = new RequestCulture(supportedCultures[0]);
-                o.SupportedCultures = supportedCultures;
-                o.SupportedUICultures = supportedCultures;
+                o.RequestCultureProviders.Clear();
+                o.SetDefaultCulture(OakConstants.Culture);
             });
 
             services.AddLocalization(o => o.ResourcesPath = "resources/localization");
@@ -86,32 +103,56 @@ namespace OakChan
                 .AddEntityFrameworkStores<OakDbContext>()
                 .AddUserStore<ApplicationUserStore>()
                 .AddRoleStore<ApplicationRoleStore>()
+                .AddUserManager<ApplicationUserManager>()
                 .AddErrorDescriber<LocalizedIdentityErrorDescriber>()
                 .AddClaimsPrincipalFactory<ApplicationUserClaimsPrincipalFactory>();
+            services.AddScoped(s => (ApplicationUserStore)s.GetRequiredService<IUserStore<ApplicationUser>>());
+            services.AddScoped<IInvitationStore<ApplicationInvitation>>(s => s.GetRequiredService<ApplicationUserStore>());
+            services.AddScoped<IUserInvitationStore<ApplicationUser>>(s => s.GetRequiredService<ApplicationUserStore>());
+            services.AddScoped<InvitationManager<ApplicationInvitation>>();
+
+            services.AddScoped<AuthorTokenManager>();
+            services.AddScoped<IAuthorTokenFactory>(s => s.GetRequiredService<AuthorTokenManager>());
+            services.AddScoped<IAuthorTokenManager, AuthorTokenManager>(s => s.GetRequiredService<AuthorTokenManager>());
+
+            services.AddDataProtection(x =>
+            {
+                x.ApplicationDiscriminator = Configuration[nameof(x.ApplicationDiscriminator)];
+            });
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.AccessDeniedPath = "/Administration/AccessDenied";
+                options.AccessDeniedPath = "/Administration/Account/AccessDenied";
+                options.LoginPath = "/Administration/Account/Login";
+                options.SlidingExpiration = true;
+                options.ExpireTimeSpan = TimeSpan.FromDays(OakConstants.Identity.CookieExpireInDays);
                 options.Cookie.Name = "passport";
                 options.Cookie.HttpOnly = true;
-                options.LoginPath = "/Administration/Account/Login";
                 options.Cookie.IsEssential = true;
-                options.SlidingExpiration = true;
+                options.Cookie.MaxAge = TimeSpan.FromDays(OakConstants.Identity.CookieMaxAgeInDays);
+                options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
+
+                options.EventsType = typeof(Security.CookieValidator);
             });
+
 
             services.Configure<IdentityOptions>(o =>
             {
                 o.User.RequireUniqueEmail = true;
-                o.User.AllowedUserNameCharacters = OakConstants.AllowedUserNameCharacters;
+                o.User.AllowedUserNameCharacters = OakConstants.Identity.AllowedUserNameCharacters;
 
                 o.Password.RequireDigit = true;
-                o.Password.RequiredLength = OakConstants.MinPasswordLength;
+                o.Password.RequiredLength = OakConstants.Identity.MinPasswordLength;
                 o.Password.RequiredUniqueChars = 2;
                 o.Password.RequireNonAlphanumeric = false;
                 o.Password.RequireUppercase = false;
                 o.Password.RequireLowercase = false;
             });
 
+            services.AddChanPolicies();
+            services.AddScoped<HttpStatusCodeDescriber>();
+
+            services.Configure<ChanOptions>(o => o.PublicRegistrationEnabled = false);
             services.AddOptions();
             services.AddScoped<DatabaseSeeder>();
             services.Configure<SeedData>(Configuration.GetSection(nameof(SeedData)));
@@ -129,9 +170,21 @@ namespace OakChan
             }
 
             app.UseForwardedHeaders();
-            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseStaticFiles();
+            app.Use(async (x, y) =>
+            {
+                var path = x.Request.Path.Value;
+                if (path.StartsWith("/res/") && path.LastIndexOf(".") > 0)
+                {
+                    x.Response.StatusCode = (int)HttpStatusCode.NotFound;
+                }
+                else
+                {
+                    await y.Invoke();
+                }
+            });
             app.UseRequestLocalization();
+            app.UseStatusCodePagesWithReExecute("/error/HandleHttpStatusCode/{0}");
             app.UseRouting();
             app.UseAuthentication();
             app.UseDeanon();

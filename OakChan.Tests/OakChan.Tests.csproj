@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SeedData\boards.json" />
+    <EmbeddedResource Include="SeedData\postsorder3.json" />
+    <EmbeddedResource Include="SeedData\postsorder4.json" />
+    <EmbeddedResource Include="SeedData\postsorder2.json" />
+    <EmbeddedResource Include="SeedData\postsorder1.json" />
+    <EmbeddedResource Include="SeedData\threadsorderonpage.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OakChan.DAL\OakChan.DAL.csproj" />
+    <ProjectReference Include="..\OakChan.Services\OakChan.Services.csproj" />
+    <ProjectReference Include="..\OakChan\OakChan.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <SsdtUnitTestVersion>3.1</SsdtUnitTestVersion>
+    <UserSecretsId>2f94e1df-2eb8-41f6-86b3-1cadab0202b4</UserSecretsId>
+  </PropertyGroup>
+</Project>

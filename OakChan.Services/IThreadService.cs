@@ -1,12 +1,35 @@
-﻿using OakChan.Services.DTO;
+﻿#nullable enable
+using OakChan.Services.DTO;
 using System.Threading.Tasks;
 
 namespace OakChan.Services
 {
     public interface IThreadService
     {
-        public Task<ThreadBoardAggregationDto> GetThreadAsync(string boardId, int threadId);
+        /// <summary>
+        /// Создает новый тред на доске.
+        /// </summary>
+        /// <param name="boardKey">ID доски, на которой будет создан тред.</param>
+        /// <param name="threadCreationDto">Данные для создания треда.</param>
+        /// <returns>Информация о созданном треде.</returns>
+        public Task<ThreadDto> CreateThreadAsync(string boardKey, ThreadCreationDto threadCreationDto);
 
-        public Task<PostDto> AddPostToThreadAsync(string boardId, int threadId, PostCreationDto post);
+
+        /// <summary>
+        /// Возвращает тред.
+        /// </summary>
+        ///<param name="boardKey">ID доски.</param>
+        /// <param name="threadId">ID треда.</param>
+        /// <returns>Данные созданного треда или null, если тред не существует.</returns>
+        public Task<ThreadDto?> GetThreadAsync(string boardKey, int threadId);
+
+        /// <summary>
+        /// Создает новый пост в треде.
+        /// </summary>
+        /// <param name="boardKey">ID доски.</param>
+        /// <param name="threadId">ID треда.</param>
+        /// <param name="post">Данные поста.</param>
+        /// <returns>Данные созанного поста.</returns>
+        public Task<PostDto> AddPostToThreadAsync(string boardKey, int threadId, PostCreationDto post);
     }
 }

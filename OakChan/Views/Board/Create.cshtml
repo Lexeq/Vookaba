@@ -1,0 +1,13 @@
+﻿@model OakChan.ViewModels.BoardPropertiesViewModel
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
+<div>
+    <h2>@Localizer["Create new board"]</h2>
+    <form method="post" asp-route="createBoard">
+        <partial name="_BoardPropertiesPartial" model="Model"/>
+        <button type="submit">@Localizer["Create"]</button>
+        <div asp-validation-summary="All"></div>
+    </form>
+</div>

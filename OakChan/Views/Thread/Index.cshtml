@@ -1,19 +1,26 @@
 ﻿@using OakChan.ViewModels
 @model ThreadViewModel
 @{
-    ViewBag.Title = Model.OpPost.Subject ?? (Model.OpPost.Message.Length <= 32 ?
+    ViewBag.Title = (Model.Subject ?? (Model.OpPost.Message.Length <= 32 ?
         Model.OpPost.Message :
-        Model.OpPost.Message.Substring(0, 29) + "...") + " - OakChan";
+        Model.OpPost.Message.Substring(0, 29) + "...")) + " - " + OakChan.Common.OakConstants.Name;
 }
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }
-<partial name="_NavigationHeaderPartial" />
 <hr />
-<p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
+<p class="switcher"
+   tabindex="0"
+   id="switcher"
+   onclick="switchFormVisibility()"
+   data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
 
 <partial name="_PostCreationFormPartial" model="new PostFormViewModel()" />
-<div class="thread">
+<div id="@($"thread-{Model.ThreadId}")"
+     class="thread"
+     data-bid="@(Model.BoardKey)"
+     data-tid="@(Model.ThreadId)">
+    <span class="thread__subject">@Model.Subject</span>
     <partial name="_PostView" model="Model.OpPost" />
     @foreach (var post in Model.Replies)
     {

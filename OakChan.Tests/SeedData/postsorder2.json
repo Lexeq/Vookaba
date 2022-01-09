@@ -1,0 +1,35 @@
+{
+  "threads": [
+    {
+      "Id": 1,
+      "BoardKey": "b",
+      "Created": "2021-01-01T23:01:00.000000",
+      "Subject": "first created",
+      "IsReadOnly": false,
+      "IsPined": false
+    }
+  ],
+  "posts": [
+    {
+      "Id": 10,
+      "IsOP": true,
+      "ThreadId": 1,
+      "Created": "2021-01-01T23:01:05.000000",
+      "Message": "OP1",
+      "AuthorToken": "11111111-1111-1111-1111-111111111111",
+      "IP": "12.34.56.78",
+      "UserAgent": "Mozilla/5.0",
+      "IsSaged": false
+    },
+    {
+      "Id": 42,
+      "ThreadId": 1,
+      "Created": "2021-01-01T23:10:00.000000",
+      "Message": "Rep1",
+      "AuthorToken": "11111111-1111-1111-1111-111111111111",
+      "IP": "12.34.56.78",
+      "UserAgent": "Mozilla/5.0",
+      "IsSaged": false
+    }
+  ]
+}

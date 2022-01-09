@@ -6,11 +6,10 @@
 @{
     ViewBag.Title = Localizer["Login"];
 }
-<partial name="_NavigationHeaderPartial" />
 <h1 class="text-center">@Localizer["Login"]</h1>
 <fieldset class="auth__fieldset">
     <legend>@Localizer["Fill in the fields"]</legend>
-    <form class="authform" method="post">
+    <form class="authform" method="post" asp-area="Administration" asp-controller="Account" asp-action="Login">
         <div class="authform-error" asp-validation-summary="ModelOnly"></div>
 
         <div class="form-row">
@@ -25,10 +24,7 @@
         </div>
         <br />
         <div class="form-row">
-            <div class="form-button">
-                <input id="logsub" type="submit" class="hidden-input" />
-                <label for="logsub">@Localizer["Login"]</label>
-            </div>
+            <button id="logsub" type="submit" class="oakbutton">@Localizer["Login"]</button>
         </div>
     </form>
 </fieldset>

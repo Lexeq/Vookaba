@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using OakChan.Common;
 
 namespace OakChan.DAL.Entities.Configurations
 {
@@ -10,37 +12,43 @@ namespace OakChan.DAL.Entities.Configurations
             builder.HasKey(p => p.Id);
 
             builder.Property(p => p.Name)
-                .IsRequired(true)
-                .HasDefaultValue("Аноним");
+                .IsRequired(false);
 
-            builder.HasOne(j => j.Thread)
-                .WithMany(t => t.Posts)
-                .HasForeignKey(t => t.ThreadId)
+            builder.Property(p => p.Created)
                 .IsRequired();
 
-            builder.Property(p => p.CreationTime)
-                .IsRequired();
+            builder.Property(p => p.IP)
+                .HasColumnName("AuthorIP")
+                .IsRequired(true);
+
+            builder.Property(p => p.UserAgent)
+                .HasColumnName("AuthorUserAgent")
+                .IsRequired(true);
 
             builder.Property(p => p.Message)
                 .IsRequired(false)
-                .HasMaxLength(4096);
+                .HasMaxLength(OakConstants.PostConstants.MessageMaxLength);
 
-            builder.HasOne<IdToken>()
+            builder.HasOne<AuthorToken>()
                 .WithMany()
-                .HasForeignKey(p => p.AuthorId)
+                .HasForeignKey(p => p.AuthorToken)
                 .IsRequired();
 
-            builder.HasOne(p => p.Image)
-                .WithOne(i => i.Post)
-                .HasForeignKey<Image>(i => i.PostId)
-                .IsRequired(false)
-                .OnDelete(DeleteBehavior.SetNull);
+            builder.HasOne(p => p.Thread)
+                .WithMany(t => t.Posts)
+                .HasForeignKey(p => p.ThreadId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Property(p => p.AuthorIP)
-                .IsRequired(true);
+            builder.Property(p => p.Number)
+                .ValueGeneratedOnAdd()
+                .IsRequired();
 
-            builder.Property(p => p.AuthorUserAgent)
-                .IsRequired(true);
+            builder.HasIndex(p => new { p.ThreadId, p.Number })
+                .HasSortOrder(SortOrder.Ascending, SortOrder.Ascending);
+
+            builder.HasIndex(p => new { p.IsOP, p.ThreadId })
+                .HasSortOrder(SortOrder.Descending, SortOrder.Ascending);
         }
     }
 }
