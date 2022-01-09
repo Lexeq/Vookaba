@@ -14,4 +14,4 @@ At the moment, OakChan is at an early stage of development.
 - Post formatting [WIP]
 - Further more
 ## Try it!
-You can try it on http://45.93.6.217
+You can try it on http://185.242.84.5
