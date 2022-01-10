@@ -1,0 +1,47 @@
+name: Building and tests
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    #Connection string
+    env:
+      ConnectionStrings__TestsDb: Host=localhost;Port=5432;Database=ChanTests;Username=postgres;Password=postgres
+      
+    services:
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+          
+    steps:
+    #Copy repo
+    - uses: actions/checkout@v2
+    #Install .Net
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    #Restore
+    - name: Restore dependencies
+      run: dotnet restore
+    #Build
+    - name: Build
+      run: dotnet build --no-restore
+    #Run tests
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
