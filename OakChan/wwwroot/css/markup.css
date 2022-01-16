@@ -1,0 +1,9 @@
+.post .spoiler {
+    color: var(--colors_spoiler);
+    background: var(--colors_spoiler)
+}
+
+    .post .spoiler:hover {
+        color: var(--colors-font);
+        background: var(--colors-post-bg)
+    }
