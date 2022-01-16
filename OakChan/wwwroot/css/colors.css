@@ -19,8 +19,14 @@
     --colors_table-head-text: #fdfdfd;
     --colors_table-subtitle: #d6bd80;
     --colors_table-hover: #d0aa7d;
-    --colors_post-reply: #e0ca75;
+    --colors_post-bg: #e0ca75;
+    --colors_post-target: #d2bd69;
     --colors_munu-button-hover: #e7272e;
     --colors_quote: #11aa05;
     --colors_spoiler: #5a2e0b;
+}
+
+.oppost {
+    --colors_post-bg: var(--colors_bg);
+    --colors_post-target: var(--colors_bg);
 }
