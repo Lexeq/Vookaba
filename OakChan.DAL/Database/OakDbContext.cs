@@ -24,17 +24,17 @@ namespace OakChan.DAL.Database
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public DbSet<AuthorToken> AuthorTokens { get; set; }
+        public virtual DbSet<AuthorToken> AuthorTokens { get; set; }
 
-        public DbSet<Post> Posts { get; set; }
+        public virtual DbSet<Post> Posts { get; set; }
 
-        public DbSet<Thread> Threads { get; set; }
+        public virtual DbSet<Thread> Threads { get; set; }
 
-        public DbSet<Board> Boards { get; set; }
+        public virtual DbSet<Board> Boards { get; set; }
 
-        public DbSet<Image> Images { get; set; }
+        public virtual DbSet<Image> Images { get; set; }
 
-        public DbSet<ModAction> ModActions { get; set; }
+        public virtual DbSet<ModAction> ModActions { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
