@@ -1,3 +1,7 @@
+﻿.post .quote {
+    color: var(--colors_quote);
+}
+
 .post .spoiler {
     color: var(--colors_spoiler);
     background: var(--colors_spoiler)

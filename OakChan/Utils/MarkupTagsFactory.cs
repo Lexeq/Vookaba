@@ -30,6 +30,7 @@ namespace OakChan.Utils
                 new EmphasizeTag(),
                 new StrongTag(),
                 new SpoilerTag(),
+                new QuoteTag()
             };
         }
 
