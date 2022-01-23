@@ -11,12 +11,39 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OakChan.Services.DbServices
 {
     public class DbThreadService : IThreadService
     {
+        private static string GetTitleFromMessage(string message)
+        {
+            var subjMax = Common.OakConstants.ThreadConstants.SubjectMaxLength;
+            var overflowStr = "...";
+
+            var builder = new StringBuilder(subjMax);
+            for (int i = 0; i < message.Length; i++)
+            {
+                if (message[i] != '<')
+                {
+                    if (builder.Length == subjMax)
+                    {
+                        builder.Insert(subjMax - overflowStr.Length, overflowStr).Length = subjMax;
+                        break;
+                    }
+                    builder.Append(message[i]);
+                }
+                else
+                {
+                    var closing = message.IndexOf('>', i);
+                    i = closing;
+                }
+            }
+            return builder.ToString();
+        }
+
         private readonly OakDbContext context;
         private readonly IAttachmentsStorage attachmentsStorage;
         private readonly IHashService hashService;
@@ -58,6 +85,8 @@ namespace OakChan.Services.DbServices
             throwHelper.ThrowIfNull(threadDto, nameof(threadDto));
 
             var thread = new Thread { BoardKey = boardKey, Subject = threadDto.Subject };
+            thread.Subject ??= GetTitleFromMessage(threadDto.OpPost.Message);
+
             var post = await CreatePostEntityAsync(threadDto.OpPost);
             post.IsOP = true;
             post.Thread = thread;
@@ -106,6 +135,7 @@ namespace OakChan.Services.DbServices
         }
 
         //TODO: Support different attachment types
+        //TODO: Extract attachment creation to a separate class? 
         private async Task<List<Attachment>> CreateImageEntityAsync(IFormFileCollection files)
         {
             var attachments = new List<Attachment>(files.Count);
