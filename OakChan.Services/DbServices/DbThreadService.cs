@@ -18,8 +18,13 @@ namespace OakChan.Services.DbServices
 {
     public class DbThreadService : IThreadService
     {
-        private static string GetTitleFromMessage(string message)
+        private static string GetThreadSubject(ThreadCreationDto threadCreation)
         {
+            if (!string.IsNullOrEmpty(threadCreation.Subject))
+            {
+                return threadCreation.Subject;
+            }
+            var message = threadCreation.OpPost.Message;
             var subjMax = Common.OakConstants.ThreadConstants.SubjectMaxLength;
             var overflowStr = "...";
 
@@ -84,8 +89,7 @@ namespace OakChan.Services.DbServices
             throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
             throwHelper.ThrowIfNull(threadDto, nameof(threadDto));
 
-            var thread = new Thread { BoardKey = boardKey, Subject = threadDto.Subject };
-            thread.Subject ??= GetTitleFromMessage(threadDto.OpPost.Message);
+            var thread = new Thread { BoardKey = boardKey, Subject = GetThreadSubject(threadDto) };
 
             var post = await CreatePostEntityAsync(threadDto.OpPost);
             post.IsOP = true;
