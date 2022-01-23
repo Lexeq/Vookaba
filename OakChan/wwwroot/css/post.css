@@ -2,14 +2,14 @@
     margin: 5px 5px 5px 20px;
     padding: 3px 30px 3px 3px;
     border-radius: 0.25rem;
-    background: var(--colors_post-reply);
+    background: var(--colors_post-bg);
     max-width: 80vw;
     display: inline-block;
 }
 
     .post:target {
         border: 2px solid #af8840;
-        background: #d5b484;
+        background: var(--colors_post-target);
     }
 
 .post_hidden {
@@ -18,17 +18,16 @@
 
     .post_hidden .post__images,
     .post_hidden .post__message,
-    .post_hidden .refmap-body{
+    .post_hidden .refmap-body {
         display: none;
     }
 
-.post-owned {
-    border-left: 3px solid brown;
+.post-owned, .post:target.post-owned {
+    border-left: 3px solid var(--colors_border);
 }
 
 .thread .post-container:first-of-type .post {
     margin: 0;
-    background: 0;
     border: none;
 }
 

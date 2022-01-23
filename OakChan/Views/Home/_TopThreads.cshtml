@@ -21,7 +21,7 @@
                         <img class="favorite-thread__image"
                              src="@(attachments.GetThumbnailLinkByName(thread.OpPost.Image.Name))"
                              alt="@thread.OpPost.Image.OriginalName" />
-                        <div class="favorite-thread__message">@(thread.OpPost.Message)</div>
+                        <div class="favorite-thread__message">@Html.Raw(thread.OpPost.Message)</div>
                     </div>
                 </a>
             </div>

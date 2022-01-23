@@ -17,7 +17,7 @@ namespace OakChan.Identity
         public ChanIdentityDbContext(DbContextOptions options) : base(options)
         { }
 
-        public DbSet<TInvitation> Invitations { get; set; }
+        public virtual DbSet<TInvitation> Invitations { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

@@ -11,23 +11,62 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace OakChan.Services.DbServices
 {
     public class DbThreadService : IThreadService
     {
+        private static string GetThreadSubject(ThreadCreationDto threadCreation)
+        {
+            if (!string.IsNullOrEmpty(threadCreation.Subject))
+            {
+                return threadCreation.Subject;
+            }
+            var message = threadCreation.OpPost.Message;
+            var subjMax = Common.OakConstants.ThreadConstants.SubjectMaxLength;
+            var overflowStr = "...";
+
+            var builder = new StringBuilder(subjMax);
+            for (int i = 0; i < message.Length; i++)
+            {
+                if (message[i] != '<')
+                {
+                    if (builder.Length == subjMax)
+                    {
+                        builder.Insert(subjMax - overflowStr.Length, overflowStr).Length = subjMax;
+                        break;
+                    }
+                    builder.Append(message[i]);
+                }
+                else
+                {
+                    var closing = message.IndexOf('>', i);
+                    i = closing;
+                }
+            }
+            return builder.ToString();
+        }
+
         private readonly OakDbContext context;
         private readonly IAttachmentsStorage attachmentsStorage;
         private readonly IHashService hashService;
+        private readonly IHtmlFormatter postHtmlFormatter;
         private readonly IMapper mapper;
         private readonly ThrowHelper throwHelper;
 
-        public DbThreadService(OakDbContext context, IAttachmentsStorage attachmentsStorage, IHashService hashService, IMapper mapper, ThrowHelper throwHelper)
+        public DbThreadService(OakDbContext context,
+                               IAttachmentsStorage attachmentsStorage,
+                               IHashService hashService,
+                               IHtmlFormatter postFormatter,
+                               IMapper mapper,
+                               ThrowHelper throwHelper)
         {
             this.context = context;
             this.attachmentsStorage = attachmentsStorage;
             this.hashService = hashService;
+            this.postHtmlFormatter = postFormatter;
             this.mapper = mapper;
             this.throwHelper = throwHelper;
         }
@@ -50,7 +89,8 @@ namespace OakChan.Services.DbServices
             throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
             throwHelper.ThrowIfNull(threadDto, nameof(threadDto));
 
-            var thread = new Thread { BoardKey = boardKey, Subject = threadDto.Subject };
+            var thread = new Thread { BoardKey = boardKey, Subject = GetThreadSubject(threadDto) };
+
             var post = await CreatePostEntityAsync(threadDto.OpPost);
             post.IsOP = true;
             post.Thread = thread;
@@ -94,10 +134,12 @@ namespace OakChan.Services.DbServices
                 post.Attachments = await CreateImageEntityAsync(postDto.Attachments);
             }
 
+            post.Message = await postHtmlFormatter.FormatAsync(postDto.Message);
             return post;
         }
 
         //TODO: Support different attachment types
+        //TODO: Extract attachment creation to a separate class? 
         private async Task<List<Attachment>> CreateImageEntityAsync(IFormFileCollection files)
         {
             var attachments = new List<Attachment>(files.Count);

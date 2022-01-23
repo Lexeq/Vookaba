@@ -55,7 +55,7 @@
             </div>
         }
 
-        <div class="post__message" id="@($"m{Model.Number}")" data-pnum="@($"{Model.Number}")">@Model.Message</div>
+        <div class="post__message" id="@($"m{Model.Number}")" data-pnum="@($"{Model.Number}")">@Html.Raw(Model.Message)</div>
 
     </div>
 </div>

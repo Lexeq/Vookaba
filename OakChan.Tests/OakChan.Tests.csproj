@@ -4,12 +4,12 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <EmbeddedResource Include="SeedData\boards.json" />
-    <EmbeddedResource Include="SeedData\postsorder3.json" />
-    <EmbeddedResource Include="SeedData\postsorder4.json" />
-    <EmbeddedResource Include="SeedData\postsorder2.json" />
-    <EmbeddedResource Include="SeedData\postsorder1.json" />
-    <EmbeddedResource Include="SeedData\threadsorderonpage.json" />
+    <EmbeddedResource Include="Integration\SeedData\boards.json" />
+    <EmbeddedResource Include="Integration\SeedData\postsorder3.json" />
+    <EmbeddedResource Include="Integration\SeedData\postsorder4.json" />
+    <EmbeddedResource Include="Integration\SeedData\postsorder2.json" />
+    <EmbeddedResource Include="Integration\SeedData\postsorder1.json" />
+    <EmbeddedResource Include="Integration\SeedData\threadsorderonpage.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OakChan.DAL\OakChan.DAL.csproj" />
+    <ProjectReference Include="..\OakChan.Markup\OakChan.Markup.csproj" />
     <ProjectReference Include="..\OakChan.Services\OakChan.Services.csproj" />
     <ProjectReference Include="..\OakChan\OakChan.csproj" />
   </ItemGroup>
