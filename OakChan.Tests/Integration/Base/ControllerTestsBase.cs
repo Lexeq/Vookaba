@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using OakChan.Deanon;
 using OakChan.Mapping;
-using System;
 
-namespace OakChan.Tests.Base
+namespace OakChan.Tests.Integration.Base
 {
     public class ControllerTestsBase
     {

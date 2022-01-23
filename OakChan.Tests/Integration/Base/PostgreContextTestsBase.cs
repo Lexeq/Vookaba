@@ -6,11 +6,10 @@ using Moq;
 using NUnit.Framework;
 using OakChan.Common;
 using OakChan.DAL.Database;
-using OakChan.Deanon;
 using System.Linq;
 using System.Reflection;
 
-namespace OakChan.Tests.Base
+namespace OakChan.Tests.Integration.Base
 {
     public class PostgreContextTestsBase
     {

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
-namespace OakChan.Tests.Base
+namespace OakChan.Tests.Unit.Base
 {
     public class ViewModelValidationTestsBase
     {

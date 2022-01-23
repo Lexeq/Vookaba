@@ -2,13 +2,8 @@
 using NUnit.Framework;
 using OakChan.Mapping;
 using OakChan.Services.Mapping;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OakChan.Tests
+namespace OakChan.Tests.Unit
 {
     public class MappingTests
     {

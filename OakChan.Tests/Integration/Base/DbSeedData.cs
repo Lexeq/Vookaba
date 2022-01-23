@@ -7,7 +7,7 @@ using System.IO;
 using System.Net;
 using System.Reflection;
 
-namespace OakChan.Tests.Base
+namespace OakChan.Tests.Integration.Base
 {
     public class DbSeedData
     {
@@ -42,7 +42,7 @@ namespace OakChan.Tests.Base
 
         public DbSeedData FromResource(string resourceName)
         {
-            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"OakChan.Tests.SeedData.{resourceName.ToLowerInvariant()}.json");
+            using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"OakChan.Tests.Integration.SeedData.{resourceName.ToLowerInvariant()}.json");
             using var reader = new StreamReader(stream);
             return FromJson(reader.ReadToEnd());
         }

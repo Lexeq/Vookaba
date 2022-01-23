@@ -2,7 +2,7 @@
 using OakChan.Markup;
 using OakChan.Markup.Tags;
 
-namespace OakChan.Tests.Markup
+namespace OakChan.Tests.Unit.Markup
 {
     public class TagsInteractions
     {

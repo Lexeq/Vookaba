@@ -1,11 +1,10 @@
 ﻿using NUnit.Framework;
-using OakChan.Markup;
 using OakChan.Markup.Tags;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace OakChan.Tests.Markup
+namespace OakChan.Tests.Unit.Markup
 {
 
     public class MarkupTagTests

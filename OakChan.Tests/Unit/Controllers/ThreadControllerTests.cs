@@ -8,11 +8,11 @@ using NUnit.Framework;
 using OakChan.Controllers;
 using OakChan.Services;
 using OakChan.Services.DTO;
-using OakChan.Tests.Base;
+using OakChan.Tests.Integration.Base;
 using OakChan.ViewModels;
 using System.Threading.Tasks;
 
-namespace OakChan.Tests.Controllers
+namespace OakChan.Tests.Unit.Controllers
 {
     public class ThreadControllerTests : ControllerTestsBase
     {

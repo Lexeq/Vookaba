@@ -2,13 +2,13 @@
 using OakChan.DAL.Entities;
 using OakChan.Services.DbServices;
 using OakChan.Services.DTO;
-using OakChan.Tests.Base;
+using OakChan.Tests.Integration.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OakChan.Tests.Services
+namespace OakChan.Tests.Integration.Services
 {
     public class TopThreadsServiceTests : ServiceTestsBase
     {
@@ -35,7 +35,7 @@ namespace OakChan.Tests.Services
                 new Thread{
                     Board = board,
                     Subject = "4",
-                    Posts = new[] { 
+                    Posts = new[] {
                         new DefaultOpPost(),
                         new DefaultPost { Created = new DateTime(2020, 1, 5) } } }
             };

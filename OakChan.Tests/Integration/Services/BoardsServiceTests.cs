@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using OakChan.Common.Exceptions;
@@ -8,13 +7,13 @@ using OakChan.DAL.Entities;
 using OakChan.Services;
 using OakChan.Services.DbServices;
 using OakChan.Services.DTO;
-using OakChan.Tests.Base;
+using OakChan.Tests.Integration.Base;
 using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OakChan.Tests.Services
+namespace OakChan.Tests.Integration.Services
 {
     public class BoardsServiceTests : ServiceTestsBase
     {

@@ -14,9 +14,9 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace OakChan.Tests.Services
+namespace OakChan.Tests.Unit.Services
 {
-    public class ThreadServiceTestsUnit
+    public class ThreadServiceTests
     {
         public IMapper Mapper { get; private set; }
 
@@ -38,7 +38,7 @@ namespace OakChan.Tests.Services
         [TestCase("", "<i>subj</i>", "subj")]
         [TestCase("", "123456789_123456789_123456789_12messagelongerthensubjectsizelimit", "123456789_123456789_123456789...")]
         [TestCase("", "123456789_123456789_123456789_12", "123456789_123456789_123456789_12")]
-        public async Task Title2(string subject, string message, string expected)
+        public async Task SetSubject(string subject, string message, string expected)
         {
             string subj = null;
             var postSet = new Mock<DbSet<Post>>();

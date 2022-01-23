@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OakChan.DAL.Database;
+﻿using OakChan.DAL.Database;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace OakChan.Tests.Base
+namespace OakChan.Tests.Integration.Base
 {
     public class Seeder
     {
@@ -20,7 +19,7 @@ namespace OakChan.Tests.Base
         }
         public void Seed()
         {
-            if(Seeded)
+            if (Seeded)
             {
                 throw new InvalidOperationException("The database is already seeded.");
             }

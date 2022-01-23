@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OakChan.Tests.Markup
+namespace OakChan.Tests.Unit.Markup
 {
     public class MarkupTextProcessorTests
     {

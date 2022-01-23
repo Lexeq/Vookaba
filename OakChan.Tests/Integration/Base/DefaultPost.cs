@@ -2,7 +2,7 @@
 using System;
 using System.Net;
 
-namespace OakChan.Tests.Base
+namespace OakChan.Tests.Integration.Base
 {
     class DefaultPost : Post
     {

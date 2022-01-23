@@ -7,14 +7,14 @@ using OakChan.DAL.Entities.Base;
 using OakChan.Services;
 using OakChan.Services.DbServices;
 using OakChan.Services.DTO;
-using OakChan.Tests.Base;
+using OakChan.Tests.Integration.Base;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OakChan.Tests.Services
+namespace OakChan.Tests.Integration.Services
 {
     public class ThreadServiceTests : ServiceTestsBase
     {

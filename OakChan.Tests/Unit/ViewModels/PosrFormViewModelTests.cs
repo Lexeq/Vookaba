@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Moq;
 using NUnit.Framework;
-using OakChan.Tests.Base;
+using OakChan.Tests.Unit.Base;
 using OakChan.ViewModels;
 
-namespace OakChan.Tests.ViewModels
+namespace OakChan.Tests.Unit.ViewModels
 {
     public class PostFormViewModelTests : ViewModelValidationTestsBase
     {

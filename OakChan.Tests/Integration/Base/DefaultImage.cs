@@ -1,7 +1,7 @@
 ﻿using OakChan.DAL.Entities;
 using System;
 
-namespace OakChan.Tests.Base
+namespace OakChan.Tests.Integration.Base
 {
     class DefaultImage : Image
     {

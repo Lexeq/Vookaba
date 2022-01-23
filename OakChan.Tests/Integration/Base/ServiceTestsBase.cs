@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using OakChan.Services.Mapping;
 
-namespace OakChan.Tests.Base
+namespace OakChan.Tests.Integration.Base
 {
     public class ServiceTestsBase : PostgreContextTestsBase
     {
