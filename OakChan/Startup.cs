@@ -18,6 +18,7 @@ using OakChan.Common.Exceptions;
 using OakChan.DAL;
 using OakChan.DAL.Database;
 using OakChan.Deanon;
+using OakChan.Extensions;
 using OakChan.Identity;
 using OakChan.Mapping;
 using OakChan.Security.DependecyInjection;
@@ -67,6 +68,8 @@ namespace OakChan
             services.AddSingleton<IHashService>(new HashService());
             services.AddSingleton<ThrowHelper>();
             services.AddSingleton<ModLogDescriber>();
+
+            services.AddPostMarkup();
 
             services.AddDeanon();
             services.AddSingleton<IValidationAttributeAdapterProvider, OakValidatiomAttributeAdapterProvider>();

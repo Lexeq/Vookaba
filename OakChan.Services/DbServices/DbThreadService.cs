@@ -20,14 +20,21 @@ namespace OakChan.Services.DbServices
         private readonly OakDbContext context;
         private readonly IAttachmentsStorage attachmentsStorage;
         private readonly IHashService hashService;
+        private readonly IHtmlFormatter postHtmlFormatter;
         private readonly IMapper mapper;
         private readonly ThrowHelper throwHelper;
 
-        public DbThreadService(OakDbContext context, IAttachmentsStorage attachmentsStorage, IHashService hashService, IMapper mapper, ThrowHelper throwHelper)
+        public DbThreadService(OakDbContext context,
+                               IAttachmentsStorage attachmentsStorage,
+                               IHashService hashService,
+                               IHtmlFormatter postFormatter,
+                               IMapper mapper,
+                               ThrowHelper throwHelper)
         {
             this.context = context;
             this.attachmentsStorage = attachmentsStorage;
             this.hashService = hashService;
+            this.postHtmlFormatter = postFormatter;
             this.mapper = mapper;
             this.throwHelper = throwHelper;
         }
@@ -94,6 +101,7 @@ namespace OakChan.Services.DbServices
                 post.Attachments = await CreateImageEntityAsync(postDto.Attachments);
             }
 
+            post.Message = await postHtmlFormatter.FormatAsync(postDto.Message);
             return post;
         }
 

@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OakChan.Markup\OakChan.Markup.csproj" />
     <ProjectReference Include="..\OakChan.Services\OakChan.Services.csproj" />
   </ItemGroup>
 
