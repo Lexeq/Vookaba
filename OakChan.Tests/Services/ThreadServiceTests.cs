@@ -21,6 +21,7 @@ namespace OakChan.Tests.Services
         private Mock<ThrowHelper> _throwHelperMock;
         private Mock<IHashService> _hashMock;
         private Mock<IAttachmentsStorage> storageMock;
+        private Mock<IHtmlFormatter> _formatterMock;
 
         [OneTimeSetUp]
         public void Setup()
@@ -34,6 +35,7 @@ namespace OakChan.Tests.Services
                 GetDbContext(),
                 storageMock.Object,
                 _hashMock.Object,
+                _formatterMock.Object,
                 ServiceDtoMapper,
                  _throwHelperMock.Object);
         }
@@ -55,6 +57,9 @@ namespace OakChan.Tests.Services
                         Width = 100
                     }
                 });
+            _formatterMock = new Mock<IHtmlFormatter>();
+            _formatterMock.Setup(x => x.FormatAsync(It.IsAny<string>()))
+                .ReturnsAsync(delegate (string t) { return t; });
         }
 
 

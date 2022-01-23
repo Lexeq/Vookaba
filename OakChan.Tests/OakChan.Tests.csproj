@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OakChan.DAL\OakChan.DAL.csproj" />
+    <ProjectReference Include="..\OakChan.Markup\OakChan.Markup.csproj" />
     <ProjectReference Include="..\OakChan.Services\OakChan.Services.csproj" />
     <ProjectReference Include="..\OakChan\OakChan.csproj" />
   </ItemGroup>
