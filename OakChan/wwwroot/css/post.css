@@ -22,13 +22,12 @@
         display: none;
     }
 
-.post-owned {
+.post-owned, .post:target.post-owned {
     border-left: 3px solid var(--colors_border);
 }
 
 .thread .post-container:first-of-type .post {
     margin: 0;
-    background: 0;
     border: none;
 }
 
