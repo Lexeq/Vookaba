@@ -18,6 +18,10 @@
             <span class="post__number" data-pnum="@Model.Number">
                 <a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a>
             </span>
+            @if (Model.IsOpening || Model.OpMark)
+            {
+                <span class="op-mark">#OP</span>
+            }
             <span class="post__control-panel">
                 <a data-pnum="@(Model.Number)"
                    class="post__menu-button"

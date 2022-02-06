@@ -23,5 +23,8 @@ namespace OakChan.ViewModels
 
         [Display(Name = "Sage")]
         public bool IsSaged { get; set; }
+
+        [Display(Name = "OP")]
+        public bool OpMark { get; set; }
     }
 }

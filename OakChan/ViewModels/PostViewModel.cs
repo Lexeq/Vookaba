@@ -8,6 +8,8 @@ namespace OakChan.ViewModels
 
         public bool IsOpening { get; set; }
 
+        public bool OpMark { get; set; }
+
         public bool IsSaged { get; set; }
 
         public int Number { get; set; }

@@ -19,6 +19,8 @@ namespace OakChan.DAL.Entities
 
         public bool IsOP { get; set; }
 
+        public bool OpMark { get; set; }
+
         public string Name { get; set; }
 
         public string Message { get; set; }
