@@ -17,6 +17,11 @@
         <div class="grid">
             <label asp-for="Name"></label>
             <input asp-for="Name" autocomplete="off" />
+            <span>@Localizer["Options:"] </span>
+            <div class="options">
+                <input asp-for="IsSaged" />
+                <label asp-for="IsSaged"></label>
+            </div>
         </div>
         <textarea class="form-control"
                   rows="4" id="form-msg"

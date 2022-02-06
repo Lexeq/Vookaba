@@ -14,6 +14,7 @@ namespace OakChan.Utils
             if (post.HasImage) yield return "post-withimage";
             if (post.IsOpening) yield return "oppost";
             if (post.AuthorId == currentUserToken) yield return "post-owned";
+            if (post.IsSaged) yield return "saged";
         }
     }
 }

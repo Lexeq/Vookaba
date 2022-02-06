@@ -21,6 +21,7 @@ namespace OakChan.ViewModels
         [MaxFileSize(OakConstants.PostConstants.MaxFileSize, ErrorMessage = "Max file size is {1}")]
         public IFormFile Image { get; set; }
 
+        [Display(Name = "Sage")]
         public bool IsSaged { get; set; }
     }
 }
