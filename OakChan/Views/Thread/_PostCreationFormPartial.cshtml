@@ -14,6 +14,10 @@
           asp-route-board="@Context.Request.RouteValues["board"]"
           asp-route-thread="@Context.Request.RouteValues["thread"]"
           asp-route-action="CreatePost">
+        <div class="grid">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" autocomplete="off" />
+        </div>
         <textarea class="form-control"
                   rows="4" id="form-msg"
                   asp-for="Text"></textarea>
