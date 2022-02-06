@@ -12,15 +12,12 @@
           enctype="multipart/form-data"
           asp-route="createThread"
           asp-route-board="@Context.Request.RouteValues["board"]">
-
-        <div class="form-row theme-row">
+        <div class="grid">
             <label asp-for="Subject">@Localizer["Subject"]</label>
             <input asp-for="Subject" autocomplete="off" />
         </div>
-        <div class="form-row">
-            <textarea class="form-control" rows="4" id="form-msg" asp-for="Text"></textarea>
-        </div>
-        <div class="form-row">
+        <textarea class="form-control" rows="4" id="form-msg" asp-for="Text"></textarea>
+        <div class="buttons-row">
             <div class="fake-button">
                 <input class="hidden-input" id="post-img" accept=".gif,.jpg,.png,.jpeg" type="file" asp-for="Image" onchange="loadImagePreview(this.files)" />
                 <label for="post-img">@Localizer["Image"]</label>

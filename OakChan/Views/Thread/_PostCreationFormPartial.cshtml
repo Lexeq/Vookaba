@@ -14,13 +14,16 @@
           asp-route-board="@Context.Request.RouteValues["board"]"
           asp-route-thread="@Context.Request.RouteValues["thread"]"
           asp-route-action="CreatePost">
-
-        <div class="form-row">
-            <textarea class="form-control" rows="4" id="form-msg" asp-for="Text"></textarea>
-        </div>
-        <div class="form-row">
+        <textarea class="form-control"
+                  rows="4" id="form-msg"
+                  asp-for="Text"></textarea>
+        <div class="buttons-row">
             <div class="fake-button">
-                <input class="hidden-input" id="post-img" accept=".gif,.jpg,.png,.jpeg" type="file" asp-for="Image" onchange="loadImagePreview(this.files)" />
+                <input class="hidden-input"
+                       id="post-img"
+                       accept=".gif,.jpg,.png,.jpeg"
+                       type="file" asp-for="Image"
+                       onchange="loadImagePreview(this.files)" />
                 <label for="post-img">@Localizer["Image"] </label>
             </div>
             <button class="oakbutton" type="submit">@Localizer["Create"]</button>

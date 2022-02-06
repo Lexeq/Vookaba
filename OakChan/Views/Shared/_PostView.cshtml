@@ -10,7 +10,7 @@
 
 <div class="post-container" id="@($"pc{Model.Number}")">
     <div id="@($"p{Model.Number}")"
-         class="post@(usid == Model.AuthorId ? " post-owned" : "")@(Model.HasImage ? " post-withimage" : "")@(Model.IsOpening ? " oppost" : "")">
+         class="@string.Join(" ", PostClasses.GetClasses(Model, usid))">
 
         <div class="post__details">
             <span class="post__author">@(Model.AuthorName ?? Localizer["Anonymous"].Value)</span>
