@@ -1,25 +1,25 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using OakChan.DAL.Database;
-using OakChan.DAL.Entities;
+using OakChan.Identity;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace OakChan.Identity
+namespace OakChan.DAL.Identity
 {
-    public class ApplicationUserStore :
-        UserStore<ApplicationUser, ApplicationRole, OakDbContext, int>,
+    public class ApplicationUserStore<TContext> :
+        UserStore<ApplicationUser, ApplicationRole, TContext, int>,
         IUserInvitationStore<ApplicationUser>,
         IInvitationStore<ApplicationInvitation>
+        where TContext : DbContext
     {
         private DbSet<ApplicationInvitation> Invitations => Context.Set<ApplicationInvitation>();
 
         private new ExtendedIdentityErrorDescriber ErrorDescriber => base.ErrorDescriber as ExtendedIdentityErrorDescriber;
 
-        public ApplicationUserStore(OakDbContext context, ExtendedIdentityErrorDescriber describer = null)
+        public ApplicationUserStore(TContext context, ExtendedIdentityErrorDescriber describer = null)
             : base(context, new ExtendedIdentityErrorDescriber()) { }
 
         public virtual async Task<IdentityResult> ApplyInvitationAsync(ApplicationUser user, string invitationToken, CancellationToken cancellationToken)

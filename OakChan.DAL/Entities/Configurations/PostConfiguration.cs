@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OakChan.Common;
+using OakChan.Identity;
 
 namespace OakChan.DAL.Entities.Configurations
 {

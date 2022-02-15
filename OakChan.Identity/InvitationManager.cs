@@ -30,15 +30,10 @@ namespace OakChan.Identity
             }
         }
 
-        public IdentityErrorDescriber ErrorDescriber { get; set; }
-
-
         public InvitationManager(IInvitationStore<TInvitation> store,
-            IdentityErrorDescriber errors,
             ILogger<InvitationManager<TInvitation>> logger)
         {
             Store = store ?? throw new ArgumentNullException(nameof(store));
-            ErrorDescriber = errors;
             _logger = logger;
         }
 
@@ -85,7 +80,7 @@ namespace OakChan.Identity
         public virtual Task<string> GetInvitationTokenAsync(TInvitation invitation)
         {
             ThrowIfDisposed();
-            if(invitation == null)
+            if (invitation == null)
             {
                 throw new ArgumentNullException(nameof(invitation));
             }

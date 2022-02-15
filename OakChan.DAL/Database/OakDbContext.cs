@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using OakChan.Common;
 using OakChan.DAL.Entities;
 using OakChan.DAL.Entities.Base;
-using OakChan.Identity;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.DAL.Database
 {
-    public class OakDbContext : ChanIdentityDbContext<ApplicationUser, ApplicationRole, ApplicationInvitation, int>
+    public class OakDbContext : IdentityDbContext
     {
         private readonly IHttpContextAccessor httpContextAccessor;
 
@@ -24,7 +23,6 @@ namespace OakChan.DAL.Database
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public virtual DbSet<AuthorToken> AuthorTokens { get; set; }
 
         public virtual DbSet<Post> Posts { get; set; }
 
