@@ -133,8 +133,10 @@ namespace OakChan.Services.DbServices
             {
                 post.Attachments = await CreateImageEntityAsync(postDto.Attachments);
             }
-
-            post.Message = await postHtmlFormatter.FormatAsync(postDto.Message);
+            if (post.Message != null)
+            {
+                post.Message = await postHtmlFormatter.FormatAsync(postDto.Message);
+            }
             return post;
         }
 

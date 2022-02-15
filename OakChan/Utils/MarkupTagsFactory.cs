@@ -28,7 +28,7 @@ namespace OakChan.Utils
             {
                 new StrongTag(),
                 new EmphasizeTag(),
-                new StrongTag(),
+                new StrikeTag(),
                 new SpoilerTag(),
                 new QuoteTag()
             };
