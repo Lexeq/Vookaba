@@ -5,6 +5,7 @@ using OakChan.Common.Exceptions;
 using OakChan.DAL;
 using OakChan.DAL.Entities;
 using OakChan.DAL.Entities.Base;
+using OakChan.Identity;
 using OakChan.Services;
 using OakChan.Services.DbServices;
 using OakChan.Tests.Integration.Base;
