@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OakChan.Common.Exceptions;
@@ -82,6 +83,18 @@ namespace OakChan.Services.DbServices
                 .FirstOrDefaultAsync();
 
             return mapper.Map<ThreadDto>(thread);
+        }
+
+        public async Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId)
+        {
+            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
+
+            var thread = await context.Threads
+                .Where(t => t.BoardKey == boardKey && t.Id == threadId)
+                .ProjectTo<ThreadInfoDto>(mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+            return thread;
         }
 
         public async Task<ThreadDto> CreateThreadAsync(string boardKey, ThreadCreationDto threadDto)

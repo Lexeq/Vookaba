@@ -82,10 +82,10 @@ namespace OakChan.Tests.Unit.Controllers
         public async Task CreatePost()
         {
             var board = new BoardInfoDto { Key = "b", Name = "b", ThreadsCount = 1 };
-            var thread = new ThreadDto { Subject = "subj", BoardKey = board.Key, ThreadId = 42 };
+            var thread = new ThreadInfoDto { Subject = "subj", BoardKey = board.Key, ThreadId = 42 };
 
             var threadServiceMock = new Mock<IThreadService>();
-            threadServiceMock.Setup(t => t.GetThreadAsync(board.Key, thread.ThreadId))
+            threadServiceMock.Setup(t => t.GetThreadInfoAsync(board.Key, thread.ThreadId))
                 .ReturnsAsync(thread);
             threadServiceMock.Setup(t => t.AddPostToThreadAsync(board.Key, thread.ThreadId, It.IsAny<PostCreationDto>()))
                 .ReturnsAsync(new PostDto { ThreadId = thread.ThreadId });
@@ -103,7 +103,7 @@ namespace OakChan.Tests.Unit.Controllers
 
             boardServiceMock.Verify(x => x.GetBoardInfoAsync(It.IsAny<string>()), Times.AtMostOnce());
             threadServiceMock.Verify(m => m.AddPostToThreadAsync(board.Key, thread.ThreadId, It.Is<PostCreationDto>(p => p.Message == "Hello, world!")), Times.Once());
-            threadServiceMock.Verify(m => m.GetThreadAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+            threadServiceMock.Verify(m => m.GetThreadInfoAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
         }
 
         [Test]
@@ -123,10 +123,10 @@ namespace OakChan.Tests.Unit.Controllers
         public async Task CreatePostOnReadOnlyThread()
         {
             var board = new BoardInfoDto { Key = "x", Name = "x", ThreadsCount = 1 };
-            var thread = new ThreadDto { Subject = "x", BoardKey = board.Key, ThreadId = 42, IsReadOnly = true };
+            var thread = new ThreadInfoDto { Subject = "x", BoardKey = board.Key, ThreadId = 42, IsReadOnly = true };
 
             var threadServiceMock = new Mock<IThreadService>();
-            threadServiceMock.Setup(t => t.GetThreadAsync(board.Key, thread.ThreadId))
+            threadServiceMock.Setup(t => t.GetThreadInfoAsync(board.Key, thread.ThreadId))
                 .ReturnsAsync(thread);
 
             var boardServiceMock = new Mock<IBoardService>();
@@ -143,7 +143,7 @@ namespace OakChan.Tests.Unit.Controllers
             Assert.IsInstanceOf<BadRequestResult>(res);
 
             threadServiceMock.Verify(m => m.AddPostToThreadAsync(board.Key, thread.ThreadId, It.Is<PostCreationDto>(p => p.Message == "Hello, world!")), Times.Never());
-            threadServiceMock.Verify(m => m.GetThreadAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
+            threadServiceMock.Verify(m => m.GetThreadInfoAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Once());
         }
 
         [Test]

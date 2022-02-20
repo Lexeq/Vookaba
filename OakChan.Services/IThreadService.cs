@@ -1,4 +1,5 @@
 ﻿#nullable enable
+using OakChan.Services.DbServices;
 using OakChan.Services.DTO;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace OakChan.Services
         /// </summary>
         ///<param name="boardKey">ID доски.</param>
         /// <param name="threadId">ID треда.</param>
-        /// <returns>Данные созданного треда или null, если тред не существует.</returns>
+        /// <returns>Тред или null, если тред не существует.</returns>
         public Task<ThreadDto?> GetThreadAsync(string boardKey, int threadId);
 
         /// <summary>
@@ -31,5 +32,13 @@ namespace OakChan.Services
         /// <param name="post">Данные поста.</param>
         /// <returns>Данные созанного поста.</returns>
         public Task<PostDto> AddPostToThreadAsync(string boardKey, int threadId, PostCreationDto post);
+
+        /// <summary>
+        /// Возвращает информацию о треде.
+        /// </summary>
+        /// <param name="boardKey">ID доски.</param>
+        /// <param name="threadId">ID треда.</param>
+        /// <returns>Объект с ифнормацией о треде</returns>
+        public Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId);
     }
 }
