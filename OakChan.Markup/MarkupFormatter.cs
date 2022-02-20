@@ -1,9 +1,10 @@
 ﻿using OakChan.Services;
+using OakChan.Services.DTO;
 using System.Threading.Tasks;
 
 namespace OakChan.Markup
 {
-    public class MarkupFormatter : IHtmlFormatter
+    public class MarkupFormatter : IPostProcessor
     {
         private readonly IMarkupTagsFactory tagsFactory;
 
@@ -12,10 +13,13 @@ namespace OakChan.Markup
             this.tagsFactory = tagsFactory;
         }
 
-        public Task<string> FormatAsync(string text)
+        public async Task ProcessAsync(PostCreationDto post)
         {
-            var markupProc = new MarkupTextProcessor(tagsFactory.GetTags());
-            return markupProc.ProcessAsync(text);
+            if (!string.IsNullOrEmpty(post.Message))
+            {
+                var markupProc = new MarkupTextProcessor(tagsFactory.GetTags());
+                post.Message = await markupProc.ProcessAsync(post.Message);
+            }
         }
     }
 }
