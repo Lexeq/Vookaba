@@ -16,6 +16,10 @@
         filter: grayscale(100%);
     }
 
+    .post .trip {
+        color: red;
+    }
+
 .op-mark {
     color: var(--colors_post-opmark);
     font-weight: 600;
@@ -52,7 +56,12 @@
 
 .post__author {
     font-style: italic;
+    display: inline-flex;
 }
+
+    .post__author .trip {
+        color: var(--colors_post-trip);
+    }
 
 .post__number {
     cursor: pointer;

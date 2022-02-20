@@ -35,5 +35,7 @@ namespace OakChan.DAL.Entities
 
         public string UserAgent { get; set; }
 
+        public string Tripcode { get; set; }
+
     }
 }

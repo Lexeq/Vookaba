@@ -31,5 +31,6 @@ namespace OakChan.Services.DTO
 
         public ImageDto Image { get; set; }
 
+        public string Tripcode { get; set; }
     }
 }

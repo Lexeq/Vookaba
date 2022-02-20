@@ -22,6 +22,8 @@ namespace OakChan.ViewModels
 
         public string AuthorName { get; set; }
 
+        public string Tripcode { get; set; }
+
         public string Message { get; set; }
 
         public bool HasImage => Image != null;

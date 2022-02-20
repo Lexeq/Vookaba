@@ -19,7 +19,6 @@ using OakChan.DAL.Database;
 using OakChan.Deanon;
 using OakChan.Extensions;
 using OakChan.Extensions.DependencyInjection;
-using OakChan.Identity;
 using OakChan.Mapping;
 using OakChan.Security.DependecyInjection;
 using OakChan.Services;
@@ -74,6 +73,7 @@ namespace OakChan
             services.AddSingleton<IHashService>(new HashService());
             services.AddSingleton<ThrowHelper>();
             services.AddSingleton<ModLogDescriber>();
+            services.AddSingleton<IPostProcessor, TripcodePostProcessor>();
 
             services.AddPostMarkup();
 

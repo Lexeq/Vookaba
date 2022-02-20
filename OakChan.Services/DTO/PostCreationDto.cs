@@ -13,5 +13,7 @@ namespace OakChan.Services.DTO
         public bool IsSaged { get; set; }
 
         public bool OpMark { get; set; }
+
+        public string Tripcode { get; set; }
     }
 }

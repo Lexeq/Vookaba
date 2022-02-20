@@ -13,7 +13,14 @@
          class="@string.Join(" ", PostClasses.GetClasses(Model, usid))">
 
         <div class="post__details">
-            <span class="post__author">@(Model.AuthorName ?? Localizer["Anonymous"].Value)</span>
+
+            <span class="post__author">
+                <span class="name">@(Model.AuthorName ?? Localizer["Anonymous"].Value)</span>
+                @if (!string.IsNullOrEmpty(Model.Tripcode))
+                {
+                    <span class="trip">!@Model.Tripcode</span>
+                }
+            </span>
             <span class="post__date" data-timestamp="@Model.Date.GetUnixEpochOffset()">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss") UTC</span>
             <span class="post__number" data-pnum="@Model.Number">
                 <a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a>
@@ -48,12 +55,12 @@
                     </div>
                     <a class="post__file-link" href="@imgPath">
                         <img id="@($"img{Model.Image.Name}")"
-                             class="post__image"
-                             src="@thumbPath"
-                             data-img-width="@Model.Image.Width"
-                             data-img-height="@Model.Image.Height"
-                             data-img-thumb="@thumbPath"
-                             loading="lazy" />
+                         class="post__image"
+                         src="@thumbPath"
+                         data-img-width="@Model.Image.Width"
+                         data-img-height="@Model.Image.Height"
+                         data-img-thumb="@thumbPath"
+                         loading="lazy" />
                     </a>
                 </div>
             </div>
