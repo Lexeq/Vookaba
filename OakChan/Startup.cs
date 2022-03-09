@@ -51,7 +51,8 @@ namespace OakChan
             //TODO: clean up this mess
             #region DB
             services.AddDbContext<OakDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("Postgre"))
+                options.UseNpgsql(Configuration.GetConnectionString("Postgre"), x =>
+                x.MigrationsAssembly("OakChan.DAL"))
 #if DEBUG
                 .UseLoggerFactory(EfLoggerFactory)
 #endif
