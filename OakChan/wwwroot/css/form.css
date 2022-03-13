@@ -12,30 +12,26 @@
     margin-bottom: -100px;
 }
 
-.form-row {
-    margin: 5px 0px;
-}
+    .posting-form .grid {
+        display: grid;
+        grid-template-columns: fit-content(35%) 1fr;
+        gap: 5px;
+    }
 
-.posting-form .form-row {
-    display: flex;
-    align-content: stretch;
-    justify-content: space-between;
-}
+    .posting-form textarea {
+        margin: 0;
+        max-height: 18em;
+        max-width: 100%;
+        min-width: 100%;
+        margin-top: 5px;
+    }
 
-.theme-row label {
-    max-width: 35%;
-    margin: 0 5px 0 0;
-}
-
-.theme-row input {
-    flex-grow: 1;
-}
-
-.form-row textarea {
-    margin: 0;
-    flex-grow: 1;
-    max-height: 18em;
-}
+    .posting-form .buttons-row {
+        display: flex;
+        align-content: stretch;
+        justify-content: space-between;
+        margin-top: 3px;
+    }
 
 .preview-container {
     width: 100px;

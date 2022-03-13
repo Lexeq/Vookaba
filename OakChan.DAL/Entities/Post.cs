@@ -19,6 +19,8 @@ namespace OakChan.DAL.Entities
 
         public bool IsOP { get; set; }
 
+        public bool OpMark { get; set; }
+
         public string Name { get; set; }
 
         public string Message { get; set; }
@@ -32,6 +34,8 @@ namespace OakChan.DAL.Entities
         public IPAddress IP { get; set; }
 
         public string UserAgent { get; set; }
+
+        public string Tripcode { get; set; }
 
     }
 }

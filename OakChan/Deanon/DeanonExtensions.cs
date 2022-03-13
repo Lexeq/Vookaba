@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using OakChan.DAL;
-using OakChan.Identity;
 using System;
 
 namespace OakChan.Deanon
@@ -37,7 +33,6 @@ namespace OakChan.Deanon
                     o.SlidingExpiration = true;
                 });
 
-            services.TryAddScoped<IAuthorTokenFactory, AuthorTokenManager>();
             return services;
         }
     }

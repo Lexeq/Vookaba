@@ -1,8 +1,6 @@
-﻿using OakChan.DAL.Entities.Base;
-
-namespace OakChan.Identity
+﻿namespace OakChan.Identity
 {
-    public class ApplicationInvitation : Invitation<int>, IHasCreationTime
+    public class ApplicationInvitation : Invitation<int>
     {
         public ApplicationUser Publisher { get; set; }
 

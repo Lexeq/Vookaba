@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -89,10 +90,11 @@ namespace OakChan.Controllers
                 var boardDto = await boards.GetBoardInfoAsync(board);
                 if (boardDto?.IsDisabled == false)
                 {
-                    var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
+                    var threadDto = await threads.GetThreadInfoAsync(boardDto.Key, thread);
                     if (threadDto != null && !threadDto.IsReadOnly)
                     {
                         var postCreationDto = mapper.Map<PostCreationDto>(postFormVM);
+                        postCreationDto.OpMark = postCreationDto.OpMark && threadDto.Author == Guid.Parse(User.FindFirstValue(Common.OakConstants.ClaimTypes.AuthorToken));
                         var newPost = await threads.AddPostToThreadAsync(boardDto.Key, thread, postCreationDto);
                         return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
                     }

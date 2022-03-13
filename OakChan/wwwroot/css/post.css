@@ -12,6 +12,15 @@
         background: var(--colors_post-target);
     }
 
+    .post.saged {
+        filter: grayscale(100%);
+    }
+
+.op-mark {
+    color: var(--colors_post-opmark);
+    font-weight: 600;
+}
+
 .post_hidden {
     opacity: 0.25;
 }
@@ -44,6 +53,10 @@
 .post__author {
     font-style: italic;
 }
+
+    .post__author .trip {
+        color: var(--colors_post-trip);
+    }
 
 .post__number {
     cursor: pointer;

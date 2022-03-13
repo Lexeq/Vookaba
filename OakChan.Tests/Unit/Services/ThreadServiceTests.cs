@@ -12,6 +12,7 @@ using OakChan.Services.DTO;
 using OakChan.Services.Mapping;
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace OakChan.Tests.Unit.Services
@@ -53,7 +54,7 @@ namespace OakChan.Tests.Unit.Services
                 ct.Object,
                 Mock.Of<IAttachmentsStorage>(),
                 Mock.Of<IHashService>(),
-                Mock.Of<IHtmlFormatter>(),
+                Enumerable.Empty<IPostProcessor>(),
                 Mapper,
                 Mock.Of<ThrowHelper>());
 

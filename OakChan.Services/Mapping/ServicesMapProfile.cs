@@ -72,6 +72,10 @@ namespace OakChan.Services.Mapping
                 .ForMember(b => b.Key, opt => opt.MapFrom(dto => dto.Key.ToLowerInvariant()));
 
             CreateMap<ModAction, ModLogDto>();
+
+            CreateMap<Thread, ThreadInfoDto>()
+                .ForMember(dto => dto.ThreadId, opt => opt.MapFrom(t => t.Id))
+                .ForMember(dto => dto.Author, opt => opt.MapFrom(t => t.Posts.First(x => x.IsOP).AuthorToken));
         }
     }
 }

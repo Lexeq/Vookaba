@@ -8,6 +8,10 @@ namespace OakChan.ViewModels
 
         public bool IsOpening { get; set; }
 
+        public bool OpMark { get; set; }
+
+        public bool IsSaged { get; set; }
+
         public int Number { get; set; }
 
         public DateTime Date { get; set; }
@@ -17,6 +21,8 @@ namespace OakChan.ViewModels
         public Guid AuthorId { get; set; }
 
         public string AuthorName { get; set; }
+
+        public string Tripcode { get; set; }
 
         public string Message { get; set; }
 

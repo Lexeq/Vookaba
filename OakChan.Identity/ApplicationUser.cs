@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using OakChan.DAL.Entities;
 using System;
 
 namespace OakChan.Identity

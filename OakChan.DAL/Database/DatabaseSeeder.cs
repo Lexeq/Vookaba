@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OakChan.Common;
 using OakChan.Identity;
@@ -14,16 +15,19 @@ namespace OakChan.DAL.Database
         private readonly OakDbContext context;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<ApplicationRole> roleManager;
+        private readonly ILogger<DatabaseSeeder> logger;
         private readonly SeedData options;
 
         public DatabaseSeeder(OakDbContext context,
             UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager,
-            IOptions<SeedData> options)
+            IOptions<SeedData> options,
+            ILogger<DatabaseSeeder> logger)
         {
             this.context = context;
             this.userManager = userManager;
             this.roleManager = roleManager;
+            this.logger = logger;
             this.options = options.Value;
         }
 
@@ -64,6 +68,13 @@ namespace OakChan.DAL.Database
 
             if (adminUserToRole == null)
             {
+                if (string.IsNullOrEmpty(options.AdministratorPassword) ||
+                    string.IsNullOrEmpty(options.AdministratorUserName) ||
+                    string.IsNullOrEmpty(options.AdministratorEmail))
+                {
+                    logger.LogWarning("No admin. Check configuration.");
+                    return;
+                }
                 var adminUser = new ApplicationUser
                 {
                     UserName = options.AdministratorUserName,
@@ -83,6 +94,11 @@ namespace OakChan.DAL.Database
         {
             if (await context.Boards.AnyAsync())
             {
+                return;
+            }
+            if (!options.Boards.Any())
+            {
+                logger.LogWarning("No default boards. Check configuration.");
                 return;
             }
 

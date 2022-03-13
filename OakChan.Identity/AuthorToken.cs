@@ -1,10 +1,9 @@
-﻿using OakChan.DAL.Entities.Base;
-using System;
+﻿using System;
 using System.Net;
 
-namespace OakChan.DAL.Entities
+namespace OakChan.Identity
 {
-    public class AuthorToken : IHasCreationTime
+    public class AuthorToken
     {
         public Guid Token { get; set; }
 

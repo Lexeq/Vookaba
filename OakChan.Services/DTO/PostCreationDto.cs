@@ -11,5 +11,9 @@ namespace OakChan.Services.DTO
         public IFormFileCollection Attachments { get; set; }
 
         public bool IsSaged { get; set; }
+
+        public bool OpMark { get; set; }
+
+        public string Tripcode { get; set; }
     }
 }

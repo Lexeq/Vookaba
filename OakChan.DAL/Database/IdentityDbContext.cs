@@ -2,20 +2,31 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using OakChan.Identity;
 using System;
 
-namespace OakChan.Identity
+namespace OakChan.DAL.Database
 {
-    public class ChanIdentityDbContext<TUser, TRole, TInvitation, TKey> : IdentityDbContext<TUser, TRole, TKey>
+    public class IdentityDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, ApplicationInvitation, AuthorToken, int>
+    {
+        public IdentityDbContext() { }
+
+        public IdentityDbContext(DbContextOptions options) : base(options) { }
+    }
+
+    public class IdentityDbContext<TUser, TRole, TInvitation, TToken, TKey> : IdentityDbContext<TUser, TRole, TKey>
         where TUser : IdentityUser<TKey>
         where TRole : IdentityRole<TKey>
         where TInvitation : Invitation<TKey>
+        where TToken : AuthorToken
         where TKey : struct, IEquatable<TKey>
     {
-        public ChanIdentityDbContext() { }
+        public IdentityDbContext() { }
 
-        public ChanIdentityDbContext(DbContextOptions options) : base(options)
+        public IdentityDbContext(DbContextOptions options) : base(options)
         { }
+
+        public virtual DbSet<TToken> AuthorTokens { get; set; }
 
         public virtual DbSet<TInvitation> Invitations { get; set; }
 
@@ -36,6 +47,14 @@ namespace OakChan.Identity
                     .IsUnique(false);
 
                 b.HasIndex(i => i.Expire);
+            });
+
+            builder.Entity(delegate (EntityTypeBuilder<AuthorToken> x)
+            {
+                x.HasKey(t => t.Token);
+
+                x.Property(t => t.Created)
+                    .IsRequired(true);
             });
         }
     }

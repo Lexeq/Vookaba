@@ -13,6 +13,8 @@ namespace OakChan.Services.DTO
 
         public bool IsOpening { get; set; }
 
+        public bool OpMark { get; set; }
+
         public Guid AuthorId { get; set; }
 
         public IPAddress AuthorIP { get; set; }
@@ -29,5 +31,6 @@ namespace OakChan.Services.DTO
 
         public ImageDto Image { get; set; }
 
+        public string Tripcode { get; set; }
     }
 }

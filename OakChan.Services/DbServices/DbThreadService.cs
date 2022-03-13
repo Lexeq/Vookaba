@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using OakChan.Common.Exceptions;
@@ -52,21 +53,21 @@ namespace OakChan.Services.DbServices
         private readonly OakDbContext context;
         private readonly IAttachmentsStorage attachmentsStorage;
         private readonly IHashService hashService;
-        private readonly IHtmlFormatter postHtmlFormatter;
+        private readonly IEnumerable<IPostProcessor> processors;
         private readonly IMapper mapper;
         private readonly ThrowHelper throwHelper;
 
         public DbThreadService(OakDbContext context,
                                IAttachmentsStorage attachmentsStorage,
                                IHashService hashService,
-                               IHtmlFormatter postFormatter,
+                               IEnumerable<IPostProcessor> processors,
                                IMapper mapper,
                                ThrowHelper throwHelper)
         {
             this.context = context;
             this.attachmentsStorage = attachmentsStorage;
             this.hashService = hashService;
-            this.postHtmlFormatter = postFormatter;
+            this.processors = processors;
             this.mapper = mapper;
             this.throwHelper = throwHelper;
         }
@@ -82,6 +83,18 @@ namespace OakChan.Services.DbServices
                 .FirstOrDefaultAsync();
 
             return mapper.Map<ThreadDto>(thread);
+        }
+
+        public async Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId)
+        {
+            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
+
+            var thread = await context.Threads
+                .Where(t => t.BoardKey == boardKey && t.Id == threadId)
+                .ProjectTo<ThreadInfoDto>(mapper.ConfigurationProvider)
+                .FirstOrDefaultAsync();
+
+            return thread;
         }
 
         public async Task<ThreadDto> CreateThreadAsync(string boardKey, ThreadCreationDto threadDto)
@@ -128,14 +141,15 @@ namespace OakChan.Services.DbServices
         {
             throwHelper.ThrowIfNull(postDto, nameof(postDto));
 
+            foreach (var proc in processors)
+            {
+                await proc.ProcessAsync(postDto);
+            }
+
             var post = mapper.Map<Post>(postDto);
             if (postDto.Attachments != null && postDto.Attachments.Any())
             {
                 post.Attachments = await CreateImageEntityAsync(postDto.Attachments);
-            }
-            if (post.Message != null)
-            {
-                post.Message = await postHtmlFormatter.FormatAsync(postDto.Message);
             }
             return post;
         }

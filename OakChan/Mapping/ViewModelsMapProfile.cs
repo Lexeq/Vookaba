@@ -26,6 +26,8 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(vm => vm.Name))
                 .ForMember(dto => dto.Message, opt => opt.MapFrom(vm => vm.Text))
                 .ForMember(dto => dto.IsSaged, opt => opt.MapFrom(vm => vm.IsSaged))
+                .ForMember(dto => dto.OpMark, opt => opt.Ignore())
+                .ForMember(dto => dto.Tripcode, opt => opt.Ignore())
                 .AfterMap((vm, dto, ctx) =>
                 {
                     if (vm.Image != null)
@@ -56,6 +58,8 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(vm => vm.Name))
                 .ForMember(dto => dto.Message, opt => opt.MapFrom(vm => vm.Text))
                 .ForMember(dto => dto.IsSaged, opt => opt.Ignore())
+                .ForMember(dto => dto.OpMark, opt => opt.Ignore())
+                .ForMember(dto => dto.Tripcode, opt => opt.Ignore())
                 .AfterMap((vm, dto, ctx) =>
                 {
                     if (vm.Image != null)
