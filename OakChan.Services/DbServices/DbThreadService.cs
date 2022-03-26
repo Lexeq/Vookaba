@@ -186,5 +186,12 @@ namespace OakChan.Services.DbServices
             };
             return imageEntity;
         }
+
+        public Task SetIsPinned(int threadId, bool isPinned)
+        {
+            var thread = new Thread { Id = threadId, IsPinned = isPinned };
+            context.Attach(thread).Property(x => x.IsPinned).IsModified = true;
+            return context.SaveChangesAsync();
+        }
     }
 }

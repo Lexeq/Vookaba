@@ -39,5 +39,12 @@ namespace OakChan.Services
         /// <param name="threadId">ID треда.</param>
         /// <returns>Объект с ифнормацией о треде</returns>
         public Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId);
+
+        /// <summary>
+        /// Управляет закреплением треда.
+        /// </summary>
+        /// <param name="threadId">ID треда.</param>
+        /// <param name="isPinned">Флаг определяющий, является ли тред закрепленным.</param>
+        public Task SetIsPinned(int threadId, bool isPinned);
     }
 }

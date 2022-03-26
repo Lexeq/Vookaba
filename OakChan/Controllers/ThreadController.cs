@@ -110,5 +110,16 @@ namespace OakChan.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(OakConstants.Policies.CanEditThread)]
+        public async Task<IActionResult> PinThread(string board, [FromRoute(Name = "thread")] int threadId, bool pin)
+        {
+            var thread = await threads.GetThreadInfoAsync(board, threadId);
+            if (thread == null) { return BadRequest(); }
+            await threads.SetIsPinned(threadId, pin);
+            return Ok();
+        }
     }
 }

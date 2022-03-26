@@ -13,5 +13,10 @@
 
 .thread__subject {
     font-weight: bolder;
-    font-size: 0.85em;
+}
+
+.thread-icon {
+    fill: var(--colors_thread-icon);
+    height: 1em;
+    vertical-align: -2px;
 }

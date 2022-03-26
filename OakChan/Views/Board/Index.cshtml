@@ -4,7 +4,7 @@
     ViewBag.Title = $"/{Model.Key}/ - {OakChan.Common.OakConstants.Name}";
 }
 @section Scripts{
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 }
 <hr />
 <h2 class="board-name">@($"/{Model.Key}/ - {Model.Name}")</h2>
@@ -16,9 +16,13 @@
     @foreach (var thread in Model.Threads)
     {
         <div id="@($"thread-{thread.ThreadId}")"
-             class="thread"
-             data-bid="@(thread.BoardKey)"
-             data-tid="@(thread.ThreadId)">
+         class="thread"
+         data-bid="@(thread.BoardKey)"
+         data-tid="@(thread.ThreadId)">
+            @if (thread.IsPinned)
+            {
+                <partial name="_Pin" />
+            }
             <span class="thread__subject">@thread.Subject</span>
             <partial name="_PostView" model="thread.OpPost" />
             <div class="to-thread">

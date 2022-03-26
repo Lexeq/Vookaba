@@ -4,7 +4,7 @@
     ViewBag.Title = Model.Subject;
 }
 @section Scripts{
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 }
 <hr />
 <p class="switcher"
@@ -18,6 +18,10 @@
      class="thread"
      data-bid="@(Model.BoardKey)"
      data-tid="@(Model.ThreadId)">
+    @if (Model.IsPinned)
+    {
+        <partial name="_Pin" />
+    }
     <span class="thread__subject">@Model.Subject</span>
     <partial name="_PostView" model="Model.OpPost" />
     @foreach (var post in Model.Replies)

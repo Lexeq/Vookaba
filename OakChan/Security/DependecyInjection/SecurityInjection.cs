@@ -55,6 +55,12 @@ namespace OakChan.Security.DependecyInjection
                 {
                     policy.RequireClaim(OakConstants.ClaimTypes.AuthorToken);
                 });
+
+                options.AddPolicy(PoliciesNames.CanEditThread, policy =>
+                {
+                    policy.RequireRole(OakConstants.Roles.Administrator, OakConstants.Roles.Moderator);
+                    policy.Combine(options.GetPolicy(PoliciesNames.HasBoardPermission));
+                });
             });
 
             services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();

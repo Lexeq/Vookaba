@@ -13,6 +13,8 @@ namespace OakChan.ViewModels
 
         public string Subject { get; set; }
 
+        public bool IsPinned { get; set; }
+
         public int PostsWithImageCount { get; set; }
 
         public PostViewModel OpPost { get; set; }
