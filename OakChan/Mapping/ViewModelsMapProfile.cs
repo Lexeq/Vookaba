@@ -38,12 +38,12 @@ namespace OakChan.Mapping
                     }
                 });
 
-            CreateMap<ThreadBoardAggregationDto, ThreadViewModel>()
-                .ForMember(vm => vm.BoardKey, opt => opt.MapFrom(dto => dto.Board.Key))
-                .ForMember(vm => vm.ThreadId, opt => opt.MapFrom(dto => dto.Thread.ThreadId))
-                .ForMember(vm => vm.Subject, opt => opt.MapFrom(dto => dto.Thread.Subject))
-                .ForMember(vm => vm.Replies, opt => opt.MapFrom(dto => dto.Thread.Posts.Skip(1)))
-                .ForMember(vm => vm.OpPost, opt => opt.MapFrom(dto => dto.Thread.Posts.First()));
+            CreateMap<ThreadDto, ThreadViewModel>()
+                .ForMember(vm => vm.BoardKey, opt => opt.MapFrom(dto => dto.BoardKey))
+                .ForMember(vm => vm.ThreadId, opt => opt.MapFrom(dto => dto.ThreadId))
+                .ForMember(vm => vm.Subject, opt => opt.MapFrom(dto => dto.Subject))
+                .ForMember(vm => vm.Replies, opt => opt.MapFrom(dto => dto.Posts.Skip(1)))
+                .ForMember(vm => vm.OpPost, opt => opt.MapFrom(dto => dto.Posts.First()));
 
             CreateMap<ThreadPreviewDto, ThreadPreviewViewModel>()
                 .ForMember(vm => vm.PostsCount, opt => opt.MapFrom(dto => dto.TotalPostsCount))

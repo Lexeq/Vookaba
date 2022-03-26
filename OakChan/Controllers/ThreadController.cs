@@ -45,7 +45,7 @@ namespace OakChan.Controllers
                 var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
                 if (threadDto != null)
                 {
-                    var vm = mapper.Map<ThreadViewModel>(new ThreadBoardAggregationDto { Thread = threadDto, Board = boardDto });
+                    var vm = mapper.Map<ThreadViewModel>(threadDto);
                     return View(vm);
                 }
             }
