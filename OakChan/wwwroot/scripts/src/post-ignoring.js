@@ -67,10 +67,10 @@ $(document).ready(() => {
     hideHidden();
     window.PostMenu.addItem(
         getLocalizedString('hide'),
-        post => setPostIsHidden(post, true),
-        post => { return !$(post).hasClass('post_hidden'); });
+        postInfo => setPostIsHidden(postInfo, true),
+        (_, post) => { return !$(post).hasClass('post_hidden'); });
     window.PostMenu.addItem(
         getLocalizedString('show'),
-        post => setPostIsHidden(post, false),
-        post => { return $(post).hasClass('post_hidden'); });
+        postInfo => setPostIsHidden(postInfo, false),
+        (_, post) => { return $(post).hasClass('post_hidden'); });
 });

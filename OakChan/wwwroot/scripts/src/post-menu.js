@@ -13,11 +13,11 @@ class PostMenu {
      * If it returns false, then the item is not displayed
      * @param {String}      title   tooltip for item
      */
-    addItem (text, action, filter, title) {
+    addItem(text, action, filter, title) {
         this.items.push({ text, title, action, filter });
     }
 
-    show (button) {
+    show(button) {
         let generatePosition = function ($parent) {
             let position = {};
             let offset = $parent.offset();
@@ -35,7 +35,7 @@ class PostMenu {
             postInfo.number = $post.find('.post__number').data('pnum');
 
             for (let e of items) {
-                if (!e.filter || e.filter($post) !== false) {
+                if (!e.filter || e.filter(postInfo, $post) !== false) {
                     let row = $(`<li>${e.text}</li>`)
                         .prop('title', e.title)
                         .click(() => e.action(postInfo, $post));
@@ -57,7 +57,7 @@ class PostMenu {
         return false;
     }
 
-    remove () {
+    remove() {
         $('#post-menu').remove();
         $('.post__menu-button_opened').removeClass('post__menu-button_opened');
     }
