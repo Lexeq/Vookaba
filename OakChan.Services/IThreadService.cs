@@ -27,11 +27,10 @@ namespace OakChan.Services
         /// <summary>
         /// Создает новый пост в треде.
         /// </summary>
-        /// <param name="boardKey">ID доски.</param>
         /// <param name="threadId">ID треда.</param>
         /// <param name="post">Данные поста.</param>
         /// <returns>Данные созанного поста.</returns>
-        public Task<PostDto> AddPostToThreadAsync(string boardKey, int threadId, PostCreationDto post);
+        public Task<PostDto> AddPostToThreadAsync(int threadId, PostCreationDto post);
 
         /// <summary>
         /// Возвращает информацию о треде.

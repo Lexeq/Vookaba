@@ -95,7 +95,7 @@ namespace OakChan.Controllers
                     {
                         var postCreationDto = mapper.Map<PostCreationDto>(postFormVM);
                         postCreationDto.OpMark = postCreationDto.OpMark && threadDto.Author == Guid.Parse(User.FindFirstValue(Common.OakConstants.ClaimTypes.AuthorToken));
-                        var newPost = await threads.AddPostToThreadAsync(boardDto.Key, thread, postCreationDto);
+                        var newPost = await threads.AddPostToThreadAsync(thread, postCreationDto);
                         return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
                     }
                 }

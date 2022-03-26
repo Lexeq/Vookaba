@@ -130,7 +130,7 @@ namespace OakChan.Tests.Integration.Services
 
             var service = CreateThreadService();
 
-            var postDto = await service.AddPostToThreadAsync("b", 1, postData);
+            var postDto = await service.AddPostToThreadAsync(1, postData);
             var thread = await service.GetThreadAsync("b", 1);
 
             Assert.NotNull(postDto);
@@ -178,7 +178,7 @@ namespace OakChan.Tests.Integration.Services
                 }
             });
 
-            var a2 = await service.AddPostToThreadAsync("a", aThread.ThreadId, new PostCreationDto
+            var a2 = await service.AddPostToThreadAsync(aThread.ThreadId, new PostCreationDto
             {
                 Message = "a_2"
             });
@@ -217,7 +217,7 @@ namespace OakChan.Tests.Integration.Services
 
             var service = CreateThreadService();
 
-            await service.AddPostToThreadAsync("a", 10, new PostCreationDto());
+            await service.AddPostToThreadAsync(10, new PostCreationDto());
 
             var thread = await service.GetThreadAsync("a", 10);
             Assert.AreEqual(DateTime.UtcNow.Date, thread.LastBump.Date);
@@ -253,7 +253,7 @@ namespace OakChan.Tests.Integration.Services
 
             var service = CreateThreadService();
 
-            await service.AddPostToThreadAsync("a", 10, new PostCreationDto
+            await service.AddPostToThreadAsync(10, new PostCreationDto
             {
             });
 
@@ -289,7 +289,7 @@ namespace OakChan.Tests.Integration.Services
 
             var service = CreateThreadService();
 
-            await service.AddPostToThreadAsync("a", 10, new PostCreationDto
+            await service.AddPostToThreadAsync(10, new PostCreationDto
             {
                 IsSaged = true
             });
