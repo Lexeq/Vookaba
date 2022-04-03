@@ -23,6 +23,10 @@
             {
                 <partial name="_Pin" />
             }
+            @if (thread.IsReadOnly)
+            {
+                <partial name="_Lock" />
+            }
             <span class="thread__subject">@thread.Subject</span>
             <partial name="_PostView" model="thread.OpPost" />
             <div class="to-thread">

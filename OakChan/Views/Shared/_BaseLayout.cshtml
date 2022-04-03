@@ -39,7 +39,8 @@
     @if ((await authorizationService.AuthorizeAsync(User, null, OakConstants.Policies.HasBoardPermission)).Succeeded)
     {
         <script src="~/scripts/mod/post-deletion.js"></script>
-        <script src=~/scripts/mod/pin.js></script>
+        <script src="~/scripts/mod/pin.js"></script>
+        <script src="~/scripts/mod/lock.js"></script>
     }
     @RenderSection("Scripts", required: false)
 </body>

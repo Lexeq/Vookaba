@@ -15,5 +15,7 @@
     delById: "искать по ID",
     daysShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
     pin_thread: "Закрепить",
-    unpin_thread: "Открепить"
+    unpin_thread: "Открепить",
+    lock_thread: "Закрыть",
+    unlock_thread: "Открыть"
 }

@@ -1,5 +1,4 @@
 ﻿#nullable enable
-using OakChan.Services.DbServices;
 using OakChan.Services.DTO;
 using System.Threading.Tasks;
 
@@ -46,5 +45,13 @@ namespace OakChan.Services
         /// <param name="threadId">ID треда.</param>
         /// <param name="isPinned">Флаг определяющий, является ли тред закрепленным.</param>
         public Task SetIsPinned(int threadId, bool isPinned);
+
+        /// <summary>
+        /// Управляет блокированием треда.
+        /// </summary>
+        /// <param name="threadId">ID тредв.</param>
+        /// <param name="isReadOnly">Флаг определяющий, является ли тред заблокированным.</param>
+        /// <returns></returns>
+        public Task SetIsReadOnly(int threadId, bool isReadOnly);
     }
 }

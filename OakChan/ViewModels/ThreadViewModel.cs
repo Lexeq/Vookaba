@@ -14,6 +14,8 @@ namespace OakChan.ViewModels
 
         public bool IsPinned { get; set; }
 
+        public bool IsReadOnly { get; set; }
+
         public IEnumerable<PostViewModel> Replies { get; set; }
     }
 }

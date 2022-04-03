@@ -15,6 +15,8 @@ namespace OakChan.ViewModels
 
         public bool IsPinned { get; set; }
 
+        public bool IsReadOnly { get; set; }
+
         public int PostsWithImageCount { get; set; }
 
         public PostViewModel OpPost { get; set; }

@@ -15,5 +15,7 @@
     delById: "with same ID",
     daysShort: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     pin_thread: "Pin",
-    unpin_thread: "Unpin"
+    unpin_thread: "Unpin",
+    lock_thread: "Lock",
+    unlock_thread: "Unlock"
 }

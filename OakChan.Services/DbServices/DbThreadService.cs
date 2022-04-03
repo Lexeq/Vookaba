@@ -193,5 +193,12 @@ namespace OakChan.Services.DbServices
             context.Attach(thread).Property(x => x.IsPinned).IsModified = true;
             return context.SaveChangesAsync();
         }
+
+        public Task SetIsReadOnly(int threadId, bool isReadOnly)
+        {
+            var thread = new Thread { Id = threadId, IsReadOnly = isReadOnly };
+            context.Attach(thread).Property(x => x.IsReadOnly).IsModified = true;
+            return context.SaveChangesAsync();
+        }
     }
 }
