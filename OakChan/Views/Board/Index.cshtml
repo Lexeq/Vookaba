@@ -8,9 +8,16 @@
 }
 <hr />
 <h2 class="board-name">@($"/{Model.Key}/ - {Model.Name}")</h2>
-
-<p class="switcher" tabindex="0" id="switcher" onclick="switchFormVisibility()" data-switched-text="@Localizer["Hide form"]">@Localizer["Create thread"]</p>
-<partial name="_ThreadCreationFormPartial" model="new ThreadFormViewModel()" />
+<div>
+    <div class="switcher"
+         tabindex="0"
+         id="switcher"
+         onclick="switchFormVisibility()"
+         data-switched-text="@Localizer["Hide form"]">
+        @Localizer["Create thread"]
+    </div>
+    <partial name="_ThreadCreationFormPartial" model="new ThreadFormViewModel()" />
+</div>
 <hr />
 <div class="threads-container" data-board="@Model.Key">
     @foreach (var thread in Model.Threads)
@@ -19,15 +26,7 @@
          class="thread"
          data-bid="@(thread.BoardKey)"
          data-tid="@(thread.ThreadId)">
-            @if (thread.IsPinned)
-            {
-                <partial name="_Pin" />
-            }
-            @if (thread.IsReadOnly)
-            {
-                <partial name="_Lock" />
-            }
-            <span class="thread__subject">@thread.Subject</span>
+            <partial name="_ThreadCaption" model="thread" />
             <partial name="_PostView" model="thread.OpPost" />
             <div class="to-thread">
                 @if (thread.PostsOmmited > 0)

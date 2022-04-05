@@ -3,19 +3,9 @@ using System.Linq;
 
 namespace OakChan.ViewModels
 {
-    public class ThreadPreviewViewModel
+    public class ThreadPreviewViewModel : ThreadViewModelBase
     {
-        public int ThreadId { get; set; }
-
-        public string BoardKey { get; set; }
-
         public int PostsCount { get; set; }
-
-        public string Subject { get; set; }
-
-        public bool IsPinned { get; set; }
-
-        public bool IsReadOnly { get; set; }
 
         public int PostsWithImageCount { get; set; }
 
