@@ -73,7 +73,7 @@ namespace OakChan.Tests.Integration.Services
             SeedData.FromResource("boards");
             var service = CreateBoardService();
 
-            var board = await service.GetBoardInfoAsync(key);
+            var board = await service.GetBoardAsync(key);
 
             Assert.NotNull(board);
             StringAssert.AreEqualIgnoringCase(key, board.Key);
@@ -84,9 +84,9 @@ namespace OakChan.Tests.Integration.Services
         {
             SeedData.FromResource("boards");
             var service = CreateBoardService();
-            BoardInfoDto result = null;
+            BoardDto result = null;
 
-            Assert.DoesNotThrow(() => result = service.GetBoardInfoAsync("x").Result);
+            Assert.DoesNotThrow(() => result = service.GetBoardAsync("x").Result);
             Assert.IsNull(result);
         }
 
@@ -113,7 +113,7 @@ namespace OakChan.Tests.Integration.Services
             SeedData.AddDefaults().AddThreads(threadsData).AddPosts(postsData);
             var service = CreateBoardService();
 
-            var threads = (await service.GetThreadPreviewsAsync("b", 0, 10, 1)).ToList();
+            var threads = (await service.GetThreadPreviewsAsync("b", 0, 10)).ToList();
 
             CollectionAssert.AreEqual(new[] { 2, 1, 3 }, threads.Select(p => p.ThreadId));
             Assert.AreEqual(3, threads.Count);
@@ -126,7 +126,7 @@ namespace OakChan.Tests.Integration.Services
             SeedData.AddDefaults();
             var service = CreateBoardService();
 
-            var result = (await service.GetThreadPreviewsAsync("b", 0, 10, 1)).ToList();
+            var result = (await service.GetThreadPreviewsAsync("b", 0, 10)).ToList();
 
             CollectionAssert.IsEmpty(result);
         }
@@ -142,13 +142,12 @@ namespace OakChan.Tests.Integration.Services
             SeedData.AddDefaults().AddThreads(threads);
             var service = CreateBoardService();
 
-            var result = (await service.GetThreadPreviewsAsync("b", 10, 10, 1)).ToList();
+            var result = (await service.GetThreadPreviewsAsync("b", 10, 10)).ToList();
 
             CollectionAssert.IsEmpty(result);
         }
 
         //TODO: Replace Json with TestCaseSource
-        [TestCase("postsorder1", 1, new int[] { })]
         [TestCase("postsorder1", 1, new int[] { })]
         [TestCase("postsorder2", 2, new int[] { 42 })]
         [TestCase("postsorder3", 4, new int[] { 77, 100 })]
@@ -158,11 +157,11 @@ namespace OakChan.Tests.Integration.Services
             SeedData.AddDefaults().FromResource(src);
             var service = CreateBoardService();
 
-            var threadPreview = (await service.GetThreadPreviewsAsync("b", 0, 10, 2)).First();
+            var threadPreview = (await service.GetThreadPreviewsAsync("b", 0, 10)).First();
 
             Assert.AreEqual(postsCount, threadPreview.TotalPostsCount);
             Assert.NotNull(threadPreview.Posts.First());
-            CollectionAssert.AreEqual(ids, threadPreview.Posts.Skip(1).Select(x => x.PostId));
+            Assert.AreEqual(ids.LastOrDefault(), threadPreview.Posts.Skip(1).Select(x => x.PostId).LastOrDefault());
         }
 
         [Test]
@@ -175,13 +174,12 @@ namespace OakChan.Tests.Integration.Services
             var service = CreateBoardService();
 
             await service.CreateBoardAsync(new BoardDto { Key = key, Name = name, BumpLimit = bumps });
-            var bi = await service.GetBoardInfoAsync(key);
+            var board = await service.GetBoardAsync(key);
 
-            Assert.NotNull(bi);
-            Assert.AreEqual(0, bi.ThreadsCount);
-            Assert.AreEqual(key, bi.Key);
-            Assert.AreEqual(name, bi.Name);
-            Assert.AreEqual(bumps, bi.BumpLimit);
+            Assert.NotNull(board);
+            Assert.AreEqual(key, board.Key);
+            Assert.AreEqual(name, board.Name);
+            Assert.AreEqual(bumps, board.BumpLimit);
         }
 
         [Test]
@@ -267,7 +265,7 @@ namespace OakChan.Tests.Integration.Services
                 BumpLimit = 100,
                 IsDisabled = true
             });
-            var board = await service.GetBoardInfoAsync("b");
+            var board = await service.GetBoardAsync("b");
 
             Assert.AreEqual("b", board.Key);
             Assert.AreEqual("new", board.Name);

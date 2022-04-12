@@ -12,6 +12,7 @@ using OakChan.Controllers.Base;
 using OakChan.Services;
 using OakChan.Services.DTO;
 using OakChan.ViewModels;
+using BoardConsts = OakChan.Common.OakConstants.BoardConstants;
 
 namespace OakChan.Controllers
 {
@@ -41,36 +42,35 @@ namespace OakChan.Controllers
             this.logger = logger;
         }
 
-        public async Task<IActionResult> Index(string board, int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index([FromRoute(Name = "board")] string boardKey, int page = 1)
         {
             if (page < 1)
             {
-                return PageNotFound(board, page);
+                return PageNotFound(boardKey, page);
             }
 
-            BoardInfoDto boardInfo = await boardService.GetBoardInfoAsync(board);
+            var board = await boardService.GetBoardAsync(boardKey);
 
-            if (boardInfo == null ||
-                boardInfo.IsDisabled && !User.IsInRole(OakConstants.Roles.Administrator))
+            if (board == null ||
+                board.IsDisabled && !User.IsInRole(OakConstants.Roles.Administrator))
             {
-                return BoardDoesNotExist(board);
+                return BoardDoesNotExist(boardKey);
             }
 
-            pageSize = CoercePageSize(pageSize);
-            var offset = (page - 1) * pageSize;
-            var pagesCount = Math.Max(1, (int)Math.Ceiling((double)boardInfo.ThreadsCount / pageSize));
+            var offset = (page - 1) * BoardConsts.PageSize;
+            var threads = await boardService.GetThreadPreviewsAsync(board.Key, offset, BoardConsts.PageSize);
+            var pagesCount = Math.Max(1, (int)Math.Ceiling((double)threads.TotalCount / BoardConsts.PageSize));
 
-            if (offset >= boardInfo.ThreadsCount && page != 1)
+            if (threads.CurrentItems?.Count == 0 && page != 1)
             {
-                return PageNotFound(board, page);
+                return PageNotFound(boardKey, page);
             }
 
-            var threads = await boardService.GetThreadPreviewsAsync(boardInfo.Key, offset, pageSize, 2);
 
             var vm = new BoardPageViewModel
             {
-                Key = board,
-                Name = boardInfo.Name,
+                Key = boardKey,
+                Name = board.Name,
                 Threads = mapper.Map<IEnumerable<ThreadPreviewViewModel>>(threads),
                 PagesInfo = new PaginatorViewModel
                 {
@@ -129,7 +129,7 @@ namespace OakChan.Controllers
             {
                 return BadRequest();
             }
-            var board = await boardService.GetBoardInfoAsync(boardKey);
+            var board = await boardService.GetBoardAsync(boardKey);
             if (board == null)
             {
                 return Error(404, $"Board '{boardKey}' not found.");
@@ -250,13 +250,6 @@ namespace OakChan.Controllers
         private IActionResult PageNotFound(string board, int page)
         {
             return Error(404, localizer["Not found"], localizer["Page {0} does not exist on board /{1}/.", page, board]);
-        }
-
-        private int CoercePageSize(int pageSize)
-        {
-            const int minValue = 5;
-            const int maxValue = 50;
-            return Math.Min(Math.Max(minValue, pageSize), maxValue);
         }
     }
 }

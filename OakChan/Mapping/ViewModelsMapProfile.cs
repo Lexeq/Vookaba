@@ -80,10 +80,9 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.Key, opt => opt.MapFrom(vm => vm.BoardKey))
                 .ReverseMap();
 
-            CreateMap<BoardInfoDto, BoardPropertiesViewModel>()
+            CreateMap<BoardDto, BoardPropertiesViewModel>()
                 .ForMember(vm => vm.BoardKey, opt => opt.MapFrom(dto => dto.Key))
-                .ReverseMap()
-                .ForMember(dto => dto.ThreadsCount, opt => opt.Ignore());
+                .ReverseMap();
         }
     }
 }

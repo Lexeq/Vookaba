@@ -38,16 +38,6 @@ namespace OakChan.Services.Mapping
                 .ForMember(dto => dto.TotalPostsCount, opt => opt.MapFrom(thread => thread.PostsCount))
                 .ForMember(dto => dto.PostsWithImageCount, opt => opt.MapFrom(thread => thread.PostsWithAttachmentnsCount));
 
-            CreateMap<Thread, ThreadBoardAggregationDto>()
-                .ForMember(dto => dto.Thread, opt => opt.MapFrom(thread => thread))
-                .ForMember(dto => dto.Board, opt => opt.MapFrom(thread => thread.Board));
-
-            CreateMap<Board, BoardInfoDto>()
-                .ForMember(dto => dto.Name, opt => opt.MapFrom(b => b.Name))
-                .ForMember(dto => dto.Key, opt => opt.MapFrom(b => b.Key))
-                .ForMember(dto => dto.ThreadsCount, opt => opt.MapFrom(b => b.Threads.Count()))
-                .ForMember(dto => dto.IsDisabled, opt => opt.MapFrom(b => b.IsDisabled));
-
             CreateMap<Image, ImageDto>()
                 .ForMember(dto => dto.ImageId, opt => opt.MapFrom(img => img.Id))
                 .ForMember(dto => dto.Size, opt => opt.MapFrom(img => img.FileSize));
@@ -69,7 +59,8 @@ namespace OakChan.Services.Mapping
 
             CreateMap<BoardDto, Board>()
                 .ForMember(b => b.Threads, opt => opt.Ignore())
-                .ForMember(b => b.Key, opt => opt.MapFrom(dto => dto.Key.ToLowerInvariant()));
+                .ForMember(b => b.Key, opt => opt.MapFrom(dto => dto.Key.ToLowerInvariant()))
+                .ReverseMap();
 
             CreateMap<ModAction, ModLogDto>();
 

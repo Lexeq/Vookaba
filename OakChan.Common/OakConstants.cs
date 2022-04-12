@@ -31,6 +31,9 @@
             public const int DefaultBumpLimit = 250;
             public const int MaxKeyLength = 10;
             public const int MaxNameLength = 64;
+
+            public const int PageSize = 10;
+            public const int RecentRepliesShow = 20;
         }
 
         public static class Roles

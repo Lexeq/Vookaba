@@ -39,7 +39,7 @@ namespace OakChan.Controllers
         public async Task<IActionResult> Index(string board, int thread)
         {
             var showAll = User.IsInRole(OakConstants.Roles.Administrator);
-            var boardDto = await boards.GetBoardInfoAsync(board);
+            var boardDto = await boards.GetBoardAsync(board);
             if (boardDto?.IsDisabled == false || showAll)
             {
                 var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
@@ -62,7 +62,7 @@ namespace OakChan.Controllers
             {
                 var threadData = mapper.Map<ThreadCreationDto>(opPost);
 
-                var boardInfo = await boards.GetBoardInfoAsync(board);
+                var boardInfo = await boards.GetBoardAsync(board);
                 if (boardInfo == null || boardInfo.IsDisabled)
                 {
                     logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)} to {nameof(CreateThreadAsync)}. Bad board key {board}");
@@ -87,7 +87,7 @@ namespace OakChan.Controllers
         {
             if (ModelState.IsValid)
             {
-                var boardDto = await boards.GetBoardInfoAsync(board);
+                var boardDto = await boards.GetBoardAsync(board);
                 if (boardDto?.IsDisabled == false)
                 {
                     var threadDto = await threads.GetThreadInfoAsync(boardDto.Key, thread);

@@ -18,6 +18,8 @@ namespace OakChan.ViewModels
 
         public bool IsDisabled { get; set; }
 
+        public bool IsReadOnly { get; set; }
+
         public int BumpLimit { get; set; }
     }
 }

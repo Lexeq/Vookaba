@@ -34,27 +34,21 @@ namespace OakChan.Services.DbServices
             this.logger = logger;
         }
 
-        public async Task<BoardInfoDto> GetBoardInfoAsync(string boardKey)
+        public async Task<BoardDto> GetBoardAsync(string boardKey)
         {
             throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
             var board = await context.Boards
                 .AsNoTracking()
                 .Where(b => EF.Functions.ILike(b.Key, boardKey))
-                .Select(b => new { Board = b, Count = b.Threads.Count() })
                 .FirstOrDefaultAsync();
 
-            if (board == null)
-            {
-                return null;
-            }
-
-            var dto = mapper.Map<BoardInfoDto>(board.Board);
-            dto.ThreadsCount = board.Count;
+            var dto = mapper.Map<BoardDto>(board);
             return dto;
         }
 
-        public async Task<IEnumerable<ThreadPreviewDto>> GetThreadPreviewsAsync(string boardKey, int offset, int count, int recentPostsCount)
+
+        public async Task<PartialList<ThreadPreviewDto>> GetThreadPreviewsAsync(string boardKey, int offset, int count)
         {
             if (offset < 0) throw new ArgumentException("Offset must not be less than 0.", nameof(offset));
             if (count <= 0) throw new ArgumentException("Count must be greater than 0.", nameof(count));
@@ -68,31 +62,31 @@ namespace OakChan.Services.DbServices
                 .AsNoTracking()
                 .ToListAsync();
 
-            if (!threadsOnPage.Any())
+            var totalCount = context.Threads.Count(t => t.BoardKey == boardKey);
+
+            var result = new PartialList<ThreadPreviewDto> { TotalCount = totalCount };
+
+            if (threadsOnPage.Any())
             {
-                return Enumerable.Empty<ThreadPreviewDto>();
+                var threadIds = threadsOnPage.Select(t => t.Id);
+
+                var posts = (await GetFirstAndLastPostsQuery(threadIds, Common.OakConstants.BoardConstants.RecentRepliesShow)
+                    .Include(p => p.Attachments)
+                    .AsNoTracking()
+                    .ToListAsync())
+                    .GroupBy(p => p.ThreadId)
+                    .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Number).ToList());
+
+                threadsOnPage.ForEach(t => t.Posts = posts[t.Id]);
             }
 
-            var threadIds = threadsOnPage.Select(t => t.Id);
-
-            var posts = (await GetFirstAndLastPostsQuery(threadIds, recentPostsCount)
-                .Include(p => p.Attachments)
-                .AsNoTracking()
-                .ToListAsync())
-                .GroupBy(p => p.ThreadId)
-                .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Number).ToList());
-
-            return threadsOnPage.Select(t =>
-            {
-                var dto = mapper.Map<ThreadPreviewDto>(t);
-                dto.Posts = mapper.Map<IEnumerable<PostDto>>(posts[t.Id]);
-                return dto;
-            });
+            result.CurrentItems = mapper.Map<List<ThreadPreviewDto>>(threadsOnPage);
+            return result;
         }
 
-        public async Task<IEnumerable<BoardInfoDto>> GetBoardsAsync(bool showAll)
+        public async Task<IEnumerable<BoardDto>> GetBoardsAsync(bool showAll)
         {
-            return await mapper.ProjectTo<BoardInfoDto>(context.Boards)
+            return await mapper.ProjectTo<BoardDto>(context.Boards)
                 .Where(b => showAll || !(b.IsHidden || b.IsDisabled))
                 .OrderBy(b => b.Key)
                 .AsNoTracking()

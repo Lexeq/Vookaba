@@ -8,6 +8,8 @@ namespace OakChan.ViewModels
 
         public string Name { get; set; }
 
+        public bool IsReadOnly { get; set; }
+
         public IEnumerable<ThreadPreviewViewModel> Threads { get; set; }
 
         public PaginatorViewModel PagesInfo { get; set; }
