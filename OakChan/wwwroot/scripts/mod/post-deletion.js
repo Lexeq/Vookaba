@@ -119,7 +119,7 @@ function showDeletingModal(board, num, level) {
                 }
             })
             .then(response => {
-                if (area == 0 && !$('#pc' + num).hasClass('oppost')) {
+                if (area == 0 && !$('#p' + num).hasClass('oppost')) {
                     $('#pc' + num).remove();
                     showNotification(getLocalizedString('postDeleted'));
                 }

@@ -13,6 +13,7 @@
     delAll: "все посты автора",
     delByIp: "искать по IP",
     delById: "искать по ID",
+    postDeleted: "Удалено",
     daysShort: ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
     pin_thread: "Закрепить",
     unpin_thread: "Открепить",
