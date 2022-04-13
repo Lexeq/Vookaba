@@ -23,7 +23,7 @@ namespace OakChan.Services.DbServices
             this.mapper = mapper;
         }
 
-        public Task<IEnumerable<ThreadPreviewDto>> GetTopThreadsByLastPostAsync(int limit)
+        public Task<IEnumerable<ThreadPreviewDto>> GetLastRepliedThreadsAsync(int limit)
         {
             var threads = context.Threads
                .FromSqlRaw("SELECT * FROM public.\"last_bumped_threads_per_board\"")
@@ -34,7 +34,7 @@ namespace OakChan.Services.DbServices
             return LoadThreadPreviews(threads);
         }
 
-        public Task<IEnumerable<ThreadPreviewDto>> GetTopThreadsByCreationTimeAsync(int limit)
+        public Task<IEnumerable<ThreadPreviewDto>> GetLastCreatedThreadsAsync(int limit)
         {
             var threads = context.Threads
                 .FromSqlRaw("SELECT * FROM public.\"last_created_threads_per_board\"")
@@ -47,18 +47,12 @@ namespace OakChan.Services.DbServices
 
         private async Task<IEnumerable<ThreadPreviewDto>> LoadThreadPreviews(IQueryable<Thread> queryableThreads)
         {
-            var threads = await queryableThreads.AsNoTracking().ToListAsync();
+            var threads = await queryableThreads
+                .Include(t => t.Posts.Where(x => x.IsOP).Take(1))
+                .ThenInclude(p => p.Attachments)
+                .ToArrayAsync();
 
-            var posts = await context.Posts
-                .Include(p => p.Attachments)
-                .Where(p => threads.Select(t => t.Id).Contains(p.ThreadId) && p.IsOP)
-                .ToListAsync();
-
-            return mapper.Map<IEnumerable<ThreadPreviewDto>>(threads.Select(t =>
-                {
-                    t.Posts = new[] { posts.First(p => p.ThreadId == t.Id) };
-                    return t;
-                }));
+            return mapper.Map<IEnumerable<ThreadPreviewDto>>(threads);
         }
     }
 }

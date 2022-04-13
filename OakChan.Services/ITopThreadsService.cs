@@ -11,13 +11,13 @@ namespace OakChan.Services
         /// </summary>
         /// <remarks>Учитываютяся только посты до бамплимита.</remarks>
         /// <param name="limit">Количество досок.</param>
-        public Task<IEnumerable<ThreadPreviewDto>> GetTopThreadsByLastPostAsync(int limit);
+        public Task<IEnumerable<ThreadPreviewDto>> GetLastRepliedThreadsAsync(int limit);
 
         /// <summary>
         /// Возвращает для каждой доски последний созданный тред.
         /// </summary>
         /// <remarks>Учитываютяся только посты до бамплимита.</remarks>
         /// <param name="limit">Количество досок.</param>
-        public Task<IEnumerable<ThreadPreviewDto>> GetTopThreadsByCreationTimeAsync(int limit);
+        public Task<IEnumerable<ThreadPreviewDto>> GetLastCreatedThreadsAsync(int limit);
     }
 }

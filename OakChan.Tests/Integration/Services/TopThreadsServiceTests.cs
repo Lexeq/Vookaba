@@ -44,7 +44,7 @@ namespace OakChan.Tests.Integration.Services
 
             TopThreadsService service = CreateService();
 
-            var x = (await service.GetTopThreadsByLastPostAsync(3)).ToList();
+            var x = (await service.GetLastRepliedThreadsAsync(3)).ToList();
 
             Assert.IsNotNull(x);
             Assert.AreEqual(2, x.Count);
@@ -73,7 +73,7 @@ namespace OakChan.Tests.Integration.Services
 
             TopThreadsService service = CreateService();
 
-            var x = (await service.GetTopThreadsByLastPostAsync(3)).ToList();
+            var x = (await service.GetLastRepliedThreadsAsync(3)).ToList();
 
             Assert.IsNotNull(x);
             Assert.AreEqual(0, x.Count);
@@ -110,7 +110,7 @@ namespace OakChan.Tests.Integration.Services
             SeedData.AddTokens(SeedData.DefaultToken).AddThreads(threads);
             TopThreadsService service = CreateService();
 
-            var result = (await service.GetTopThreadsByLastPostAsync(2)).ToList();
+            var result = (await service.GetLastRepliedThreadsAsync(2)).ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(subj, result[0].Subject);
@@ -149,7 +149,7 @@ namespace OakChan.Tests.Integration.Services
 
             TopThreadsService service = CreateService();
 
-            var x = (await service.GetTopThreadsByCreationTimeAsync(3)).ToList();
+            var x = (await service.GetLastCreatedThreadsAsync(3)).ToList();
 
             Assert.IsNotNull(x);
             Assert.AreEqual(2, x.Count);
@@ -193,8 +193,8 @@ namespace OakChan.Tests.Integration.Services
         {
             public static IEnumerable<MethodCaller> Foo(int limit)
             {
-                yield return serv => serv.GetTopThreadsByLastPostAsync(limit);
-                yield return serv => serv.GetTopThreadsByCreationTimeAsync(limit);
+                yield return serv => serv.GetLastRepliedThreadsAsync(limit);
+                yield return serv => serv.GetLastCreatedThreadsAsync(limit);
             }
         }
 
