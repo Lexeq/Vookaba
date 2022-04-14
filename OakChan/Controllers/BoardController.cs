@@ -71,6 +71,7 @@ namespace OakChan.Controllers
             {
                 Key = boardKey,
                 Name = board.Name,
+                IsReadOnly = board.IsReadOnly,
                 Threads = mapper.Map<IEnumerable<ThreadPreviewViewModel>>(threads),
                 PagesInfo = new PaginatorViewModel
                 {

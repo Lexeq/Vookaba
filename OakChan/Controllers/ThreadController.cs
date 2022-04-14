@@ -38,14 +38,15 @@ namespace OakChan.Controllers
 
         public async Task<IActionResult> Index(string board, int thread)
         {
-            var showAll = User.IsInRole(OakConstants.Roles.Administrator);
+            var isAdmin = UserRole == OakConstants.Roles.Administrator;
             var boardDto = await boards.GetBoardAsync(board);
-            if (boardDto?.IsDisabled == false || showAll)
+            if (boardDto?.IsDisabled == false || isAdmin)
             {
                 var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
                 if (threadDto != null)
                 {
                     var vm = mapper.Map<ThreadViewModel>(threadDto);
+                    vm.IsReadOnly |= boardDto.IsReadOnly;
                     return View(vm);
                 }
             }
@@ -60,15 +61,14 @@ namespace OakChan.Controllers
         {
             if (ModelState.IsValid)
             {
-                var threadData = mapper.Map<ThreadCreationDto>(opPost);
-
                 var boardInfo = await boards.GetBoardAsync(board);
-                if (boardInfo == null || boardInfo.IsDisabled)
+                if (boardInfo == null || boardInfo.IsDisabled || boardInfo.IsReadOnly)
                 {
                     logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)} to {nameof(CreateThreadAsync)}. Bad board key {board}");
-
                     return BadRequest();
                 }
+                var threadData = mapper.Map<ThreadCreationDto>(opPost);
+
                 var t = await threads.CreateThreadAsync(boardInfo.Key, threadData);
                 return RedirectToRoute("thread", new { Board = boardInfo.Key, Thread = t.ThreadId });
             }
@@ -88,7 +88,7 @@ namespace OakChan.Controllers
             if (ModelState.IsValid)
             {
                 var boardDto = await boards.GetBoardAsync(board);
-                if (boardDto?.IsDisabled == false)
+                if (boardDto != null && !boardDto.IsDisabled && !boardDto.IsReadOnly)
                 {
                     var threadDto = await threads.GetThreadInfoAsync(boardDto.Key, thread);
                     if (threadDto != null && !threadDto.IsReadOnly)

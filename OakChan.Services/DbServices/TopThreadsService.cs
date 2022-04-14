@@ -27,7 +27,6 @@ namespace OakChan.Services.DbServices
         {
             var threads = context.Threads
                .FromSqlRaw("SELECT * FROM public.\"last_bumped_threads_per_board\"")
-               .Where(t => !(t.Board.IsDisabled || t.Board.IsHidden))
                .OrderByDescending(t1 => t1.LastBump)
                .Take(limit);
 
@@ -38,7 +37,6 @@ namespace OakChan.Services.DbServices
         {
             var threads = context.Threads
                 .FromSqlRaw("SELECT * FROM public.\"last_created_threads_per_board\"")
-                .Where(t => !(t.Board.IsDisabled || t.Board.IsHidden))
                 .OrderByDescending(t1 => t1.Created)
                 .Take(limit);
 
