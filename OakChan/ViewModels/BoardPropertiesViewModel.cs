@@ -20,6 +20,6 @@ namespace OakChan.ViewModels
 
         public bool IsReadOnly { get; set; }
 
-        public int BumpLimit { get; set; }
+        public int BumpLimit { get; set; } = OakConstants.BoardConstants.DefaultBumpLimit;
     }
 }

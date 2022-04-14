@@ -87,10 +87,7 @@ namespace OakChan.Controllers
         [Route("board/create", Name = "createBoard")]
         public IActionResult Create()
         {
-            return View(new BoardPropertiesViewModel
-            {
-                BumpLimit = OakConstants.BoardConstants.DefaultBumpLimit
-            });
+            return View(new BoardPropertiesViewModel());
         }
 
         [HttpPost]
