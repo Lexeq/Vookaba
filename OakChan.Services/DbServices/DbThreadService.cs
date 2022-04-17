@@ -19,7 +19,7 @@ namespace OakChan.Services.DbServices
 {
     public class DbThreadService : IThreadService
     {
-        private static string GetThreadSubject(ThreadCreationDto threadCreation)
+        private static string GetThreadSubjectFromMesage(ThreadCreationDto threadCreation)
         {
             if (!string.IsNullOrEmpty(threadCreation.Subject))
             {
@@ -43,8 +43,7 @@ namespace OakChan.Services.DbServices
                 }
                 else
                 {
-                    var closing = message.IndexOf('>', i);
-                    i = closing;
+                    i = message.IndexOf('>', i + 1);
                 }
             }
             return builder.ToString();
@@ -99,9 +98,8 @@ namespace OakChan.Services.DbServices
             throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
             throwHelper.ThrowIfNull(threadDto, nameof(threadDto));
 
-            var thread = new Thread { BoardKey = boardKey, Subject = GetThreadSubject(threadDto) };
-
             var post = await CreatePostEntityAsync(threadDto.OpPost);
+            var thread = new Thread { BoardKey = boardKey, Subject = GetThreadSubjectFromMesage(threadDto) };
             post.IsOP = true;
             post.Thread = thread;
 
