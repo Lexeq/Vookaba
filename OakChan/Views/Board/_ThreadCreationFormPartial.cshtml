@@ -1,27 +1,34 @@
 ﻿@model OakChan.ViewModels.ThreadFormViewModel
 
-<div class="creation-form" id="form">
-    <div class="preview-container">
-        <div>
-            <img id="preview-img" class="preview-imgage" />
-        </div>
+<div id="form"
+     class="posting-form__wrapper"
+     style="display: none;">
+    <div class="posting-form__img-preview">
+        <img id="preview-img" class="preview-imgage" />
     </div>
     <form id="posting-form"
-          class="posting-form"
           method="post"
           enctype="multipart/form-data"
           asp-route="createThread"
           asp-route-board="@Context.Request.RouteValues["board"]">
-        <div class="grid">
-            <label asp-for="Subject">@Localizer["Subject"]</label>
-            <input asp-for="Subject" autocomplete="off" />
-            <label asp-for="Name">@Localizer["Name"]</label>
-            <input asp-for="Name" autocomplete="off" />
+        <div class="posting-form__fields">
+            <label asp-for=Subject>@Localizer["Subject"]</label>
+            <input asp-for=Subject autocomplete="off" />
+            <label asp-for=Name>@Localizer["Name"]</label>
+            <input asp-for=Name autocomplete="off" />
         </div>
-        <textarea class="form-control" rows="4" id="form-msg" asp-for="Text"></textarea>
-        <div class="buttons-row">
+        <textarea id="message-text"
+                  asp-for=Text
+                  class="posting-form__text-editor"
+                  rows="4"></textarea>
+        <div class="posting-form__buttons-row">
             <div class="fake-button">
-                <input class="hidden-input" id="post-img" accept=".gif,.jpg,.png,.jpeg" type="file" asp-for="Image" onchange="loadImagePreview(this.files)" />
+                <input class="hidden-input"
+                       id="post-img"
+                       accept=".gif,.jpg,.png,.jpeg"
+                       type="file"
+                       asp-for="Image"
+                       onchange="loadImagePreview(this.files)" />
                 <label for="post-img">@Localizer["Image"]</label>
             </div>
             <button class="oakbutton" type="submit">@Localizer["Create"]</button>

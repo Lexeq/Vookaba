@@ -66,15 +66,18 @@ function subscribeReplyOnClick() {
 }
 
 function reply(postNumber) {
-    let input = document.getElementById('form-msg');
+    let input = document.getElementById('message-text');
     let text = '>>' + postNumber + ' ';
-    let sel = window.getSelection();
+    let sel = document.getSelection();
 
-    if (sel && sel.anchorNode == sel.focusNode && document.getElementById("m" + postNumber).contains(sel.anchorNode)) {
-        text += '\n' + document.getSelection();
+    let id1 = $(sel.anchorNode).closest('.post__message').attr('id');
+    let id2 = $(sel.focusNode).closest('.post__message').attr('id');
+
+    if (!sel.isCollapsed && id1 == id2 && id1 == "m" + postNumber) {
+        text += '\n>' + sel;
     }
     text += '\n';
-    if (document.getElementById('form').style.display == '') {
+    if ($('#form').css('display') == 'none') {
         switchFormVisibility();
     }
     input.value += text;
@@ -92,14 +95,14 @@ function loadImagePreview(files) {
         reader.readAsDataURL(files[0]);
     }
     else {
-        img.src = "#";
+        img.removeAttribute('src');
         img.style.display = '';
     }
 }
 
 function switchFormVisibility() {
     let form = document.getElementById("form");
-    form.style.display = form.style.display ? '' : 'block';
+    form.style.display = form.style.display ? '' : 'none';
     let switcher = document.getElementById("switcher");
     let newText = switcher.dataset.switchedText;
     switcher.dataset.switchedText = switcher.textContent;
