@@ -111,12 +111,11 @@
     width: 100%;
     max-width: 250px;
     display: flex;
-    justify-content: space-between;
     margin: 0px 0px 2px;
 }
 
     .post__file-size span {
-        margin: 0px 5px 0px 0px;
+        margin-right: 5px;
         overflow: hidden;
         white-space: nowrap;
     }
