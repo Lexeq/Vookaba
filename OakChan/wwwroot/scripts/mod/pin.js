@@ -32,5 +32,15 @@ function pinThread(board, thread, pin) {
             "RequestVerificationToken": antiforgery
         },
         body: `pin=${pin}`
-    }).then(() => window.location.reload());
+    })
+        .then(response => {
+            if (response.status >= 200 && response.status < 300) {
+                window.location.reload();
+            } else {
+                let error = new Error(response.statusText);
+                error.response = response;
+                throw error
+            }
+        })
+        .catch(er => showNotification(er, true));
 }

@@ -128,7 +128,7 @@ function showDeletingModal(board, num, level) {
                 }
             })
             .catch(er => {
-                showNotification(er);
+                showNotification(er, true);
                 console.error(er);
             })
     });
