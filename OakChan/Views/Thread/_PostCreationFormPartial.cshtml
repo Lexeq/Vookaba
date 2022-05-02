@@ -1,18 +1,16 @@
 ﻿@model OakChan.ViewModels.PostFormViewModel
 
-<div id="form"
-     class="posting-form__wrapper"
-     style="display: none;">
-    <div class="posting-form__img-preview">
-        <img id="preview-img" class="preview-imgage" />
-    </div>
-    <form id="posting-form"
-          method="post"
-          enctype="multipart/form-data"
-          asp-route="threadAction"
-          asp-route-board="@Context.Request.RouteValues["board"]"
-          asp-route-thread="@Context.Request.RouteValues["thread"]"
-          asp-route-action="CreatePost">
+<form id="posting-form"
+      class="posting-form"
+      style="display: none;"
+      method="post"
+      enctype="multipart/form-data"
+      asp-route="threadAction"
+      asp-route-board="@Context.Request.RouteValues["board"]"
+      asp-route-thread="@Context.Request.RouteValues["thread"]"
+      asp-route-action="CreatePost">
+    @Html.EditorFor(x => x.Image, "ImageSelector")
+    <div>
         <div class="posting-form__fields">
             <label asp-for="Name"></label>
             <input asp-for="Name" autocomplete="off" />
@@ -29,18 +27,7 @@
                   class="posting-form__text-editor"
                   rows="4"></textarea>
         <partial name="_MarkupButtonsPartial" />
-        <div class="posting-form__buttons-row">
-            <div class="fake-button">
-                <input class="hidden-input"
-                       id="post-img"
-                       accept=".gif,.jpg,.png,.jpeg"
-                       type="file"
-                       asp-for="Image"
-                       onchange="loadImagePreview(this.files)" />
-                <label for="post-img">@Localizer["Image"] </label>
-            </div>
-            <button class="oakbutton" type="submit">@Localizer["Create"]</button>
-        </div>
+        <button class="oakbutton" type="submit">@Localizer["Create"]</button>
         <div class="form-row error-list" asp-validation-summary="All"></div>
-    </form>
-</div>
+    </div>
+</form>

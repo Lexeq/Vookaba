@@ -1,9 +1,12 @@
-﻿window.onload = () => {
+﻿$(document).ready(() => {
     subscribeImageOnClick();
     subscribeFullSizeOnClick();
     subscribeReplyOnClick();
     buildRefMap();
-}
+    if ($('#attachment-input').val()) {
+        loadImagePreview($('#attachment-input').prop('files'));
+    }
+})
 
 function subscribeFullSizeOnClick() {
     function toFullSize(e) {
@@ -85,23 +88,48 @@ function reply(postNumber) {
 }
 
 function loadImagePreview(files) {
-    let img = document.getElementById("preview-img");
+    let img = document.getElementById("attachment-thumbnail");
     if (files && files[0]) {
         let reader = new FileReader();
         reader.onload = function (e) {
             img.src = e.target.result;
-            img.style.display = "block";
         }
         reader.readAsDataURL(files[0]);
     }
     else {
-        img.removeAttribute('src');
-        img.style.display = '';
+        clearImagePreview();
     }
 }
 
+function attachmentLoaded(img) {
+    $('#attachment-selector').hide();
+    let shrinkRatio = Math.max(img.naturalHeight / 130, img.naturalWidth / 100);
+    $('#attachment-info')
+        .width(img.naturalWidth / shrinkRatio)
+        .height(img.naturalHeight / shrinkRatio)
+        .show();
+    $('#attachment-resolution').text(img.naturalWidth + "x" + img.naturalHeight);
+    let fileSize = $('#attachment-input').prop('files')[0].size;
+    $('#attachment-size').text(Math.ceil(fileSize / 1024) + getLocalizedString('KB'));
+
+}
+
+function attachmentLoadFailed() {
+    clearAttachment();
+    showNotification(getLocalizedString('Bad image.'), true);
+}
+
+function clearAttachment() {
+    $('#attachment-selector').show();
+    $('#attachment-input').val('');
+    $('#attachment-thumbnail').removeAttr('src');
+    $('#attachment-resolution').text('');
+    $('#attachment-size').text('');
+    $('#attachment-info').hide();
+}
+
 function switchFormVisibility() {
-    let form = document.getElementById("form");
+    let form = document.getElementById("posting-form");
     form.style.display = form.style.display ? '' : 'none';
     let switcher = document.getElementById("switcher");
     let newText = switcher.dataset.switchedText;

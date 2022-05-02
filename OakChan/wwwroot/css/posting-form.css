@@ -1,42 +1,84 @@
-﻿.posting-form__wrapper {
+﻿.posting-form {
     display: flex;
-    flex-wrap: wrap-reverse;
+    flex-wrap: wrap;
+    justify-content: center;
     width: 80%;
     max-width: 550px;
-    min-width: 300px;
     margin: 5px auto;
 }
 
-    .posting-form__wrapper form {
-        box-sizing: border-box;
-        flex-grow: 1;
-    }
-
-.posting-form__img-preview {
+.posting-form__fields {
     box-sizing: border-box;
-    width: 100px;
-    margin-right: 4px;
+    flex-grow: 1;
+    min-width: 350px;
 }
 
-    .posting-form__img-preview img {
+.posting-form__attachment {
+    box-sizing: border-box;
+    width: 100px;
+    margin: 0 4px 4px;
+}
+
+    .posting-form__attachment img {
         box-sizing: border-box;
         max-width: 100px;
         max-height: 130px;
-        display: none;
     }
 
-.posting-form__fields {
+    .posting-form__attachment input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+.attachment-selector {
+    height: 100px;
+}
+
+    .attachment-selector label {
+        height: 100%;
+        width: 100%;
+        min-width: initial;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        box-sizing: border-box;
+        border-width: thin;
+    }
+
+#attachment-info {
+    position: relative;
+    font-size: 0.7em;
+    display: none;
+}
+
+    #attachment-info button {
+        position: absolute;
+        background-color: white;
+        color: black;
+        opacity: 0.75;
+        top: 2px;
+        right: 2px;
+        width: 18px;
+        height: 18px;
+        padding: 0;
+        font-size: 11px;
+        box-sizing: border-box;
+        padding: 0;
+        border: none;
+        border-radius: 2px;
+        font-weight: 700;
+    }
+
+.posting-form__grid {
     display: grid;
     grid-template-columns: fit-content(35%) 1fr;
     gap: 5px;
     margin-bottom: 5px;
-}
-
-.posting-form__buttons-row {
-    display: flex;
-    align-content: stretch;
-    justify-content: space-between;
-    margin-top: 3px;
 }
 
 .posting-form__text-editor {
