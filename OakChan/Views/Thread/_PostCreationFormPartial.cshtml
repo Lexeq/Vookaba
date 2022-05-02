@@ -12,14 +12,16 @@
     @Html.EditorFor(x => x.Image, "ImageSelector")
     <div>
         <div class="posting-form__fields">
-            <label asp-for="Name"></label>
-            <input asp-for="Name" autocomplete="off" />
-            <span>@Localizer["Options:"] </span>
-            <div class="options">
-                <input asp-for=IsSaged />
-                <label asp-for=IsSaged></label>
-                <input asp-for=OpMark />
-                <label asp-for=OpMark></label>
+            <div class="posting-form__grid">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" autocomplete="off" />
+                <span>@Localizer["Options:"] </span>
+                <div class="options">
+                    <input asp-for=IsSaged />
+                    <label asp-for=IsSaged></label>
+                    <input asp-for=OpMark />
+                    <label asp-for=OpMark></label>
+                </div>
             </div>
         </div>
         <textarea id="message-text"

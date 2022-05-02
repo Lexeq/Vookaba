@@ -33,7 +33,7 @@
             public const int MaxNameLength = 64;
 
             public const int PageSize = 10;
-            public const int RecentRepliesShow = 20;
+            public const int RecentRepliesShow = 2;
         }
 
         public static class Roles
