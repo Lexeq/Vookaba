@@ -13,7 +13,7 @@
          class="@string.Join(" ", PostClasses.GetClasses(Model, usid))">
 
         <div class="post__details">
-            @Html.EditorFor(x=>x, "PostAuthor")
+            @Html.DisplayFor(x=>x, "PostAuthor")
             <span class="post__date" data-timestamp="@Model.Date.GetUnixEpochOffset()">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss") UTC</span>
             <span class="post__number" data-pnum="@Model.Number">
                 <a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a>
