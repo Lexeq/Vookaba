@@ -49,7 +49,7 @@ namespace OakChan.Common.Exceptions
         {
             if (typeof(T).IsDefined(typeof(FlagsAttribute)))
             {
-                if (value.ToString().All(char.IsDigit))
+                if (!value.IsValidFlagCombination())
                 {
                     throw new ArgumentException("Invalid combination of flags.");
                 }
