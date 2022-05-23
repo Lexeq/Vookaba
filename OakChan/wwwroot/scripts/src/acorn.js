@@ -80,7 +80,7 @@ function reply(postNumber) {
         text += '\n>' + sel;
     }
     text += '\n';
-    if ($('#form').css('display') == 'none') {
+    if ($('#posting-form').css('display') == 'none') {
         switchFormVisibility();
     }
     input.value += text;

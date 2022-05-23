@@ -344,7 +344,7 @@ namespace OakChan.Areas.Administration.Controllers
 
         private IActionResult RedirectToReturnUrlOrDefault(string returnUrl) =>
             string.IsNullOrEmpty(returnUrl) ?
-                RedirectToRoute("default") :
-                (IActionResult)LocalRedirect(returnUrl);
+                RedirectToRoute("home") :
+                LocalRedirect(returnUrl);
     }
 }
