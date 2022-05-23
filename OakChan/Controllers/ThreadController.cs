@@ -57,14 +57,14 @@ namespace OakChan.Controllers
         [HttpPost]
         [Authorize(Policy = OakConstants.Policies.CanPost)]
         [Route("{board:alpha}/createThread", Name = "createThread")]
-        public async Task<IActionResult> CreateThreadAsync(string board, ThreadFormViewModel opPost)
+        public async Task<IActionResult> Create(string board, ThreadFormViewModel opPost)
         {
             if (ModelState.IsValid)
             {
                 var boardInfo = await boards.GetBoardAsync(board);
                 if (boardInfo == null || boardInfo.IsDisabled || boardInfo.IsReadOnly)
                 {
-                    logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)} to {nameof(CreateThreadAsync)}. Bad board key {board}");
+                    logger.LogWarning($"Bad request. From {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)} to {nameof(Create)}. Bad board key {board}");
                     return BadRequest();
                 }
                 var threadData = mapper.Map<ThreadCreationDto>(opPost);
@@ -74,7 +74,7 @@ namespace OakChan.Controllers
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {OakConstants.ClaimTypes.AuthorToken} to {nameof(CreateThreadAsync)}. " +
+                logger.LogWarning($"Invalid model state from {OakConstants.ClaimTypes.AuthorToken} to {nameof(Create)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }
@@ -83,7 +83,7 @@ namespace OakChan.Controllers
         [HttpPost]
         [Authorize(Policy = OakConstants.Policies.CanPost)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePostAsync(string board, int thread, PostFormViewModel postFormVM)
+        public async Task<IActionResult> AddPost(string board, int thread, PostFormViewModel postFormVM)
         {
             if (ModelState.IsValid)
             {
@@ -99,38 +99,16 @@ namespace OakChan.Controllers
                         return RedirectToRoute("thread", new { Board = board, Thread = thread }, $"p{newPost.PostId}");
                     }
                 }
-                logger.LogWarning($"Invalid arguments from {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)}({IP}) to {nameof(CreatePostAsync)}. " +
+                logger.LogWarning($"Invalid arguments from {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)}({IP}) to {nameof(AddPost)}. " +
                     string.Join(Environment.NewLine, $"board: {board}", $"thread: {thread}."));
                 return BadRequest();
             }
             else
             {
-                logger.LogWarning($"Invalid model state from {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)}({IP}) to {nameof(CreatePostAsync)}. " +
+                logger.LogWarning($"Invalid model state from {User.FindFirst(OakConstants.ClaimTypes.AuthorToken)}({IP}) to {nameof(AddPost)}. " +
                       string.Join(Environment.NewLine, ModelState.Root.Errors.Select(e => e.ErrorMessage)));
                 return BadRequest();
             }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(OakConstants.Policies.CanEditThread)]
-        public async Task<IActionResult> PinThread(string board, [FromRoute(Name = "thread")] int threadId, bool pin)
-        {
-            var thread = await threads.GetThreadInfoAsync(board, threadId);
-            if (thread == null) { return BadRequest(); }
-            await threads.SetIsPinned(threadId, pin);
-            return Ok();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(OakConstants.Policies.CanEditThread)]
-        public async Task<IActionResult> LockThread(string board, [FromRoute(Name = "thread")] int threadId, bool @lock)
-        {
-            var thread = await threads.GetThreadInfoAsync(board, threadId);
-            if (thread == null) { return BadRequest(); }
-            await threads.SetIsReadOnly(threadId, @lock);
-            return Ok();
         }
     }
 }

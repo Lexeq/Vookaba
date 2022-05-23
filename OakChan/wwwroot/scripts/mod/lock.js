@@ -1,6 +1,6 @@
 ﻿$(document).ready(() => {
     let level = $('#accountLevel').val();
-    if (level > 3) { //moderators and admin
+    if (level >= 3) { //moderators and admin
         window.PostMenu.addItem(
             getLocalizedString('lock_thread'),
             info => lockThread(info.board, info.thread, true),
@@ -22,16 +22,10 @@
 function lockThread(board, thread, lock) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000)
-    const uri = `/${board}/${thread}/LockThread`;
-    let antiforgery = $("input[name='__RequestVerificationToken']").val();
+    const uri = `/api/v1/threads/${lock ? 'lock' : 'unlock'}?board=${board}&thread=${thread}`;
     return fetch(uri, {
         signal: timeoutId.signal,
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "RequestVerificationToken": antiforgery
-        },
-        body: `lock=${lock}`
+        method: "POST"
     })
         .then(response => {
             if (response.status >= 200 && response.status < 300) {

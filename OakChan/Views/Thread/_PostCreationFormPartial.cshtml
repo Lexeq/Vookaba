@@ -8,7 +8,7 @@
       asp-route="threadAction"
       asp-route-board="@Context.Request.RouteValues["board"]"
       asp-route-thread="@Context.Request.RouteValues["thread"]"
-      asp-route-action="CreatePost">
+      asp-route-action="AddPost">
     @Html.EditorFor(x => x.Image, "ImageSelector")
     <div>
         <div class="posting-form__fields">

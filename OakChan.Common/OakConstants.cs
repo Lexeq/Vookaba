@@ -59,7 +59,7 @@
             public const string CanEditUsers = "EditUserPolicy";
             public const string HasStaffRole = "StaffRole";
             public const string HasBoardPermission = "BoardPermissionPolicy";
-            public const string CanEditThread = "ThreadEditPolicy";
+            public const string CanEditThreads = "ThreadEditPolicy";
         }
     }
 }

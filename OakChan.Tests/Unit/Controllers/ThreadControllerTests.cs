@@ -96,7 +96,7 @@ namespace OakChan.Tests.Unit.Controllers
 
             var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
 
-            var result = await controller.CreatePostAsync(board.Key, thread.ThreadId, new PostFormViewModel
+            var result = await controller.AddPost(board.Key, thread.ThreadId, new PostFormViewModel
             {
                 Text = "Hello, world!"
             }) as ViewResult;
@@ -113,7 +113,7 @@ namespace OakChan.Tests.Unit.Controllers
             var controller = CreateContorller();
             controller.ModelState.AddModelError(string.Empty, "test error");
 
-            var res = await controller.CreatePostAsync("x", 42, new PostFormViewModel()) as ViewResult;
+            var res = await controller.AddPost("x", 42, new PostFormViewModel()) as ViewResult;
 
             threadServiceMock.Verify(m => m.AddPostToThreadAsync(It.IsAny<int>(), It.IsAny<PostCreationDto>()), Times.Never());
             threadServiceMock.Verify(m => m.GetThreadAsync(It.IsAny<string>(), It.IsAny<int>()), Times.Never());
@@ -135,7 +135,7 @@ namespace OakChan.Tests.Unit.Controllers
 
             var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
 
-            var res = await controller.CreatePostAsync(board.Key, thread.ThreadId, new PostFormViewModel
+            var res = await controller.AddPost(board.Key, thread.ThreadId, new PostFormViewModel
             {
                 Text = "Hello, world!"
             });
@@ -161,7 +161,7 @@ namespace OakChan.Tests.Unit.Controllers
 
             var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
 
-            var res = await controller.CreatePostAsync(board.Key, thread.ThreadId, new PostFormViewModel
+            var res = await controller.AddPost(board.Key, thread.ThreadId, new PostFormViewModel
             {
                 Text = "Hello, world!"
             });
@@ -196,7 +196,7 @@ namespace OakChan.Tests.Unit.Controllers
             const string subj = "test thread";
 
 
-            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel
+            var result = await controller.Create("b", new ThreadFormViewModel
             {
                 Subject = subj,
                 Text = "Hello, world!"
@@ -214,7 +214,7 @@ namespace OakChan.Tests.Unit.Controllers
             var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
             controller.ModelState.AddModelError(string.Empty, "test error");
 
-            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel()) as ViewResult;
+            var result = await controller.Create("b", new ThreadFormViewModel()) as ViewResult;
 
             threadServiceMock.Verify(m => m.CreateThreadAsync(It.IsAny<string>(), It.IsAny<ThreadCreationDto>()), Times.Never());
             boardServiceMock.Verify(m => m.GetBoardAsync(It.IsAny<string>()), Times.Never());
@@ -230,7 +230,7 @@ namespace OakChan.Tests.Unit.Controllers
             var threadServiceMock = new Mock<IThreadService>();
             var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
 
-            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel
+            var result = await controller.Create("b", new ThreadFormViewModel
             {
                 Subject = "test thread",
                 Text = "hello, world",
@@ -252,7 +252,7 @@ namespace OakChan.Tests.Unit.Controllers
                 .ReturnsAsync(new BoardDto { IsDisabled = true });
             var controller = CreateContorller(threadServiceMock.Object, boardServiceMock.Object);
 
-            var result = await controller.CreateThreadAsync("b", new ThreadFormViewModel
+            var result = await controller.Create("b", new ThreadFormViewModel
             {
                 Subject = "test thread",
                 Text = "hello, world",

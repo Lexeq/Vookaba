@@ -151,6 +151,8 @@ namespace OakChan
             services.AddChanPolicies();
             services.AddScoped<HttpStatusCodeDescriber>();
 
+            services.AddApiVersioning();
+
             services.Configure<ChanOptions>(o => o.PublicRegistrationEnabled = false);
             services.AddOptions();
         }
@@ -199,7 +201,7 @@ namespace OakChan
                   defaults: new { Controller = "Error" });
 
                 endpoints.MapControllerRoute(
-                  name: "default",
+                  name: "home",
                   pattern: "/",
                   defaults: new { Controller = "Home", Action = "Index" });
 
@@ -215,12 +217,12 @@ namespace OakChan
 
                 endpoints.MapControllerRoute(
                     name: "boardAction",
-                    pattern: "{board:alpha}/{action}",
+                    pattern: "boards/{action}/{board:alpha}",
                     defaults: new { Controller = "Board" });
 
                 endpoints.MapControllerRoute(
                     name: "threadAction",
-                    pattern: "{board:alpha}/{thread:int}/{action}",
+                    pattern: "threads/{board:alpha}/{thread:int}/{action}",
                     defaults: new { Controller = "Thread" });
             });
         }

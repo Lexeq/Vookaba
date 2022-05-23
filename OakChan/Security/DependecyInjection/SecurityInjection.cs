@@ -40,10 +40,7 @@ namespace OakChan.Security.DependecyInjection
 
                 options.AddPolicy(PoliciesNames.CanDeletePosts, policy =>
                 {
-                    policy.Combine(options.GetPolicy(PoliciesNames.HasStaffRole))
-                          .Combine(options.GetPolicy(PoliciesNames.HasBoardPermission))
-                          .AddRequirements(new PostDeletingPermissionRequirement());
-
+                    policy.AddRequirements(new PostDeletingPermissionRequirement());
                 });
 
                 options.AddPolicy(PoliciesNames.CanEditUsers, policy =>
@@ -56,7 +53,7 @@ namespace OakChan.Security.DependecyInjection
                     policy.RequireClaim(OakConstants.ClaimTypes.AuthorToken);
                 });
 
-                options.AddPolicy(PoliciesNames.CanEditThread, policy =>
+                options.AddPolicy(PoliciesNames.CanEditThreads, policy =>
                 {
                     policy.RequireRole(OakConstants.Roles.Administrator, OakConstants.Roles.Moderator);
                     policy.Combine(options.GetPolicy(PoliciesNames.HasBoardPermission));

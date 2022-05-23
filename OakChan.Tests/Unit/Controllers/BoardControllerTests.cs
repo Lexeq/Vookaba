@@ -27,7 +27,6 @@ namespace OakChan.Tests.Unit.Controllers
         {
             var controller = new BoardController(
                 boardService ?? Mock.Of<IBoardService>(),
-                postService ?? Mock.Of<IPostService>(),
                 stringLocalizer ?? Mock.Of<IStringLocalizer<BoardController>>(),
                 mapper ?? Mapper,
                 modLogService ?? Mock.Of<IModLogService>(),

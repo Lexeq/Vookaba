@@ -9,17 +9,19 @@ function deletePosts(board, number, reason, area, mode) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000)
 
-    const uri = `/${board}/BulkDeletePosts`;
+    const uri = '/api/v1/posts/delete';
     let antiforgery = $("input[name='__RequestVerificationToken']").val();
+    let options = { board, number, reason, area };
+    if (mode != 0) { options.mode = mode; }
     return fetch(uri, {
         signal: timeoutId.signal,
-        method: "POST",
+        method: "DELETE",
         headers: {
             "Accept": "application/json",
             "Content-Type": "application/json",
             "RequestVerificationToken": antiforgery
         },
-        body: JSON.stringify({ number: number, reason: reason, area: area, mode: mode })
+        body: JSON.stringify(options)
     });
 }
 
@@ -95,17 +97,19 @@ function showDeletingModal(board, num, level) {
         }
 
         let mode = 0;
-        if ($('#byIp').prop('checked')) {
-            mode += 1;
-        }
-        if ($('#byId').prop('checked')) {
-            mode += 2;
-        }
-        if (area != 0 && mode == 0) {
-            $('#del-error')
-                .css('display', 'block')
-                .text(getLocalizedString('modeRequired'));
-            return Promise.resolve(false);
+        if (area != 0) {
+            if ($('#byIp').prop('checked')) {
+                mode += 1;
+            }
+            if ($('#byId').prop('checked')) {
+                mode += 2;
+            }
+            if (mode == 0) {
+                $('#del-error')
+                    .css('display', 'block')
+                    .text(getLocalizedString('modeRequired'));
+                return Promise.resolve(false);
+            }
         }
 
         return deletePosts(board, num, reason, area, mode)
@@ -150,7 +154,7 @@ function createModeSelector() {
     let mode = $('<div>').attr('id', 'umode');
     mode.append(createCheckbox('byId', getLocalizedString('delById'), true))
         .append(createCheckbox('byIp', getLocalizedString('delByIp')))
-        .css('display','none');
+        .css('display', 'none');
 
     return mode;
 }

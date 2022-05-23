@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using OakChan.Common;
 using OakChan.ViewModels;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using System;
+using OakChan.Utils;
 
 namespace OakChan.Security.AuthorizationHandlers
 {
     public class PostDeletingPermissionRequirement : IAuthorizationRequirement { }
 
-    public class PostDeletingPermissionHandler : AuthorizationHandler<PostDeletingPermissionRequirement>
+    public class PostDeletingPermissionHandler : AuthorizationHandler<PostDeletingPermissionRequirement, PostsDeletionOptions>
     {
         private readonly ILogger<PostDeletingPermissionHandler> logger;
 
@@ -20,33 +20,33 @@ namespace OakChan.Security.AuthorizationHandlers
             this.logger = logger;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PostDeletingPermissionRequirement requirement)
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PostDeletingPermissionRequirement requirement, PostsDeletionOptions options)
         {
-            if (context.HasFailed)
-            {
-                return;
-            }
-
-            var area = (await ReadViewModelAsync(context.Resource as HttpContext)).Area;
+            var area = options.Area;
             var role = context.User.FindFirstValue(ClaimTypes.Role);
 
             if (!Enum.IsDefined(area))
             {
+                logger.LogWarning($"Bad enum '{nameof(area)}: {area}'.");
                 context.Fail();
-                logger.LogWarning($"Bad enum '{area.GetType().Name}: {area}'.");
-                return;
+                return Task.CompletedTask;
+            }
+
+            if (!context.User.HasBoardPermission(options.Board))
+            {
+                context.Fail();
             }
             if (role == OakConstants.Roles.Administrator)
             {
                 context.Succeed(requirement);
             }
             else if (role == OakConstants.Roles.Moderator
-                     && area != PostsDeletionViewModel.DeletingArea.All)
+                     && area != PostsDeletionOptions.DeletingArea.All)
             {
                 context.Succeed(requirement);
             }
             else if (role == OakConstants.Roles.Janitor
-                     && area == PostsDeletionViewModel.DeletingArea.Single)
+                     && area == PostsDeletionOptions.DeletingArea.Single)
             {
                 context.Succeed(requirement);
             }
@@ -54,19 +54,7 @@ namespace OakChan.Security.AuthorizationHandlers
             {
                 context.Fail();
             }
-        }
-
-        private async Task<PostsDeletionViewModel> ReadViewModelAsync(HttpContext context)
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            context.Request.EnableBuffering();
-            var vm = await context.Request.ReadFromJsonAsync<PostsDeletionViewModel>();
-            context.Request.Body.Position = 0;
-            return vm;
+            return Task.CompletedTask;
         }
     }
 }

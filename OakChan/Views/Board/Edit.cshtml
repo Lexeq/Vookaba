@@ -5,7 +5,9 @@
 }
 <h2>@Localizer["Edit board"] /@Model.BoardKey/</h2>
 <fieldset>
-    <form method="post" asp-action="Update">
+    <form method="post"
+      asp-action=@nameof(OakChan.Controllers.BoardController.Update)
+      asp-route-board=@Model.BoardKey>
         <partial name="_BoardPropertiesPartial" model="Model" />
         <button type="submit">@Localizer["Update"]</button>
     </form>
