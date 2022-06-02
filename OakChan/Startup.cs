@@ -153,7 +153,7 @@ namespace OakChan
 
             services.AddApiVersioning();
 
-            services.Configure<ChanOptions>(o => o.PublicRegistrationEnabled = false);
+            services.Configure<ApplicationOptions>(Configuration.GetSection("ApplicationOptions"), o => o.BindNonPublicProperties = true);
             services.AddOptions();
         }
 

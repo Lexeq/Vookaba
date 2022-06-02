@@ -22,20 +22,20 @@ namespace OakChan.Security
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IUserClaimsPrincipalFactory<ApplicationUser> principalFactory;
         private readonly ISystemClock clock;
-        private readonly ChanOptions chanOptions;
+        private readonly ApplicationOptions appOptions;
         private readonly IdentityOptions identityOptions;
 
         public CookieValidator(UserManager<ApplicationUser> userManager,
                                IUserClaimsPrincipalFactory<ApplicationUser> principalFactory,
                                ISystemClock clock,
-                               IOptions<ChanOptions> chanOptions,
+                               IOptions<ApplicationOptions> chanOptions,
                                IOptions<IdentityOptions> identityOptions
             )
         {
             this.userManager = userManager;
             this.principalFactory = principalFactory;
             this.clock = clock;
-            this.chanOptions = chanOptions.Value;
+            this.appOptions = chanOptions.Value;
             this.identityOptions = identityOptions.Value;
         }
 
@@ -69,20 +69,19 @@ namespace OakChan.Security
 
         private bool IsDoubleCheckRequred(CookieValidatePrincipalContext context)
         {
-            return chanOptions.DoubleCheckPermissions
-                && context.HttpContext.GetEndpoint()?.Metadata.GetMetadata<IAuthorizeData>() != null
+            return appOptions.DoubleCheckPermissions
                 && context.Principal!.HasClaim(x => x.Type == ClaimTypes.Role);
         }
 
         private bool IsValidationExpired(CookieValidatePrincipalContext context)
         {
-            if (chanOptions.CheckPermissionsInterval <= TimeSpan.Zero)
+            if (appOptions.PermissionsCheckInterval <= TimeSpan.Zero)
             {
                 return false;
             }
             if (TryGetValidationTime(context, out var lastCheck))
             {
-                return clock.UtcNow.Subtract(lastCheck) >= chanOptions.CheckPermissionsInterval;
+                return clock.UtcNow.Subtract(lastCheck) >= appOptions.PermissionsCheckInterval;
             }
 
             return true;

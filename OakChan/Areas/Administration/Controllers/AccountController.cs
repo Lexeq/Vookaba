@@ -28,7 +28,7 @@ namespace OakChan.Areas.Administration.Controllers
     {
         private readonly ApplicationUserManager userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly ChanOptions chanOptions;
+        private readonly ApplicationOptions appOptions;
         private readonly ClaimsIdentityOptions claimOptions;
         private readonly InvitationManager<ApplicationInvitation> invitations;
         private readonly IBoardService boardService;
@@ -39,7 +39,7 @@ namespace OakChan.Areas.Administration.Controllers
 
         public AccountController(ApplicationUserManager userManager,
             SignInManager<ApplicationUser> signInManager,
-            IOptions<ChanOptions> chanOptionsAccessor,
+            IOptions<ApplicationOptions> chanOptionsAccessor,
             IOptions<ClaimsIdentityOptions> claimOptionsAccessor,
             InvitationManager<ApplicationInvitation> invitations,
             IModLogService modLogs,
@@ -51,7 +51,7 @@ namespace OakChan.Areas.Administration.Controllers
             this.signInManager = signInManager;
             this.invitations = invitations;
             this.modLogs = modLogs;
-            this.chanOptions = chanOptionsAccessor.Value;
+            this.appOptions = chanOptionsAccessor.Value;
             this.claimOptions = claimOptionsAccessor.Value;
             this.localizer = localizer;
             this.logger = logger;
@@ -62,15 +62,15 @@ namespace OakChan.Areas.Administration.Controllers
         [HttpGet]
         public IActionResult Register(string invitation)
         {
-            return View(chanOptions.PublicRegistrationEnabled ?
-                new RegisterViewModel() :
-                new RegisterWithInvitationViewModel { Invitaion = invitation });
+            return View(appOptions.RegistrationByInvitation ?
+                new RegisterWithInvitationViewModel { Invitaion = invitation } :
+                new RegisterViewModel());
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel vm)
         {
-            if (!chanOptions.PublicRegistrationEnabled)
+            if (appOptions.RegistrationByInvitation)
             {
                 vm = new RegisterWithInvitationViewModel();
                 await TryUpdateModelAsync(vm as RegisterWithInvitationViewModel);
@@ -84,9 +84,9 @@ namespace OakChan.Areas.Administration.Controllers
                     UserName = vm.Login
                 };
 
-                IdentityResult result = chanOptions.PublicRegistrationEnabled ?
-                    await userManager.CreateAsync(user, vm.Password) :
-                    await userManager.CreateAsync(user, vm.Password, (vm as RegisterWithInvitationViewModel).Invitaion);
+                IdentityResult result = appOptions.RegistrationByInvitation ?
+                    await userManager.CreateAsync(user, vm.Password, ((RegisterWithInvitationViewModel)vm).Invitaion) :
+                    await userManager.CreateAsync(user, vm.Password);
                 if (result.Succeeded)
                 {
                     User.AddIdentity(new ClaimsIdentity(new[] { new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()) }));
@@ -281,15 +281,6 @@ namespace OakChan.Areas.Administration.Controllers
                 }
             }
             return BadRequest();
-        }
-
-        [HttpGet]
-        public IActionResult AccessDenied()
-        {
-            return Error(
-                403, 
-                localizer["Access Denied"],
-                localizer["You are not allowed to do this."]);
         }
 
         private async Task<IdentityResult> UpdateUserRoleAsync(ApplicationUser user, string newRole)
