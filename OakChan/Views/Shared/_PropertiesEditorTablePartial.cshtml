@@ -25,7 +25,12 @@
             }
             foreach (var property in group)
             {
+                //TODO: Localize tooltip with adapter. Maybe.
                 var tooltip = property.GetCustomAttribute<TooltipAttribute>()?.Tooltip;
+                if (tooltip != null)
+                {
+                    tooltip = Localizer[tooltip].Value;
+                }
                 @Html.Editor(property.Name, "PropertyTableRow", new { Tooltip = tooltip })
             }
         }
