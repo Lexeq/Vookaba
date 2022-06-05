@@ -1,0 +1,33 @@
+﻿@using System.Reflection;
+@using System.ComponentModel.DataAnnotations;
+@using OakChan.Attributes
+@model object
+@{
+    var props = Model.GetType()
+            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+            .ToLookup(x => x.GetCustomAttribute<DisplayAttribute>()?.GroupName ?? "");
+}
+<table class="properties-table">
+    <thead>
+        <tr>
+            <th>@Localizer["Property"]</th>
+            <th>@Localizer["Value"]</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var group in props)
+        {
+            if (group.Key != "")
+            {
+                <tr>
+                    <th colspan="2">@group.Key</th>
+                </tr>
+            }
+            foreach (var property in group)
+            {
+                var tooltip = property.GetCustomAttribute<TooltipAttribute>()?.Tooltip;
+                @Html.Editor(property.Name, "PropertyTableRow", new { Tooltip = tooltip })
+            }
+        }
+    </tbody>
+</table>

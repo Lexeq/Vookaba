@@ -1,0 +1,28 @@
+﻿.properties-table, .properties-table th, .properties-table td {
+    border: 1px solid var(--colors_border);
+    border-collapse: collapse;
+}
+
+    .properties-table th, .properties-table td {
+        padding: 3px 5px;
+    }
+
+    .properties-table tr td:last-child {
+        text-align: center;
+        min-width: 100px;
+        max-width: 250px;
+    }
+
+    .properties-table tbody th {
+        font-weight: 600;
+        font-style: italic;
+    }
+
+    .properties-table .property-error {
+        display: inline-block;
+        color: var(--colors_error);
+    }
+
+    .properties-table .tr span {
+        display: inline-block;
+    }

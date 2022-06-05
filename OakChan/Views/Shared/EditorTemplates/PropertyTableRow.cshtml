@@ -1,0 +1,10 @@
+﻿@model object
+<tr class="property-row">
+    <td>
+        <label asp-for="@Model" title="@ViewBag.Tooltip"></label>
+        <span class="property-error" asp-validation-for="@Model"></span>
+    </td>
+    <td>
+        <input asp-for="@Model" />
+    </td>
+</tr>

@@ -6,8 +6,8 @@
 <div>
     <h2>@Localizer["Create new board"]</h2>
     <form method="post" asp-route="createBoard">
-        <partial name="_BoardPropertiesPartial" model="Model"/>
+        <partial name="_PropertiesEditorTablePartial" model="Model" />
         <button type="submit">@Localizer["Create"]</button>
-        <div asp-validation-summary="All"></div>
     </form>
+    <div class="error-text" class="oakbutton" asp-validation-summary="ModelOnly"></div>
 </div>
