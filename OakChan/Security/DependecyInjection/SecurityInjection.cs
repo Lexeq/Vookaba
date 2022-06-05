@@ -50,7 +50,7 @@ namespace OakChan.Security.DependecyInjection
 
                 options.AddPolicy(PoliciesNames.CanPost, policy =>
                 {
-                    policy.RequireClaim(OakConstants.ClaimTypes.AuthorToken);
+                    policy.AddRequirements(new PostingPermissionRequirement());
                 });
 
                 options.AddPolicy(PoliciesNames.CanEditThreads, policy =>
@@ -62,6 +62,7 @@ namespace OakChan.Security.DependecyInjection
 
             services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
             services.AddScoped<IAuthorizationHandler, PostDeletingPermissionHandler>();
+            services.AddSingleton<IAuthorizationHandler, PostingPermissionHandler>();
             services.AddScoped<AppCookieEvents>();
 
             return services;
