@@ -216,7 +216,7 @@ namespace OakChan
 
                 endpoints.MapControllerRoute(
                     name: "boardAction",
-                    pattern: "boards/{action}/{board:alpha}",
+                    pattern: "boards/{action}/{board:alpha?}",
                     defaults: new { Controller = "Board" });
 
                 endpoints.MapControllerRoute(

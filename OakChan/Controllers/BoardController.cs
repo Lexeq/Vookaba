@@ -81,7 +81,6 @@ namespace OakChan.Controllers
 
         [HttpGet]
         [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
-        [Route("board/create", Name = "createBoard")]
         public IActionResult Create()
         {
             return View(new BoardPropertiesViewModel());
@@ -89,7 +88,6 @@ namespace OakChan.Controllers
 
         [HttpPost]
         [Authorize(Policy = OakConstants.Policies.CanEditBoards)]
-        [Route("board/create", Name = "createBoard")]
         public async Task<IActionResult> Create(BoardPropertiesViewModel vm)
         {
             if (ModelState.IsValid)
