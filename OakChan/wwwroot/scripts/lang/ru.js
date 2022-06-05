@@ -18,5 +18,6 @@
     pin_thread: "Закрепить",
     unpin_thread: "Открепить",
     lock_thread: "Закрыть",
-    unlock_thread: "Открыть"
+    unlock_thread: "Открыть",
+    brdDeleteConfirmMessage: "Вы действительно хотите удалить эту доску?"
 }

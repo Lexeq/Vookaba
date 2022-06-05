@@ -18,5 +18,6 @@
     pin_thread: "Pin",
     unpin_thread: "Unpin",
     lock_thread: "Lock",
-    unlock_thread: "Unlock"
+    unlock_thread: "Unlock",
+    brdDeleteConfirmMessage: "Are you sure you want to delete this board?"
 }

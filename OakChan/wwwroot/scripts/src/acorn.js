@@ -179,3 +179,10 @@ function buildRefMap() {
         msg.innerHTML = newHtml;
     }
 }
+
+$('#brd-delete').click((e) => {
+
+    if (confirm(getLocalizedString('brdDeleteConfirmMessage')) !== true) {
+        e.preventDefault();
+    }
+})
