@@ -154,6 +154,7 @@ namespace OakChan
 
             services.Configure<ApplicationOptions>(Configuration.GetSection("ApplicationOptions"), o => o.BindNonPublicProperties = true);
             services.AddOptions();
+            services.AddSingleton<OptionsRewriter>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

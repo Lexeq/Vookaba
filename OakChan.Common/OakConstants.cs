@@ -4,6 +4,7 @@
     {
         public const string Name = "OakChan";
         public const string Culture = "ru";
+        public const string UserOptionsFileName = "appsettings.edited.json";
 
         public static class Identity
         {

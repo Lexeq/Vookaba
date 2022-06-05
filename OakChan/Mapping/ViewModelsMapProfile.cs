@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using OakChan.Areas.Administration.ViewModels;
+using OakChan.Common;
 using OakChan.Services.DTO;
 using OakChan.ViewModels;
 using System.Linq;
@@ -82,6 +84,11 @@ namespace OakChan.Mapping
 
             CreateMap<BoardDto, BoardPropertiesViewModel>()
                 .ForMember(vm => vm.BoardKey, opt => opt.MapFrom(dto => dto.Key))
+                .ReverseMap();
+
+            CreateMap<ApplicationOptions, AppConfiguratonViewModel>()
+                .ForMember(vm => vm.RequireInvitation, opt => opt.MapFrom(x => x.RegistrationByInvitation))
+                .ForMember(vm => vm.AnonymousCanPost, opt => opt.MapFrom(x => x.IsAnonymousPostingAllowed))
                 .ReverseMap();
         }
     }
