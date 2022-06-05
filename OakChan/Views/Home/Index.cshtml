@@ -8,7 +8,14 @@
 }
 
 <div class="home__auth-panel">
-    <partial name="_AuthPartial" />
+    @if (User.Identity.IsAuthenticated)
+    {
+        <partial name="_AccountInfo" />
+    }
+    else
+    {
+        <partial name="_AuthPartial" />
+    }
 </div>
 <div class="logo">
     <img class="logo-img" src="/images/logo.png" />

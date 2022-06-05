@@ -1,0 +1,31 @@
+﻿@using OakChan.Common
+@using System.Security.Claims
+
+@{
+    var role = User.FindFirstValue(ClaimTypes.Role);
+    var accountLevel = role switch
+    {
+        OakConstants.Roles.Janitor => 1,
+        OakConstants.Roles.Moderator => 3,
+        OakConstants.Roles.Administrator => 5,
+        _ => -1
+    };
+}
+
+<div>
+    <input id="accountLevel"
+           type="hidden"
+           value="@accountLevel" />
+    <span class="user-name">@User.Identity.Name</span>
+    @if (role != null)
+    {
+        <a asp-area="Administration"
+       asp-controller="Admin"
+       asp-action="Dashboard">[@Localizer[role]]</a>
+    }
+    <a class="auth-action"
+       asp-area="Administration"
+       asp-controller="Account"
+       asp-action="Logout"
+       asp-route-returnUrl="@Context.Request.Path">@Localizer["Logout"]</a>
+</div>

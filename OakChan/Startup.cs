@@ -135,8 +135,8 @@ namespace OakChan
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.AccessDeniedPath = "/Administration/Account/AccessDenied";
                 options.LoginPath = "/Administration/Account/Login";
+                options.LogoutPath = "/Administration/Account/Logout";
                 options.SlidingExpiration = true;
                 options.ExpireTimeSpan = TimeSpan.FromDays(OakConstants.Identity.CookieExpireInDays);
                 options.Cookie.Name = "passport";
@@ -144,8 +144,7 @@ namespace OakChan
                 options.Cookie.IsEssential = true;
                 options.Cookie.MaxAge = TimeSpan.FromDays(OakConstants.Identity.CookieMaxAgeInDays);
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
-
-                options.EventsType = typeof(Security.CookieValidator);
+                options.EventsType = typeof(Security.AppCookieEvents);
             });
 
             services.AddChanPolicies();

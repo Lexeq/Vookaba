@@ -62,6 +62,10 @@ namespace OakChan.Areas.Administration.Controllers
         [HttpGet]
         public IActionResult Register(string invitation)
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                return RedirectToRoute("home");
+            }
             return View(appOptions.RegistrationByInvitation ?
                 new RegisterWithInvitationViewModel { Invitaion = invitation } :
                 new RegisterViewModel());
@@ -105,6 +109,10 @@ namespace OakChan.Areas.Administration.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            if (signInManager.IsSignedIn(User))
+            {
+                return RedirectToRoute("home");
+            }
             return View();
         }
 

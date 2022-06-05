@@ -62,7 +62,7 @@ namespace OakChan.Security.DependecyInjection
 
             services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
             services.AddScoped<IAuthorizationHandler, PostDeletingPermissionHandler>();
-            services.AddScoped<CookieValidator>();
+            services.AddScoped<AppCookieEvents>();
 
             return services;
         }

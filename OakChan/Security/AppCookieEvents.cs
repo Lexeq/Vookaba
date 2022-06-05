@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace OakChan.Security
 {
-    public class CookieValidator : CookieAuthenticationEvents
+    public class AppCookieEvents : CookieAuthenticationEvents
     {
         private const string LastCheck = "checked";
 
@@ -25,7 +25,7 @@ namespace OakChan.Security
         private readonly ApplicationOptions appOptions;
         private readonly IdentityOptions identityOptions;
 
-        public CookieValidator(UserManager<ApplicationUser> userManager,
+        public AppCookieEvents(UserManager<ApplicationUser> userManager,
                                IUserClaimsPrincipalFactory<ApplicationUser> principalFactory,
                                ISystemClock clock,
                                IOptions<ApplicationOptions> chanOptions,
@@ -37,6 +37,11 @@ namespace OakChan.Security
             this.clock = clock;
             this.appOptions = chanOptions.Value;
             this.identityOptions = identityOptions.Value;
+        }
+        public override Task RedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
+        {
+            context.Response.StatusCode = StatusCodes.Status403Forbidden;
+            return Task.CompletedTask;
         }
 
         public override async Task ValidatePrincipal(CookieValidatePrincipalContext context)

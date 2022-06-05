@@ -1,24 +1,10 @@
-﻿@using System.Security.Claims;
-@inject Microsoft.AspNetCore.Identity.SignInManager<OakChan.Identity.ApplicationUser> signInManager
-
-@if (signInManager.IsSignedIn(User))
-{
-    var role = User.FindFirstValue(ClaimTypes.Role);
-<div>
-    <span class="user-name">@User.Identity.Name</span>
-    @if (role != null)
-    {
-        <a asp-area="Administration" asp-controller="Admin" asp-action="Dashboard">[@Localizer[role]]</a>
-        <partial name="_AccountLevel" model="role"/>
-        @Html.AntiForgeryToken();
-    }
-    <a class="auth-action" asp-area="Administration" asp-controller="Account" asp-action="Logout">@Localizer["Logout"]</a>
+﻿<div>
+    <a class="auth-action"
+       asp-area="Administration"
+       asp-controller="Account"
+       asp-action="Login">@Localizer["Login"]</a>
+    <a class="auth-action"
+       asp-area="Administration"
+       asp-controller="Account"
+       asp-action="Register">@Localizer["Register"]</a>
 </div>
-}
-else
-{
-    <div>
-        <a class="auth-action" asp-area="Administration" asp-controller="Account" asp-action="Login">@Localizer["Login"]</a>
-        <a class="auth-action" asp-area="Administration" asp-controller="Account" asp-action="Register">@Localizer["Register"]</a>
-    </div>
-}

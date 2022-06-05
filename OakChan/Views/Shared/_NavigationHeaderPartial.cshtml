@@ -10,5 +10,8 @@
             <a asp-route="board" asp-route-board="@board" >@($"/{board}/")</a>
         }
     </div>
-    <partial name="_AuthPartial" />
+    @if (User.Identity.IsAuthenticated)
+    {
+        <partial name="_AccountInfo" />
+    }
 </header>
