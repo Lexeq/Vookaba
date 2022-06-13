@@ -1,57 +1,93 @@
 ﻿$(document).ready(() => {
-    subscribeImageOnClick();
-    subscribeFullSizeOnClick();
     subscribeReplyOnClick();
     buildRefMap();
     if ($('#attachment-input').val()) {
         loadImagePreview($('#attachment-input').prop('files'));
     }
+    $('.post__file-link img').on('load', (x) => imageLoaded(x.target));
+    $('.full-size').on('click', (x) => toggleFullSize(x.target));
+    $('.post__file-link').on('click', (x) => { x.preventDefault(); toggleExpanded(x.target); });
 })
 
-function subscribeFullSizeOnClick() {
-    function toFullSize(e) {
-        let id = e.target.id.substring(5);
-        let container = document.getElementById('ic' + id);
-        let img = document.getElementById('img' + id);
-        img.style.maxHeight = "";
-        img.src = img.parentNode.href;
-        container.style.maxWidth = img.dataset.imgWidth + "px";
-        container.style.width = img.dataset.imgWidth + "px";
+function imageLoaded(img) {
+    img.classList.remove('loading');
+    let setNaturalSize = true;
+    let container = img.closest('.post__image-container');
+    if (container.classList.contains('full')) {
+        img.closest('.post').style.maxWidth = 'unset';
     }
+    else if (container.classList.contains('expanded')) {
+        let body = document.getElementsByTagName('body')[0];
+        img.closest('.post').style.maxWidth = 'unset';
 
-    let list = document.getElementsByClassName('full-size');
-    for (let item of list) {
-        item.addEventListener('click', toFullSize, false);
+        let w = img.naturalWidth;
+        let h = img.naturalHeight;
+        let bw = body.clientWidth * 0.9;
+        let bh = window.innerHeight * 0.9;
+
+        if (w > bw || h > bh) {
+
+            let rw = bw / w;
+            let rh = bh / h;
+            let shrinkRatio = Math.min(rw, rh);
+
+            img.width = img.naturalWidth * shrinkRatio;
+            img.height = img.naturalHeight * shrinkRatio;
+            setNaturalSize = false;
+        }
+    }
+    else {
+        img.closest('.post').style.maxWidth = '';
+    }
+    if (setNaturalSize) {
+        img.width = img.naturalWidth;
+        img.height = img.naturalHeight;
     }
 }
 
-function subscribeImageOnClick() {
-
-    function imLinkClick(e) {
-        e.preventDefault();
-
-        let img = e.target;
-        let container = img.parentNode.parentNode;
-
-        container.style.width = "";
-        if (img.src.endsWith(img.dataset.imgThumb)) {
-            container.style.maxWidth = "100vw";
-            img.style.maxWidth = "100%";
-            img.style.maxHeight = "90vh";
-            img.src = img.parentNode.href;
-        }
-        else {
-            container.style.maxWidth = "";
-            img.style.maxWidth = "";
-            img.style.maxWidth = "";
-            img.style.maxHeight = "";
-            img.src = img.dataset.imgThumb;
-        }
+function toggleFullSize(btn) {
+    let id = btn.id.substring(5);
+    let img = document.getElementById('img' + id);
+    if (img.classList.contains('loading')) {
+        return;
     }
+    else {
+        img.classList.add('loading');
+    }
+    let container = img.closest('.post__image-container');
+    img.removeAttribute('loading')
+    container.classList.toggle('full');
+    img.src = selectImgSrc(img, container);
+}
 
-    let list = document.getElementsByClassName('post__file-link');
-    for (let item of list) {
-        item.addEventListener('click', imLinkClick, false);
+function toggleExpanded(img) {
+    if (img.classList.contains('loading')) {
+        return;
+    }
+    else {
+        img.classList.add('loading');
+    }
+    let container = img.parentNode.parentNode;
+    if (container.classList.contains('full')) {
+        container.classList.remove('full');
+        container.classList.remove('expanded')
+    }
+    else {
+        container.classList.toggle('expanded');
+    }
+    img.removeAttribute('loading')
+    img.src = selectImgSrc(img, container);
+}
+
+function selectImgSrc(img, container) {
+    if (container.classList.contains('full')) {
+        return img.parentNode.href;
+    }
+    if (container.classList.contains('expanded')) {
+        return img.parentNode.href;
+    }
+    else {
+        return img.dataset.thumb;
     }
 }
 

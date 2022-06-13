@@ -180,6 +180,8 @@ namespace OakChan.Services.DbServices
                 Extension = extension,
                 Width = result.Image.Width,
                 Height = result.Image.Height,
+                ThumbnailHeight = result.Thumbnail.Height,
+                ThumbnailWidth = result.Thumbnail.Width,
                 FileSize = (int)file.Length
             };
             return imageEntity;
