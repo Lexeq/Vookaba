@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Migrations\Sql\04_up_posts_on_board_page.sql" />
+    <EmbeddedResource Include="Migrations\Sql\03_up_updated_views.sql" />
     <EmbeddedResource Include="Migrations\Sql\00_down_triggers.sql" />
     <EmbeddedResource Include="Migrations\Sql\00_up_triggers.sql" />
     <EmbeddedResource Include="Migrations\Sql\02_down_procedures.sql" />

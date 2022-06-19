@@ -53,33 +53,31 @@ namespace OakChan.Services.DbServices
             if (offset < 0) throw new ArgumentException("Offset must not be less than 0.", nameof(offset));
             if (count <= 0) throw new ArgumentException("Count must be greater than 0.", nameof(count));
 
-            var threadsOnPage = await context.Threads
-                .Where(t => t.BoardKey == boardKey && t.Posts.Any())
-                .OrderByDescending(t => t.IsPinned)
-                .ThenByDescending(t => t.LastBump)
-                .Skip(offset)
-                .Take(count)
-                .AsNoTracking()
-                .ToListAsync();
-
             var totalCount = context.Threads.Count(t => t.BoardKey == boardKey);
-
             var result = new PartialList<ThreadPreviewDto> { TotalCount = totalCount };
-
-            if (threadsOnPage.Any())
+            List<Thread> threadsOnPage = null;
+            if (totalCount > 0)
             {
-                var threadIds = threadsOnPage.Select(t => t.Id);
 
-                var posts = (await GetFirstAndLastPostsQuery(threadIds, Common.OakConstants.BoardConstants.RecentRepliesShow)
+                threadsOnPage = await context.Threads
+                    .Where(t => t.BoardKey == boardKey && t.Posts.Any())
+                    .OrderByDescending(t => t.IsPinned)
+                    .ThenByDescending(t => t.LastBump)
+                    .Skip(offset)
+                    .Take(count)
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var posts = (await context.Posts
+                    .FromSqlInterpolated($"select * from posts_on_board_page({threadsOnPage.Select(t => t.Id).ToList()}, {Common.OakConstants.BoardConstants.RecentRepliesShow})")
                     .Include(p => p.Attachments)
                     .AsNoTracking()
                     .ToListAsync())
                     .GroupBy(p => p.ThreadId)
-                    .ToDictionary(g => g.Key, g => g.OrderBy(p => p.Number).ToList());
+                    .ToDictionary(p => p.Key, p => p.ToList());
 
                 threadsOnPage.ForEach(t => t.Posts = posts[t.Id]);
             }
-
             result.CurrentItems = mapper.Map<List<ThreadPreviewDto>>(threadsOnPage);
             return result;
         }
@@ -177,30 +175,5 @@ namespace OakChan.Services.DbServices
                 }
             }
         }
-
-
-        private IQueryable<Post> GetFirstAndLastPostsQuery(IEnumerable<int> threadIds, int recentPostsCount)
-        {
-            var idsString = string.Join(", ", threadIds);
-            var queryString =
-@$"
-SELECT op.*
-FROM ""Threads"" t,
-LATERAL(
-    SELECT *
-    FROM ""Posts"" p0
-    WHERE p0.""IsOP"" and p0.""ThreadId"" = t.""Id""
-    UNION(
-        SELECT *
-        FROM ""Posts"" p1
-        WHERE p1.""ThreadId"" = t.""Id""
-        ORDER BY p1.""Number"" DESC
-        LIMIT {recentPostsCount})
-    ) AS op
-WHERE t.""Id"" IN({idsString})
-";
-            return context.Posts.FromSqlRaw(queryString);
-        }
-
     }
 }
