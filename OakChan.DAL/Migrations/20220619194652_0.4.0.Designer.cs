@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OakChan.DAL.Database;
@@ -12,9 +13,10 @@ using OakChan.DAL.Database;
 namespace OakChan.DAL.Migrations
 {
     [DbContext(typeof(OakDbContext))]
-    partial class OakDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220619194652_0.4.0")]
+    partial class _040
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
