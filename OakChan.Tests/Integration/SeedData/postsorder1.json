@@ -3,7 +3,7 @@
     {
       "Id": 1,
       "BoardKey": "b",
-      "Created": "2021-01-01T23:01:00.000000",
+      "Created": "2021-01-01T23:01:00.000000Z",
       "Subject": "first created",
       "IsReadOnly": false,
       "IsPined": false
@@ -13,7 +13,7 @@
     {
       "ThreadId": 1,
       "IsOP": true,
-      "Created": "2021-01-01T23:01:05.000000",
+      "Created": "2021-01-01T23:01:05.000000Z",
       "Message": "OP1",
       "AuthorToken": "11111111-1111-1111-1111-111111111111",
       "IP": "12.34.56.78",

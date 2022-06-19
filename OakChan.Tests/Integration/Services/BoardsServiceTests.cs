@@ -102,12 +102,12 @@ namespace OakChan.Tests.Integration.Services
 
             var postsData = new[]
             {
-                new DefaultPost{ThreadId = 1, Created = DateTime.Parse("2021-01-01"), Message = "OP1" },
-                new DefaultPost{ThreadId = 2, Created = DateTime.Parse("2021-01-02"), Message = "OP_Pinned" },
-                new DefaultPost{ThreadId = 3, Created = DateTime.Parse("2021-01-03"), Message = "OP2" },
-                new DefaultPost{ThreadId = 3, Created = DateTime.Parse("2021-01-04"), Message = "Rep2" },
-                new DefaultPost{ThreadId = 1, Created = DateTime.Parse("2021-01-05"), Message = "Rep1" },
-                new DefaultPost{ThreadId = 3, Created = DateTime.Parse("2021-01-06"), Message = "Rep2", IsSaged = true },
+                new DefaultPost{ThreadId = 1, Created = DateTimeOffset.Parse("2021-01-01").UtcDateTime, Message = "OP1" },
+                new DefaultPost{ThreadId = 2, Created = DateTimeOffset.Parse("2021-01-02").UtcDateTime, Message = "OP_Pinned" },
+                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-03").UtcDateTime, Message = "OP2" },
+                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-04").UtcDateTime, Message = "Rep2" },
+                new DefaultPost{ThreadId = 1, Created = DateTimeOffset.Parse("2021-01-05").UtcDateTime, Message = "Rep1" },
+                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-06").UtcDateTime, Message = "Rep2", IsSaged = true },
             };
 
             SeedData.AddDefaults().AddThreads(threadsData).AddPosts(postsData);
@@ -151,7 +151,6 @@ namespace OakChan.Tests.Integration.Services
         [TestCase("postsorder1", 1, new int[] { })]
         [TestCase("postsorder2", 2, new int[] { 42 })]
         [TestCase("postsorder3", 4, new int[] { 77, 100 })]
-        [TestCase("postsorder4", 5, new int[] { 600, 100 })]
         public async Task PostsOrder(string src, int postsCount, int[] ids)
         {
             SeedData.AddDefaults().FromResource(src);
