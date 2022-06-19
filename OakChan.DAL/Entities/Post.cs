@@ -23,7 +23,9 @@ namespace OakChan.DAL.Entities
 
         public string Name { get; set; }
 
-        public string Message { get; set; }
+        public string HtmlEncodedMessage { get; set; }
+
+        public string PlainMessageText { get; set; }
 
         public bool IsSaged { get; set; }
 

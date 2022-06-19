@@ -8,7 +8,7 @@ namespace OakChan.Tests.Integration.Base
     {
         public DefaultPost()
         {
-            Message = "Post";
+            PlainMessageText = "Post";
             Created = DateTime.SpecifyKind(new DateTime(2021, 1, 1), DateTimeKind.Utc);
             AuthorToken = new Guid("11111111-1111-1111-1111-111111111111");
             IP = IPAddress.Loopback;

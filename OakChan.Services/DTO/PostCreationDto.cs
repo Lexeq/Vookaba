@@ -8,6 +8,8 @@ namespace OakChan.Services.DTO
 
         public string Message { get; set; }
 
+        public string EncodedMessage { get; set; }
+
         public IFormFileCollection Attachments { get; set; }
 
         public bool IsSaged { get; set; }

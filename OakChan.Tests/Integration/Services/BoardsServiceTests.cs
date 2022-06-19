@@ -102,12 +102,12 @@ namespace OakChan.Tests.Integration.Services
 
             var postsData = new[]
             {
-                new DefaultPost{ThreadId = 1, Created = DateTimeOffset.Parse("2021-01-01").UtcDateTime, Message = "OP1" },
-                new DefaultPost{ThreadId = 2, Created = DateTimeOffset.Parse("2021-01-02").UtcDateTime, Message = "OP_Pinned" },
-                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-03").UtcDateTime, Message = "OP2" },
-                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-04").UtcDateTime, Message = "Rep2" },
-                new DefaultPost{ThreadId = 1, Created = DateTimeOffset.Parse("2021-01-05").UtcDateTime, Message = "Rep1" },
-                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-06").UtcDateTime, Message = "Rep2", IsSaged = true },
+                new DefaultPost{ThreadId = 1, Created = DateTimeOffset.Parse("2021-01-01").UtcDateTime, PlainMessageText= "OP1" },
+                new DefaultPost{ThreadId = 2, Created = DateTimeOffset.Parse("2021-01-02").UtcDateTime, PlainMessageText = "OP_Pinned" },
+                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-03").UtcDateTime, PlainMessageText = "OP2" },
+                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-04").UtcDateTime, PlainMessageText = "Rep2" },
+                new DefaultPost{ThreadId = 1, Created = DateTimeOffset.Parse("2021-01-05").UtcDateTime, PlainMessageText = "Rep1" },
+                new DefaultPost{ThreadId = 3, Created = DateTimeOffset.Parse("2021-01-06").UtcDateTime, PlainMessageText = "Rep2", IsSaged = true },
             };
 
             SeedData.AddDefaults().AddThreads(threadsData).AddPosts(postsData);

@@ -34,7 +34,7 @@ namespace OakChan.Tests.Integration.Services
                 GetDbContext(),
                 storageMock.Object,
                 _hashMock.Object,
-                Enumerable.Empty<IPostProcessor>(),
+                new[] { new FakePostProcessor() },
                 ServiceDtoMapper,
                  _throwHelperMock.Object);
         }
@@ -123,7 +123,7 @@ namespace OakChan.Tests.Integration.Services
                     {
                         new DefaultOpPost()
                         {
-                            Message = "x",
+                            PlainMessageText = "x",
                         }
                     }
                 });
@@ -205,8 +205,8 @@ namespace OakChan.Tests.Integration.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
+                              new DefaultOpPost { PlainMessageText = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
                         }
                     }
                 }
@@ -239,10 +239,10 @@ namespace OakChan.Tests.Integration.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-40) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-30) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-20) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) },
+                              new DefaultOpPost { PlainMessageText = "OpPost", Created = DateTime.UtcNow.AddDays(-40) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-30) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-20) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-10) },
                         }
                     }
     }
@@ -277,8 +277,8 @@ namespace OakChan.Tests.Integration.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
+                              new DefaultOpPost { PlainMessageText = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
                         }
                     }
                 }
