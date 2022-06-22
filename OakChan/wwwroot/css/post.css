@@ -88,6 +88,11 @@
         opacity: 0.5;
     }
 
+.full .post__image {
+    max-width: unset;
+    max-height: unset;
+}
+
 .post__image {
     max-width: 100%;
     max-height: 100%;
