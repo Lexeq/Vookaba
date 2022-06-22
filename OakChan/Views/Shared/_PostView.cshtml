@@ -13,7 +13,7 @@
          class="@string.Join(" ", PostClasses.GetClasses(Model, usid))">
 
         <div class="post__details">
-            @Html.EditorFor(x=>x, "PostAuthor")
+            @Html.DisplayFor(x=>x, "PostAuthor")
             <span class="post__date" data-timestamp="@Model.Date.GetUnixEpochOffset()">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss") UTC</span>
             <span class="post__number" data-pnum="@Model.Number">
                 <a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a>
@@ -38,7 +38,7 @@
                 <div id="@($"ic{Model.Image.Name}")" class="post__image-container">
                     <div class="post__file-info" id="@($"fi{Model.Number}-{Model.Image.Name}")">
                         <div class="post__file-name">
-                            <a href="@imgPath">@($">{Model.Image.OriginalName}")</a>
+                            <a target="_blank" href="@imgPath">@($">{Model.Image.OriginalName}")</a>
                         </div>
                         <div class="post__file-size">
                             <span>@($"{Model.Image.Width}x{Model.Image.Height}")</span>
@@ -50,9 +50,9 @@
                         <img id="@($"img{Model.Image.Name}")"
                          class="post__image"
                          src="@thumbPath"
-                         data-img-width="@Model.Image.Width"
-                         data-img-height="@Model.Image.Height"
-                         data-img-thumb="@thumbPath"
+                         width=@Model.Image.ThumbnailWidth
+                         height=@Model.Image.ThumbnailHeight
+                         data-thumb=@thumbPath
                          loading="lazy" />
                     </a>
                 </div>

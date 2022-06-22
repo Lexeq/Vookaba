@@ -1,9 +1,9 @@
 ﻿footer {
     position: absolute;
-    bottom: 0.25em;
+    bottom: 5px;
     width: 100%;
     box-sizing: border-box;
     font-size: 0.75rem;
     white-space: nowrap;
-    line-height: 40px;
+    margin-top: 10px;
 }

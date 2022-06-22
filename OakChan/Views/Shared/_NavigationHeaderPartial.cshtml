@@ -1,6 +1,6 @@
 ﻿<header class="navbar">
     <div class="navbar-path">
-        <a asp-route="default">
+        <a asp-route="home">
             <img src="~/images/home.png" />
             <span>@Localizer["Go to home page"]</span>
         </a>
@@ -10,5 +10,8 @@
             <a asp-route="board" asp-route-board="@board" >@($"/{board}/")</a>
         }
     </div>
-    <partial name="_AuthPartial" />
+    @if (User.Identity.IsAuthenticated)
+    {
+        <partial name="_AccountInfo" />
+    }
 </header>

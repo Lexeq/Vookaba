@@ -18,7 +18,7 @@ namespace OakChan.Services.Mapping
                 .ForMember(dto => dto.AuthorName, opt => opt.MapFrom(post => post.Name))
                 .ForMember(dto => dto.Created, opt => opt.MapFrom(post => post.Created))
                 .ForMember(dto => dto.ThreadId, opt => opt.MapFrom(post => post.ThreadId))
-                .ForMember(dto => dto.Message, opt => opt.MapFrom(post => post.Message))
+                .ForMember(dto => dto.Message, opt => opt.MapFrom(post => post.HtmlEncodedMessage))
                 .ForMember(dto => dto.Image, opt => opt.MapFrom(post => post.Attachments.FirstOrDefault() as Image))
                 .ForMember(dto => dto.PostNumber, opt => opt.MapFrom(post => post.Number))
                 .ForMember(dto => dto.IsSaged, opt => opt.MapFrom(post => post.IsSaged))
@@ -38,16 +38,6 @@ namespace OakChan.Services.Mapping
                 .ForMember(dto => dto.TotalPostsCount, opt => opt.MapFrom(thread => thread.PostsCount))
                 .ForMember(dto => dto.PostsWithImageCount, opt => opt.MapFrom(thread => thread.PostsWithAttachmentnsCount));
 
-            CreateMap<Thread, ThreadBoardAggregationDto>()
-                .ForMember(dto => dto.Thread, opt => opt.MapFrom(thread => thread))
-                .ForMember(dto => dto.Board, opt => opt.MapFrom(thread => thread.Board));
-
-            CreateMap<Board, BoardInfoDto>()
-                .ForMember(dto => dto.Name, opt => opt.MapFrom(b => b.Name))
-                .ForMember(dto => dto.Key, opt => opt.MapFrom(b => b.Key))
-                .ForMember(dto => dto.ThreadsCount, opt => opt.MapFrom(b => b.Threads.Count()))
-                .ForMember(dto => dto.IsDisabled, opt => opt.MapFrom(b => b.IsDisabled));
-
             CreateMap<Image, ImageDto>()
                 .ForMember(dto => dto.ImageId, opt => opt.MapFrom(img => img.Id))
                 .ForMember(dto => dto.Size, opt => opt.MapFrom(img => img.FileSize));
@@ -57,7 +47,8 @@ namespace OakChan.Services.Mapping
                 .ForMember(p => p.IP, opt => opt.Ignore())
                 .ForMember(p => p.UserAgent, opt => opt.Ignore())
                 .ForMember(p => p.Created, opt => opt.Ignore())
-                .ForMember(p => p.Message, opt => opt.MapFrom(dto => dto.Message))
+                .ForMember(p => p.PlainMessageText, opt => opt.MapFrom(dto => dto.Message))
+                .ForMember(p => p.HtmlEncodedMessage, opt => opt.MapFrom(dto => dto.EncodedMessage))
                 .ForMember(p => p.Name, opt => opt.MapFrom(dto => dto.AuthorName))
                 .ForMember(p => p.Id, opt => opt.Ignore())
                 .ForMember(p => p.ThreadId, opt => opt.Ignore())
@@ -69,7 +60,8 @@ namespace OakChan.Services.Mapping
 
             CreateMap<BoardDto, Board>()
                 .ForMember(b => b.Threads, opt => opt.Ignore())
-                .ForMember(b => b.Key, opt => opt.MapFrom(dto => dto.Key.ToLowerInvariant()));
+                .ForMember(b => b.Key, opt => opt.MapFrom(dto => dto.Key.ToLowerInvariant()))
+                .ReverseMap();
 
             CreateMap<ModAction, ModLogDto>();
 

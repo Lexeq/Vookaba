@@ -19,7 +19,7 @@ namespace OakChan.Services.DbServices
 {
     public class DbThreadService : IThreadService
     {
-        private static string GetThreadSubject(ThreadCreationDto threadCreation)
+        private static string GetThreadSubjectFromMesage(ThreadCreationDto threadCreation)
         {
             if (!string.IsNullOrEmpty(threadCreation.Subject))
             {
@@ -43,8 +43,7 @@ namespace OakChan.Services.DbServices
                 }
                 else
                 {
-                    var closing = message.IndexOf('>', i);
-                    i = closing;
+                    i = message.IndexOf('>', i + 1);
                 }
             }
             return builder.ToString();
@@ -72,29 +71,26 @@ namespace OakChan.Services.DbServices
             this.throwHelper = throwHelper;
         }
 
-        public async Task<ThreadDto> GetThreadAsync(string boardKey, int threadId)
+        public Task<ThreadDto> GetThreadAsync(string boardKey, int threadId)
         {
             throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
-            var thread = await context.Threads.AsNoTracking()
+            return context.Threads.AsNoTracking()
                 .Where(t => t.BoardKey == boardKey && t.Id == threadId)
                 .Include(t => t.Posts.OrderBy(p => p.Number))
                 .ThenInclude(p => p.Attachments)
+                .ProjectTo<ThreadDto>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-
-            return mapper.Map<ThreadDto>(thread);
         }
 
-        public async Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId)
+        public Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId)
         {
             throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
-            var thread = await context.Threads
+            return context.Threads
                 .Where(t => t.BoardKey == boardKey && t.Id == threadId)
                 .ProjectTo<ThreadInfoDto>(mapper.ConfigurationProvider)
                 .FirstOrDefaultAsync();
-
-            return thread;
         }
 
         public async Task<ThreadDto> CreateThreadAsync(string boardKey, ThreadCreationDto threadDto)
@@ -102,9 +98,8 @@ namespace OakChan.Services.DbServices
             throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
             throwHelper.ThrowIfNull(threadDto, nameof(threadDto));
 
-            var thread = new Thread { BoardKey = boardKey, Subject = GetThreadSubject(threadDto) };
-
             var post = await CreatePostEntityAsync(threadDto.OpPost);
+            var thread = new Thread { BoardKey = boardKey, Subject = GetThreadSubjectFromMesage(threadDto) };
             post.IsOP = true;
             post.Thread = thread;
 
@@ -123,9 +118,8 @@ namespace OakChan.Services.DbServices
             };
         }
 
-        public async Task<PostDto> AddPostToThreadAsync(string boardKey, int threadId, PostCreationDto postData)
+        public async Task<PostDto> AddPostToThreadAsync(int threadId, PostCreationDto postData)
         {
-            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
             throwHelper.ThrowIfNull(postData, nameof(postData));
 
             var post = await CreatePostEntityAsync(postData);
@@ -186,9 +180,25 @@ namespace OakChan.Services.DbServices
                 Extension = extension,
                 Width = result.Image.Width,
                 Height = result.Image.Height,
+                ThumbnailHeight = result.Thumbnail.Height,
+                ThumbnailWidth = result.Thumbnail.Width,
                 FileSize = (int)file.Length
             };
             return imageEntity;
+        }
+
+        public Task SetIsPinned(int threadId, bool isPinned)
+        {
+            var thread = new Thread { Id = threadId, IsPinned = isPinned };
+            context.Attach(thread).Property(x => x.IsPinned).IsModified = true;
+            return context.SaveChangesAsync();
+        }
+
+        public Task SetIsReadOnly(int threadId, bool isReadOnly)
+        {
+            var thread = new Thread { Id = threadId, IsReadOnly = isReadOnly };
+            context.Attach(thread).Property(x => x.IsReadOnly).IsModified = true;
+            return context.SaveChangesAsync();
         }
     }
 }

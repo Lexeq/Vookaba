@@ -34,7 +34,7 @@ namespace OakChan.Tests.Integration.Services
                 GetDbContext(),
                 storageMock.Object,
                 _hashMock.Object,
-                Enumerable.Empty<IPostProcessor>(),
+                new[] { new FakePostProcessor() },
                 ServiceDtoMapper,
                  _throwHelperMock.Object);
         }
@@ -123,14 +123,14 @@ namespace OakChan.Tests.Integration.Services
                     {
                         new DefaultOpPost()
                         {
-                            Message = "x",
+                            PlainMessageText = "x",
                         }
                     }
                 });
 
             var service = CreateThreadService();
 
-            var postDto = await service.AddPostToThreadAsync("b", 1, postData);
+            var postDto = await service.AddPostToThreadAsync(1, postData);
             var thread = await service.GetThreadAsync("b", 1);
 
             Assert.NotNull(postDto);
@@ -178,7 +178,7 @@ namespace OakChan.Tests.Integration.Services
                 }
             });
 
-            var a2 = await service.AddPostToThreadAsync("a", aThread.ThreadId, new PostCreationDto
+            var a2 = await service.AddPostToThreadAsync(aThread.ThreadId, new PostCreationDto
             {
                 Message = "a_2"
             });
@@ -205,8 +205,8 @@ namespace OakChan.Tests.Integration.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
+                              new DefaultOpPost { PlainMessageText = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
                         }
                     }
                 }
@@ -217,7 +217,7 @@ namespace OakChan.Tests.Integration.Services
 
             var service = CreateThreadService();
 
-            await service.AddPostToThreadAsync("a", 10, new PostCreationDto());
+            await service.AddPostToThreadAsync(10, new PostCreationDto());
 
             var thread = await service.GetThreadAsync("a", 10);
             Assert.AreEqual(DateTime.UtcNow.Date, thread.LastBump.Date);
@@ -239,10 +239,10 @@ namespace OakChan.Tests.Integration.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-40) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-30) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-20) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) },
+                              new DefaultOpPost { PlainMessageText = "OpPost", Created = DateTime.UtcNow.AddDays(-40) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-30) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-20) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-10) },
                         }
                     }
     }
@@ -253,7 +253,7 @@ namespace OakChan.Tests.Integration.Services
 
             var service = CreateThreadService();
 
-            await service.AddPostToThreadAsync("a", 10, new PostCreationDto
+            await service.AddPostToThreadAsync(10, new PostCreationDto
             {
             });
 
@@ -277,8 +277,8 @@ namespace OakChan.Tests.Integration.Services
                         Board = SeedData.DefaultBoard,
                         Posts = new Post[]
                         {
-                              new DefaultOpPost { Message = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
-                              new DefaultPost { Message = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
+                              new DefaultOpPost { PlainMessageText = "OpPost", Created = DateTime.UtcNow.AddDays(-20) },
+                              new DefaultPost { PlainMessageText = "Reply", Created = DateTime.UtcNow.AddDays(-10) }
                         }
                     }
                 }
@@ -289,7 +289,7 @@ namespace OakChan.Tests.Integration.Services
 
             var service = CreateThreadService();
 
-            await service.AddPostToThreadAsync("a", 10, new PostCreationDto
+            await service.AddPostToThreadAsync(10, new PostCreationDto
             {
                 IsSaged = true
             });

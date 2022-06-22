@@ -1,0 +1,115 @@
+﻿.posting-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 80%;
+    max-width: 550px;
+    margin: 5px auto;
+}
+
+.posting-form__fields {
+    box-sizing: border-box;
+    flex-grow: 1;
+    min-width: 350px;
+}
+
+.posting-form__attachment {
+    box-sizing: border-box;
+    width: 100px;
+    margin: 0 4px 4px;
+}
+
+    .posting-form__attachment img {
+        box-sizing: border-box;
+        max-width: 100px;
+        max-height: 130px;
+    }
+
+    .posting-form__attachment input {
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+    }
+
+.attachment-selector {
+    height: 100px;
+}
+
+    .attachment-selector label {
+        height: 100%;
+        width: 100%;
+        min-width: initial;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        box-sizing: border-box;
+        border-width: thin;
+    }
+
+#attachment-info {
+    position: relative;
+    font-size: 0.7em;
+    display: none;
+}
+
+    #attachment-info button {
+        position: absolute;
+        background-color: white;
+        color: black;
+        opacity: 0.75;
+        top: 2px;
+        right: 2px;
+        width: 18px;
+        height: 18px;
+        padding: 0;
+        font-size: 11px;
+        box-sizing: border-box;
+        padding: 0;
+        border: none;
+        border-radius: 2px;
+        font-weight: 700;
+    }
+
+.posting-form__grid {
+    display: grid;
+    grid-template-columns: fit-content(35%) 1fr;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.posting-form__text-editor {
+    display: block;
+    max-height: 700px;
+    width: 100%;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.posting-form__mb-wrapper {
+    display: flex;
+    margin: 3px 0;
+}
+
+.posting-form__mb {
+    width: 23px;
+    height: 23px;
+    padding: 0;
+    margin-right: 3px;
+    font-size: 0.85em;
+}
+
+    .posting-form__mb.mb_bald {
+        font-weight: 700;
+    }
+
+    .posting-form__mb.mb_italic {
+        font-style: italic;
+    }
+
+    .posting-form__mb.mb_strike {
+        text-decoration: line-through;
+    }

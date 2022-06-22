@@ -5,7 +5,7 @@ namespace OakChan.ViewModels
 {
     public class HomePageViewModel
     {
-        public IEnumerable<BoardInfoDto> Boards { get; set; }
+        public IEnumerable<BoardDto> Boards { get; set; }
 
         public IEnumerable<ThreadPreviewViewModel> LastCreatedThreads { get; set; }
 

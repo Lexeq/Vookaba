@@ -14,3 +14,9 @@
     margin: 3px;
     padding: 3px 16px;
 }
+
+.notification_error {
+    background-color: var(--colors_post-bg);
+    border: 2px solid red;
+    color: red;
+}

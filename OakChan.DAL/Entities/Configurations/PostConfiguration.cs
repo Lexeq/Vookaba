@@ -26,9 +26,12 @@ namespace OakChan.DAL.Entities.Configurations
                 .HasColumnName("AuthorUserAgent")
                 .IsRequired(true);
 
-            builder.Property(p => p.Message)
+            builder.Property(p => p.PlainMessageText)
                 .IsRequired(false)
                 .HasMaxLength(OakConstants.PostConstants.MessageMaxLength);
+
+            builder.Property(p => p.HtmlEncodedMessage)
+                .HasColumnName("Message");
 
             builder.HasOne<AuthorToken>()
                 .WithMany()

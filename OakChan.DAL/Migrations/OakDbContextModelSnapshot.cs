@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OakChan.DAL.Database;
 
+#nullable disable
+
 namespace OakChan.DAL.Migrations
 {
     [DbContext(typeof(OakDbContext))]
@@ -16,16 +18,18 @@ namespace OakChan.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.9")
-                .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -40,15 +44,16 @@ namespace OakChan.DAL.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<int>", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("text");
@@ -63,7 +68,7 @@ namespace OakChan.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
@@ -84,7 +89,7 @@ namespace OakChan.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
@@ -101,7 +106,7 @@ namespace OakChan.DAL.Migrations
 
                     b.HasIndex("UserId", "RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
@@ -120,15 +125,16 @@ namespace OakChan.DAL.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("OakChan.DAL.Entities.Base.Attachment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AttachmentType")
                         .HasColumnType("integer");
@@ -143,7 +149,7 @@ namespace OakChan.DAL.Migrations
                     b.Property<string>("Hash")
                         .IsRequired()
                         .HasColumnType("text")
-                        .IsFixedLength(true);
+                        .IsFixedLength();
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -188,6 +194,9 @@ namespace OakChan.DAL.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
+                    b.Property<bool>("IsReadOnly")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -202,11 +211,12 @@ namespace OakChan.DAL.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("EntityId")
                         .IsRequired()
@@ -241,14 +251,19 @@ namespace OakChan.DAL.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<Guid>("AuthorToken")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("HtmlEncodedMessage")
+                        .HasColumnType("text")
+                        .HasColumnName("Message");
 
                     b.Property<IPAddress>("IP")
                         .IsRequired()
@@ -261,20 +276,21 @@ namespace OakChan.DAL.Migrations
                     b.Property<bool>("IsSaged")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Message")
-                        .HasMaxLength(4096)
-                        .HasColumnType("character varying(4096)");
-
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.Property<int>("Number")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Number"));
 
                     b.Property<bool>("OpMark")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("PlainMessageText")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
 
                     b.Property<int>("ThreadId")
                         .HasColumnType("integer");
@@ -291,8 +307,9 @@ namespace OakChan.DAL.Migrations
 
                     b.HasIndex("AuthorToken");
 
-                    b.HasIndex("IsOP", "ThreadId")
-                        .HasSortOrder(new[] { SortOrder.Descending, SortOrder.Ascending });
+                    b.HasIndex("IsOP", "ThreadId");
+
+                    NpgsqlIndexBuilderExtensions.HasSortOrder(b.HasIndex("IsOP", "ThreadId"), new[] { SortOrder.Descending, SortOrder.Ascending });
 
                     b.HasIndex("ThreadId", "Number");
 
@@ -303,15 +320,16 @@ namespace OakChan.DAL.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("BoardKey")
                         .IsRequired()
                         .HasColumnType("character varying(10)");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsPinned")
                         .HasColumnType("boolean");
@@ -321,12 +339,12 @@ namespace OakChan.DAL.Migrations
 
                     b.Property<DateTime>("LastBump")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasDefaultValue(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
                     b.Property<DateTime>("LastHit")
                         .ValueGeneratedOnUpdate()
-                        .HasColumnType("timestamp without time zone")
+                        .HasColumnType("timestamp with time zone")
                         .HasDefaultValue(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
 
                     b.Property<int>("PostsCount")
@@ -340,16 +358,18 @@ namespace OakChan.DAL.Migrations
                         .HasDefaultValue(0);
 
                     b.Property<string>("Subject")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
+                        .HasMaxLength(42)
+                        .HasColumnType("character varying(42)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoardKey", "IsPinned", "Created")
-                        .HasSortOrder(new[] { SortOrder.Ascending, SortOrder.Descending, SortOrder.Descending });
+                    b.HasIndex("BoardKey", "IsPinned", "Created");
 
-                    b.HasIndex("BoardKey", "IsPinned", "LastBump")
-                        .HasSortOrder(new[] { SortOrder.Ascending, SortOrder.Descending, SortOrder.Descending });
+                    NpgsqlIndexBuilderExtensions.HasSortOrder(b.HasIndex("BoardKey", "IsPinned", "Created"), new[] { SortOrder.Ascending, SortOrder.Descending, SortOrder.Descending });
+
+                    b.HasIndex("BoardKey", "IsPinned", "LastBump");
+
+                    NpgsqlIndexBuilderExtensions.HasSortOrder(b.HasIndex("BoardKey", "IsPinned", "LastBump"), new[] { SortOrder.Ascending, SortOrder.Descending, SortOrder.Descending });
 
                     b.ToTable("Threads");
                 });
@@ -366,10 +386,10 @@ namespace OakChan.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("Expire")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("IsUsed")
                         .HasColumnType("boolean");
@@ -397,8 +417,9 @@ namespace OakChan.DAL.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -418,15 +439,16 @@ namespace OakChan.DAL.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("OakChan.Identity.ApplicationUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
@@ -491,7 +513,7 @@ namespace OakChan.DAL.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("OakChan.Identity.AuthorToken", b =>
@@ -501,7 +523,7 @@ namespace OakChan.DAL.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<IPAddress>("IP")
                         .HasColumnType("inet");
@@ -516,6 +538,12 @@ namespace OakChan.DAL.Migrations
                     b.HasBaseType("OakChan.DAL.Entities.Base.Attachment");
 
                     b.Property<int>("Height")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ThumbnailHeight")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ThumbnailWidth")
                         .HasColumnType("integer");
 
                     b.Property<int>("Width")

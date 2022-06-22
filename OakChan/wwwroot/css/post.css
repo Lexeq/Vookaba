@@ -76,8 +76,21 @@
 .post__image-container {
     display: inline-block;
     transition-duration: 0.15s;
-    max-width: 175px;
-    min-width: 150px;
+    max-width: 200px;
+}
+
+    .post__image-container.full,
+    .post__image-container.expanded {
+        max-width: unset;
+    }
+
+    .post__image-container img.loading {
+        opacity: 0.5;
+    }
+
+.full .post__image {
+    max-width: unset;
+    max-height: unset;
 }
 
 .post__image {
@@ -90,10 +103,9 @@
     margin-right: 0.5em;
 }
 
-
-
 .post__file-info {
-    font-size: 00.75em;
+    font-size: 0.75em;
+    min-width: 125px;
 }
 
 .post__file-name {
@@ -109,14 +121,12 @@
 
 .post__file-size {
     width: 100%;
-    max-width: 250px;
     display: flex;
-    justify-content: space-between;
     margin: 0px 0px 2px;
 }
 
     .post__file-size span {
-        margin: 0px 5px 0px 0px;
+        margin-right: 5px;
         overflow: hidden;
         white-space: nowrap;
     }
@@ -142,6 +152,10 @@
 .post-withimage {
     min-width: 400px;
 }
+
+    .post-withimage .post__message {
+        margin-top: 28px;
+    }
 
 .ref-post {
     color: brown;

@@ -17,6 +17,8 @@
         InvitationCreate = 20_201,
 
         //thread events 30_xxx
+        ThreadIsPinnedChanged = 30_001,
+        ThreadIsLockedChanged = 30_005,
 
         //posts events 40_xxx
         PostDelete = 40_001,

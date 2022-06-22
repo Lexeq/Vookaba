@@ -28,7 +28,7 @@ namespace OakChan.Tests.Integration.Base
             = new AuthorToken
             {
                 Token = new Guid("11111111-1111-1111-1111-111111111111"),
-                Created = DateTime.Parse("2000-01-01")
+                Created = DateTime.SpecifyKind(DateTime.Parse("2000-01-01"), DateTimeKind.Utc)
             };
 
         internal Board DefaultBoard { get; }

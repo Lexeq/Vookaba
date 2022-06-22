@@ -25,26 +25,26 @@ namespace OakChan.Tests.Integration.Services
                     Subject = "2",
                     Posts = new[] {
                         new DefaultOpPost(),
-                        new DefaultPost { Created = new DateTime(2020, 1, 10) } } },
+                        new DefaultPost { Created = DateTime.SpecifyKind( new DateTime(2020, 1, 10), DateTimeKind.Utc) } } },
                 new Thread{
                     BoardKey = "b",
                     Subject = "1",
                     Posts = new[] {
                         new DefaultOpPost(),
-                        new DefaultPost { Created = new DateTime(2020, 1, 20 ) } } },
+                        new DefaultPost { Created = DateTime.SpecifyKind(new DateTime(2020, 1, 20 ), DateTimeKind.Utc) } } },
                 new Thread{
                     Board = board,
                     Subject = "4",
                     Posts = new[] {
                         new DefaultOpPost(),
-                        new DefaultPost { Created = new DateTime(2020, 1, 5) } } }
+                        new DefaultPost { Created = DateTime.SpecifyKind(new DateTime(2020, 1, 5), DateTimeKind.Utc) } } }
             };
 
             SeedData.AddDefaults().AddThreads(thread);
 
             TopThreadsService service = CreateService();
 
-            var x = (await service.GetTopThreadsByLastPostAsync(3)).ToList();
+            var x = (await service.GetLastRepliedThreadsAsync(3)).ToList();
 
             Assert.IsNotNull(x);
             Assert.AreEqual(2, x.Count);
@@ -62,18 +62,18 @@ namespace OakChan.Tests.Integration.Services
                 new Thread{
                     BoardKey = "b",
                     Subject = "2",
-                    Posts = new[] { new DefaultOpPost { Created = new DateTime(2020, 1, 10) } } },
+                    Posts = new[] { new DefaultOpPost { Created = DateTime.SpecifyKind(new DateTime(2020, 1, 10), DateTimeKind.Utc) } } },
                 new Thread{
                     Board = board,
                     Subject = "4",
-                    Posts = new[] { new DefaultOpPost { Created = new DateTime(2020, 1, 5) } } }
+                    Posts = new[] { new DefaultOpPost { Created = DateTime.SpecifyKind(new DateTime(2020, 1, 5), DateTimeKind.Utc) } } }
             };
 
             SeedData.AddDefaults().AddThreads(thread);
 
             TopThreadsService service = CreateService();
 
-            var x = (await service.GetTopThreadsByLastPostAsync(3)).ToList();
+            var x = (await service.GetLastRepliedThreadsAsync(3)).ToList();
 
             Assert.IsNotNull(x);
             Assert.AreEqual(0, x.Count);
@@ -92,17 +92,17 @@ namespace OakChan.Tests.Integration.Services
                     Board = board,
                     Subject = "3",
                     Posts = new[] {
-                        new DefaultOpPost {Created = DateTime.Now },
-                        new DefaultPost {Created = DateTime.Now.AddDays(1), IsSaged = true },
-                        new DefaultPost {Created = DateTime.Now.AddDays(10) }
+                        new DefaultOpPost {Created = DateTime.UtcNow },
+                        new DefaultPost {Created = DateTime.UtcNow.AddDays(1), IsSaged = true },
+                        new DefaultPost {Created = DateTime.UtcNow.AddDays(10) }
                     }
                 },
                 new Thread{
                     Board = board,
                     Subject = "2",
                     Posts = new[] {
-                        new DefaultOpPost {Created = DateTime.Now.AddDays(2) },
-                        new DefaultPost {Created = DateTime.Now.AddDays(5) }
+                        new DefaultOpPost {Created = DateTime.UtcNow.AddDays(2) },
+                        new DefaultPost {Created = DateTime.UtcNow.AddDays(5) }
                          }
                 }
             };
@@ -110,7 +110,7 @@ namespace OakChan.Tests.Integration.Services
             SeedData.AddTokens(SeedData.DefaultToken).AddThreads(threads);
             TopThreadsService service = CreateService();
 
-            var result = (await service.GetTopThreadsByLastPostAsync(2)).ToList();
+            var result = (await service.GetLastRepliedThreadsAsync(2)).ToList();
 
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(subj, result[0].Subject);
@@ -130,26 +130,26 @@ namespace OakChan.Tests.Integration.Services
                 new Thread{
                     Board = board1,
                     Subject = "2",
-                    Created = DateTime.Now.AddDays(2),
-                    Posts = new[] { new DefaultOpPost { Created = DateTime.Now.AddDays(2) } } },
+                    Created = DateTime.UtcNow.AddDays(2),
+                    Posts = new[] { new DefaultOpPost { Created = DateTime.UtcNow.AddDays(2) } } },
                 new Thread{
                     Board = board1,
                     Subject = "1",
-                    Created = DateTime.Now,
-                    Posts = new[] { new DefaultOpPost { Created = DateTime.Now, } } },
+                    Created = DateTime.UtcNow,
+                    Posts = new[] { new DefaultOpPost { Created = DateTime.UtcNow, } } },
 
                 new Thread{
                     Board = board2,
                     Subject = "3",
-                    Created = DateTime.Now.AddDays(3),
-                    Posts = new[] { new DefaultOpPost { Created = DateTime.Now.AddDays(3) } } }
+                    Created = DateTime.UtcNow.AddDays(3),
+                    Posts = new[] { new DefaultOpPost { Created = DateTime.UtcNow.AddDays(3) } } }
             };
 
             SeedData.AddTokens(SeedData.DefaultToken).AddThreads(threads);
 
             TopThreadsService service = CreateService();
 
-            var x = (await service.GetTopThreadsByCreationTimeAsync(3)).ToList();
+            var x = (await service.GetLastCreatedThreadsAsync(3)).ToList();
 
             Assert.IsNotNull(x);
             Assert.AreEqual(2, x.Count);
@@ -193,8 +193,8 @@ namespace OakChan.Tests.Integration.Services
         {
             public static IEnumerable<MethodCaller> Foo(int limit)
             {
-                yield return serv => serv.GetTopThreadsByLastPostAsync(limit);
-                yield return serv => serv.GetTopThreadsByCreationTimeAsync(limit);
+                yield return serv => serv.GetLastRepliedThreadsAsync(limit);
+                yield return serv => serv.GetLastCreatedThreadsAsync(limit);
             }
         }
 

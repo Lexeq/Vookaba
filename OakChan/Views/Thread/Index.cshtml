@@ -4,21 +4,32 @@
     ViewBag.Title = Model.Subject;
 }
 @section Scripts{
-    <partial name="_ValidationScriptsPartial" />
+<partial name="_ValidationScriptsPartial" />
 }
 <hr />
-<p class="switcher"
-   tabindex="0"
-   id="switcher"
-   onclick="switchFormVisibility()"
-   data-switched-text="@Localizer["Hide form"]">@Localizer["Write a post"]</p>
+<div>
+    @if (!Model.IsReadOnly)
+    {
+        <div class="switcher"
+         tabindex="0"
+         id="switcher"
+         onclick="switchFormVisibility()"
+         data-switched-text="@Localizer["Hide form"]">
+            @Localizer["Write a post"]
+        </div>
 
-<partial name="_PostCreationFormPartial" model="new PostFormViewModel()" />
+        <partial name="_PostCreationFormPartial" model="new PostFormViewModel()" />
+    }
+    else
+    {
+        <h3 class="text-center">@Localizer["Thread is closed."]</h3>
+    }
+</div>
 <div id="@($"thread-{Model.ThreadId}")"
      class="thread"
      data-bid="@(Model.BoardKey)"
      data-tid="@(Model.ThreadId)">
-    <span class="thread__subject">@Model.Subject</span>
+    <partial name="_ThreadCaption" model="Model" />
     <partial name="_PostView" model="Model.OpPost" />
     @foreach (var post in Model.Replies)
     {

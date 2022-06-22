@@ -135,8 +135,8 @@ namespace OakChan
 
             services.ConfigureApplicationCookie(options =>
             {
-                options.AccessDeniedPath = "/Administration/Account/AccessDenied";
                 options.LoginPath = "/Administration/Account/Login";
+                options.LogoutPath = "/Administration/Account/Logout";
                 options.SlidingExpiration = true;
                 options.ExpireTimeSpan = TimeSpan.FromDays(OakConstants.Identity.CookieExpireInDays);
                 options.Cookie.Name = "passport";
@@ -144,15 +144,17 @@ namespace OakChan
                 options.Cookie.IsEssential = true;
                 options.Cookie.MaxAge = TimeSpan.FromDays(OakConstants.Identity.CookieMaxAgeInDays);
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
-
-                options.EventsType = typeof(Security.CookieValidator);
+                options.EventsType = typeof(Security.AppCookieEvents);
             });
 
             services.AddChanPolicies();
             services.AddScoped<HttpStatusCodeDescriber>();
 
-            services.Configure<ChanOptions>(o => o.PublicRegistrationEnabled = false);
+            services.AddApiVersioning();
+
+            services.Configure<ApplicationOptions>(Configuration.GetSection("ApplicationOptions"), o => o.BindNonPublicProperties = true);
             services.AddOptions();
+            services.AddSingleton<OptionsRewriter>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -199,7 +201,7 @@ namespace OakChan
                   defaults: new { Controller = "Error" });
 
                 endpoints.MapControllerRoute(
-                  name: "default",
+                  name: "home",
                   pattern: "/",
                   defaults: new { Controller = "Home", Action = "Index" });
 
@@ -215,12 +217,12 @@ namespace OakChan
 
                 endpoints.MapControllerRoute(
                     name: "boardAction",
-                    pattern: "{board:alpha}/{action}",
+                    pattern: "boards/{action}/{board:alpha?}",
                     defaults: new { Controller = "Board" });
 
                 endpoints.MapControllerRoute(
                     name: "threadAction",
-                    pattern: "{board:alpha}/{thread:int}/{action}",
+                    pattern: "threads/{board:alpha}/{thread:int}/{action}",
                     defaults: new { Controller = "Thread" });
             });
         }

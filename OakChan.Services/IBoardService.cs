@@ -11,14 +11,14 @@ namespace OakChan.Services
         /// Возвращает перечисление, содержащие информацию о существующих досках.
         /// </summary>
         /// <param name="showAll">Если <c>true</c> возвращает также скрытые и неактивные доски.</param>
-        public Task<IEnumerable<BoardInfoDto>> GetBoardsAsync(bool showAll);
+        public Task<IEnumerable<BoardDto>> GetBoardsAsync(bool showAll);
 
         /// <summary>
         /// Возвращает информацию о доске по строковому ключу.
         /// </summary>
         /// <param name="boardKey">Строковый идентификатор доски.</param>
         /// <returns>Объект, сожержащий информацию о доске или null, если доска не существует.</returns>
-        public Task<BoardInfoDto?> GetBoardInfoAsync(string boardKey);
+        public Task<BoardDto?> GetBoardAsync(string boardKey);
 
 
         /// <summary>
@@ -27,9 +27,7 @@ namespace OakChan.Services
         /// <param name="boardId">ID доски.</param>
         /// <param name="offset">Смещение, необходимое для выборки определенного подмножества тредов.</param>
         /// <param name="count">Количество тредов.</param>
-        /// <param name="recentPostsCount">Количество последних ответов для предпросмотра.</param>
-        /// <returns>Коллекция объектов предпросмотра тредов или пустое множество, если тредов для задданных параметров не существует.</returns>
-        public Task<IEnumerable<ThreadPreviewDto>> GetThreadPreviewsAsync(string boardKey, int offset, int count, int recentPostsCount);
+        public Task<PartialList<ThreadPreviewDto>> GetThreadPreviewsAsync(string boardKey, int offset, int count);
 
         /// <summary>
         /// Создает новую доску.

@@ -40,10 +40,7 @@ namespace OakChan.Security.DependecyInjection
 
                 options.AddPolicy(PoliciesNames.CanDeletePosts, policy =>
                 {
-                    policy.Combine(options.GetPolicy(PoliciesNames.HasStaffRole))
-                          .Combine(options.GetPolicy(PoliciesNames.HasBoardPermission))
-                          .AddRequirements(new PostDeletingPermissionRequirement());
-
+                    policy.AddRequirements(new PostDeletingPermissionRequirement());
                 });
 
                 options.AddPolicy(PoliciesNames.CanEditUsers, policy =>
@@ -53,13 +50,20 @@ namespace OakChan.Security.DependecyInjection
 
                 options.AddPolicy(PoliciesNames.CanPost, policy =>
                 {
-                    policy.RequireClaim(OakConstants.ClaimTypes.AuthorToken);
+                    policy.AddRequirements(new PostingPermissionRequirement());
+                });
+
+                options.AddPolicy(PoliciesNames.CanEditThreads, policy =>
+                {
+                    policy.RequireRole(OakConstants.Roles.Administrator, OakConstants.Roles.Moderator);
+                    policy.Combine(options.GetPolicy(PoliciesNames.HasBoardPermission));
                 });
             });
 
             services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
             services.AddScoped<IAuthorizationHandler, PostDeletingPermissionHandler>();
-            services.AddScoped<CookieValidator>();
+            services.AddSingleton<IAuthorizationHandler, PostingPermissionHandler>();
+            services.AddScoped<AppCookieEvents>();
 
             return services;
         }

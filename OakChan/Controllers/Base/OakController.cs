@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OakChan.ViewModels;
 using System.Net;
+using System.Security.Claims;
 
 namespace OakChan.Controllers.Base
 {
@@ -9,6 +10,14 @@ namespace OakChan.Controllers.Base
         public IPAddress IP => HttpContext.Connection.RemoteIpAddress;
 
         public string UserAgent => HttpContext.Request.Headers["User-Agent"];
+
+        public string UserRole
+        {
+            get
+            {
+                return User.FindFirstValue(ClaimsIdentity.DefaultRoleClaimType) ?? Common.OakConstants.Roles.NotInRole;
+            }
+        }
 
         protected virtual ViewResult Error(int code, string caption)
             => Error(code, caption, string.Empty);

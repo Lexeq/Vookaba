@@ -9,6 +9,8 @@ using OakChan.Services;
 using OakChan.Services.DTO;
 using OakChan.Tests.Integration.Base;
 using OakChan.ViewModels;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OakChan.Tests.Unit.Controllers
@@ -25,7 +27,6 @@ namespace OakChan.Tests.Unit.Controllers
         {
             var controller = new BoardController(
                 boardService ?? Mock.Of<IBoardService>(),
-                postService ?? Mock.Of<IPostService>(),
                 stringLocalizer ?? Mock.Of<IStringLocalizer<BoardController>>(),
                 mapper ?? Mapper,
                 modLogService ?? Mock.Of<IModLogService>(),
@@ -39,14 +40,21 @@ namespace OakChan.Tests.Unit.Controllers
         {
             var boardServiceMock = new Mock<IBoardService>();
             boardServiceMock
-                .Setup(x => x.GetBoardInfoAsync(key))
-                .ReturnsAsync(new BoardInfoDto { Key = key, Name = name });
+                .Setup(x => x.GetBoardAsync(key))
+                .ReturnsAsync(new BoardDto { Key = key, Name = name });
+            boardServiceMock
+                .Setup(x => x.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(new PartialList<ThreadPreviewDto>
+                {
+                    TotalCount = 0,
+                    CurrentItems = new List<ThreadPreviewDto>()
+                });
             var controller = CreateContorller(boardServiceMock.Object);
 
             var id = await controller.Index(key) as ViewResult;
             var page = id?.ViewData.Model as BoardPageViewModel;
 
-            boardServiceMock.Verify(m => m.GetBoardInfoAsync(key), Times.Once);
+            boardServiceMock.Verify(m => m.GetBoardAsync(key), Times.Once);
             Assert.IsNotNull(page);
             StringAssert.AreEqualIgnoringCase(key, page.Key);
             StringAssert.AreEqualIgnoringCase(name, page.Name);
@@ -54,20 +62,20 @@ namespace OakChan.Tests.Unit.Controllers
         }
 
         [Test]
-        public async Task RequestDeletedBoard()
+        public async Task RequestDisabledBoard()
         {
             var boardServiceMock = new Mock<IBoardService>();
             boardServiceMock
-                .Setup(x => x.GetBoardInfoAsync(It.IsAny<string>()))
-                .ReturnsAsync(new BoardInfoDto { IsDisabled = true });
+                .Setup(x => x.GetBoardAsync(It.IsAny<string>()))
+                .ReturnsAsync(new BoardDto { IsDisabled = true });
             var controller = CreateContorller(boardServiceMock.Object);
 
             var result = await controller.Index("b") as ViewResult;
 
             Assert.NotNull(result);
             Assert.IsInstanceOf<ErrorViewModel>(result.Model);
-            boardServiceMock.Verify(m => m.GetBoardInfoAsync(It.IsAny<string>()), Times.Once());
-            boardServiceMock.Verify(m => m.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never());
+            boardServiceMock.Verify(m => m.GetBoardAsync(It.IsAny<string>()), Times.Once());
+            boardServiceMock.Verify(m => m.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never());
         }
 
 
@@ -78,28 +86,32 @@ namespace OakChan.Tests.Unit.Controllers
         {
             var boardServiceMock = new Mock<IBoardService>();
             boardServiceMock
-                .Setup(x => x.GetBoardInfoAsync(It.IsAny<string>()))
-                .ReturnsAsync(new BoardInfoDto { Key = "b", Name = "Random" });
+                .Setup(x => x.GetBoardAsync(It.IsAny<string>()))
+                .ReturnsAsync(new BoardDto { Key = "b", Name = "Random" });
+            boardServiceMock.Setup(x => x.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(new PartialList<ThreadPreviewDto> { TotalCount = 0, CurrentItems = new List<ThreadPreviewDto>() });
             var controller = CreateContorller(boardServiceMock.Object);
 
             var result = await controller.Index("b", page) as ViewResult;
 
-            boardServiceMock.Verify(m => m.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<int>()), Times.Never());
             Assert.IsInstanceOf<ErrorViewModel>(result.ViewData.Model);
         }
 
         [TestCase(1, 0)]
         [TestCase(1, 1)]
-        [TestCase(1, 10)]
-        [TestCase(2, 11)]
+        [TestCase(1, Common.OakConstants.BoardConstants.PageSize)]
+        [TestCase(2, Common.OakConstants.BoardConstants.PageSize + 1)]
+        [TestCase(5, Common.OakConstants.BoardConstants.PageSize * 5)]
         public async Task PagesCountCalculation(int expected, int source)
         {
             var boardServiceMock = new Mock<IBoardService>();
-            boardServiceMock.Setup(x => x.GetBoardInfoAsync("b"))
-             .ReturnsAsync(new BoardInfoDto { Key = "b", Name = "Random", ThreadsCount = source });
+            boardServiceMock.Setup(x => x.GetBoardAsync("b"))
+             .ReturnsAsync(new BoardDto { Key = "b", Name = "Random" });
+            boardServiceMock.Setup(x => x.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(new PartialList<ThreadPreviewDto> { TotalCount = source, CurrentItems = Array.Empty<ThreadPreviewDto>() });
             var controller = CreateContorller(boardServiceMock.Object);
 
-            var viewResult = await controller.Index("b", 1, 10) as ViewResult;
+            var viewResult = await controller.Index("b", 1) as ViewResult;
             var viewModel = viewResult.Model as BoardPageViewModel;
 
             Assert.IsNotNull(viewModel);

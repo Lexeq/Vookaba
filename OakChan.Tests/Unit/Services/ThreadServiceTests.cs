@@ -37,8 +37,8 @@ namespace OakChan.Tests.Unit.Services
         [TestCase("", "<span>subj</span>subj", "subjsubj")]
         [TestCase("", "<span>subj</span>", "subj")]
         [TestCase("", "<i>subj</i>", "subj")]
-        [TestCase("", "123456789_123456789_123456789_12messagelongerthensubjectsizelimit", "123456789_123456789_123456789...")]
-        [TestCase("", "123456789_123456789_123456789_12", "123456789_123456789_123456789_12")]
+        [TestCase("", "123456789_123456789_123456789_123456789_12messagelongerthensubjectsizelimit", "123456789_123456789_123456789_123456789...")]
+        [TestCase("", "123456789_123456789_123456789_123456789_12", "123456789_123456789_123456789_123456789_12")]
         public async Task SetSubject(string subject, string message, string expected)
         {
             string subj = null;

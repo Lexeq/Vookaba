@@ -2,12 +2,12 @@
     color: var(--colors_quote);
 }
 
-.post .spoiler {
+.spoiler {
     color: var(--colors_spoiler);
     background: var(--colors_spoiler)
 }
 
-    .post .spoiler:hover {
+    .spoiler:hover {
         color: var(--colors-font);
         background: var(--colors-post-bg)
     }

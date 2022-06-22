@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using OakChan.Areas.Administration.ViewModels;
+using OakChan.Common;
 using OakChan.Services.DTO;
 using OakChan.ViewModels;
 using System.Linq;
@@ -28,6 +30,7 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.IsSaged, opt => opt.MapFrom(vm => vm.IsSaged))
                 .ForMember(dto => dto.OpMark, opt => opt.Ignore())
                 .ForMember(dto => dto.Tripcode, opt => opt.Ignore())
+                .ForMember(dto => dto.EncodedMessage, opt => opt.Ignore())
                 .AfterMap((vm, dto, ctx) =>
                 {
                     if (vm.Image != null)
@@ -38,12 +41,12 @@ namespace OakChan.Mapping
                     }
                 });
 
-            CreateMap<ThreadBoardAggregationDto, ThreadViewModel>()
-                .ForMember(vm => vm.BoardKey, opt => opt.MapFrom(dto => dto.Board.Key))
-                .ForMember(vm => vm.ThreadId, opt => opt.MapFrom(dto => dto.Thread.ThreadId))
-                .ForMember(vm => vm.Subject, opt => opt.MapFrom(dto => dto.Thread.Subject))
-                .ForMember(vm => vm.Replies, opt => opt.MapFrom(dto => dto.Thread.Posts.Skip(1)))
-                .ForMember(vm => vm.OpPost, opt => opt.MapFrom(dto => dto.Thread.Posts.First()));
+            CreateMap<ThreadDto, ThreadViewModel>()
+                .ForMember(vm => vm.BoardKey, opt => opt.MapFrom(dto => dto.BoardKey))
+                .ForMember(vm => vm.ThreadId, opt => opt.MapFrom(dto => dto.ThreadId))
+                .ForMember(vm => vm.Subject, opt => opt.MapFrom(dto => dto.Subject))
+                .ForMember(vm => vm.Replies, opt => opt.MapFrom(dto => dto.Posts.Skip(1)))
+                .ForMember(vm => vm.OpPost, opt => opt.MapFrom(dto => dto.Posts.First()));
 
             CreateMap<ThreadPreviewDto, ThreadPreviewViewModel>()
                 .ForMember(vm => vm.PostsCount, opt => opt.MapFrom(dto => dto.TotalPostsCount))
@@ -60,6 +63,7 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.IsSaged, opt => opt.Ignore())
                 .ForMember(dto => dto.OpMark, opt => opt.Ignore())
                 .ForMember(dto => dto.Tripcode, opt => opt.Ignore())
+                .ForMember(dto => dto.EncodedMessage, opt => opt.Ignore())
                 .AfterMap((vm, dto, ctx) =>
                 {
                     if (vm.Image != null)
@@ -80,10 +84,14 @@ namespace OakChan.Mapping
                 .ForMember(dto => dto.Key, opt => opt.MapFrom(vm => vm.BoardKey))
                 .ReverseMap();
 
-            CreateMap<BoardInfoDto, BoardPropertiesViewModel>()
+            CreateMap<BoardDto, BoardPropertiesViewModel>()
                 .ForMember(vm => vm.BoardKey, opt => opt.MapFrom(dto => dto.Key))
-                .ReverseMap()
-                .ForMember(dto => dto.ThreadsCount, opt => opt.Ignore());
+                .ReverseMap();
+
+            CreateMap<ApplicationOptions, AppConfiguratonViewModel>()
+                .ForMember(vm => vm.RequireInvitation, opt => opt.MapFrom(x => x.RegistrationByInvitation))
+                .ForMember(vm => vm.AnonymousCanPost, opt => opt.MapFrom(x => x.IsAnonymousPostingAllowed))
+                .ReverseMap();
         }
     }
 }

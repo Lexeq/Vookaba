@@ -20,7 +20,9 @@
                     <div>
                         <img class="favorite-thread__image"
                              src="@(attachments.GetThumbnailLinkByName(thread.OpPost.Image.Name))"
-                             alt="@thread.OpPost.Image.OriginalName" />
+                             alt="@thread.OpPost.Image.OriginalName"
+                             width="@thread.OpPost.Image.ThumbnailWidth"
+                             height="@thread.OpPost.Image.ThumbnailHeight"/>
                         <div class="favorite-thread__message">@Html.Raw(thread.OpPost.Message)</div>
                     </div>
                 </a>

@@ -54,10 +54,10 @@ namespace OakChan.Services
         /// <summary>
         /// Search posts with same IP.
         /// </summary>
-        IP = 0x1,
+        IP = 1,
         /// <summary>
         /// Search posts with same AuthorToken.
         /// </summary>
-        Token = 0x2
+        Token = 2
     }
 }

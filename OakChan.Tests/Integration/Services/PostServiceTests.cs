@@ -57,7 +57,7 @@ namespace OakChan.Tests.Integration.Services
                     {
                         new DefaultOpPost(),
                         new DefaultPost(),
-                        new DefaultPost{Message = "ok" }, //Number 3
+                        new DefaultPost{ HtmlEncodedMessage = "ok" }, //Number 3
                         new DefaultPost()
                     }
                 });
@@ -79,7 +79,7 @@ namespace OakChan.Tests.Integration.Services
                     {
                                     new DefaultOpPost(),
                                     new DefaultPost(),
-                                    new DefaultPost{Id = 42},
+                                    new DefaultPost{ Id = 42 },
                                     new DefaultPost()
                     }
                 });

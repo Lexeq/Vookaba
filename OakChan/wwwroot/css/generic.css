@@ -23,7 +23,7 @@ hr {
     border-top: 1px solid var(--colors_separator);
 }
 
-.main{
+.main {
     margin: 5px 5px 0;
 }
 
@@ -67,3 +67,28 @@ hr {
 .error-text {
     color: var(--colors_error);
 }
+
+
+.properties-form {
+    margin: 10px;
+}
+
+    .properties-form .oakbutton {
+        margin-top: 5px;
+    }
+
+.danger-zone {
+    --colors_btn-alt: red;
+    --colors_btn-brd: red;
+    border-color: red;
+    max-width: 600px;
+}
+
+    .danger-zone form {
+        display: flex;
+        justify-content: space-between;
+    }
+
+        .danger-zone form label {
+            max-width: 80%;
+        }

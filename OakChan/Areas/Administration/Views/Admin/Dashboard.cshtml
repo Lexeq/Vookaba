@@ -1,10 +1,11 @@
 ﻿@model OakChan.Areas.Administration.ViewModels.AdminDashboardViemModel
-@section Scripts{
-    <partial name="_ValidationScriptsPartial" />
-    <script src="~/scripts/mod/invitations.js"></script>
-}
 <div class="dashboard">
-    <h1>@Localizer["Oakchan administration"]</h1>
+    <h1>@Localizer["{0} administration", OakChan.Common.OakConstants.Name]</h1>
+    <div class="text-center">
+        <a asp-area="Administration"
+           asp-controller="Configuration" 
+           asp-action="Index">[@Localizer["Edit config"]]</a>
+    </div>
     <hr />
     <div class="dashboard-section">
         <h3>@Localizer["Boards:"]</h3>
@@ -18,3 +19,7 @@
     </div>
     <hr />
 </div>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/scripts/mod/invitations.js"></script>
+}

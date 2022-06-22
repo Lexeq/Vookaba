@@ -18,8 +18,19 @@ namespace OakChan.Controllers
             this.describer = describer;
         }
 
-        public IActionResult HandleHttpStatusCode(int statusCode) =>
-            IsRequestFromReExecuteMiddleware ? ErrorView(statusCode) : ErrorView(404);
+        public IActionResult HandleHttpStatusCode(int statusCode)
+        {
+
+            if (IsRequestFromReExecuteMiddleware)
+            {
+                var original = HttpContext.Features.Get<IStatusCodeReExecuteFeature>().OriginalPath;
+                return original.StartsWith("/api/v", System.StringComparison.OrdinalIgnoreCase) ? StatusCode(statusCode) : ErrorView(statusCode);
+            }
+            else
+            {
+                return ErrorView(404);
+            }
+        }
 
         public IActionResult HandleException()
         {

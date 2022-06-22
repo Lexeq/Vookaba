@@ -4,6 +4,7 @@
     {
         public const string Name = "OakChan";
         public const string Culture = "ru";
+        public const string UserOptionsFileName = "appsettings.edited.json";
 
         public static class Identity
         {
@@ -16,13 +17,13 @@
         public static class PostConstants
         {
             public const int NameMaxLength = 32;
-            public const int MessageMaxLength = 4096;
+            public const int MessageMaxLength = 10000;
             public const int MaxFileSize = 1536 * 1024;
         }
 
         public static class ThreadConstants
         {
-            public const int SubjectMaxLength = 32;
+            public const int SubjectMaxLength = 42;
             public const int MaxFileSize = 2048 * 1024;
         }
 
@@ -31,6 +32,9 @@
             public const int DefaultBumpLimit = 250;
             public const int MaxKeyLength = 10;
             public const int MaxNameLength = 64;
+
+            public const int PageSize = 10;
+            public const int RecentRepliesShow = 3;
         }
 
         public static class Roles
@@ -56,6 +60,7 @@
             public const string CanEditUsers = "EditUserPolicy";
             public const string HasStaffRole = "StaffRole";
             public const string HasBoardPermission = "BoardPermissionPolicy";
+            public const string CanEditThreads = "ThreadEditPolicy";
         }
     }
 }

@@ -44,6 +44,9 @@ namespace OakChan.Utils
                 ApplicationEvent.AccountRoleAdd => stringLocalizer["Add role `{0}` to user {1}", log.Note, GetUsetEditionTag(log.EntityId)],
                 ApplicationEvent.AccountRoleRemove => stringLocalizer["Remove role `{0}` from user {1}", log.Note, GetUsetEditionTag(log.EntityId)],
 
+                ApplicationEvent.ThreadIsPinnedChanged => stringLocalizer[$"{(log.Note == "true" ? "Pin": "Unpin")} thread #{{0}}", log.EntityId],
+                ApplicationEvent.ThreadIsLockedChanged => stringLocalizer[$"{(log.Note == "true" ? "Lock": "Unlock")} thread #{{0}}", log.EntityId],
+
                 ApplicationEvent.PostDelete => stringLocalizer["Delete post #{0} ({1})", log.EntityId, GetDeletionReason(log.Note)],
                 ApplicationEvent.PostBulkDelete => stringLocalizer["Delete many posts ({0})", GetDeletionReason(log.Note)],
 

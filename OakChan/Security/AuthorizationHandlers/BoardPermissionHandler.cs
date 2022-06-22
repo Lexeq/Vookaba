@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using OakChan.Common;
+using Microsoft.Extensions.Logging;
+using OakChan.Utils;
 using System.Threading.Tasks;
 
 namespace OakChan.Security.AuthorizationHandlers
@@ -10,26 +11,34 @@ namespace OakChan.Security.AuthorizationHandlers
     public class BoardPermissionHandler : AuthorizationHandler<BoardPermissionRequirement>
     {
         private readonly IHttpContextAccessor accessor;
+        private readonly ILogger<BoardPermissionHandler> logger;
 
-        public BoardPermissionHandler(IHttpContextAccessor accessor)
+        public BoardPermissionHandler(IHttpContextAccessor accessor, ILogger<BoardPermissionHandler> logger)
         {
             this.accessor = accessor;
+            this.logger = logger;
         }
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, BoardPermissionRequirement requirement)
         {
             var board = accessor.HttpContext.Request.RouteValues["board"]?.ToString();
-            if (board != null &&
-                (context.User.IsInRole(OakConstants.Roles.Administrator) ||
-                context.User.HasClaim(OakConstants.ClaimTypes.BoardPermission, board)))
-
+            if(board == null)
             {
-                context.Succeed(requirement);
+                board = accessor.HttpContext.Request.Query["board"];
+            }
+            if (board != null)
+            {
+                if (context.User.HasBoardPermission(board))
+                {
+                    context.Succeed(requirement);
+                    return Task.CompletedTask;
+                }
             }
             else
             {
-                context.Fail();
+                logger.LogInformation("Route value for board was not provided.");
             }
+            context.Fail();
             return Task.CompletedTask;
         }
     }

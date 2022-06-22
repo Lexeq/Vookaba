@@ -15,10 +15,10 @@ namespace OakChan.Markup
 
         public async Task ProcessAsync(PostCreationDto post)
         {
-            if (!string.IsNullOrEmpty(post.Message))
+            if (post.Message != null)
             {
                 var markupProc = new MarkupTextProcessor(tagsFactory.GetTags());
-                post.Message = await markupProc.ProcessAsync(post.Message);
+                post.EncodedMessage = await markupProc.ProcessAsync(post.Message);
             }
         }
     }

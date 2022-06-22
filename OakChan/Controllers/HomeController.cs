@@ -27,8 +27,8 @@ namespace OakChan.Controllers
             var vm = new HomePageViewModel
             {
                 Boards = boards,
-                LastCreatedThreads = mapper.Map<List<ThreadPreviewViewModel>>(await topThreads.GetTopThreadsByCreationTimeAsync(3)),
-                LastUpdatedThreads = mapper.Map<List<ThreadPreviewViewModel>>(await topThreads.GetTopThreadsByLastPostAsync(3)),
+                LastCreatedThreads = mapper.Map<List<ThreadPreviewViewModel>>(await topThreads.GetLastCreatedThreadsAsync(3)),
+                LastUpdatedThreads = mapper.Map<List<ThreadPreviewViewModel>>(await topThreads.GetLastRepliedThreadsAsync(3)),
             };
 
             return View(vm);
