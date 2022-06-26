@@ -40,7 +40,7 @@
 }
 
 .favorite-threads {
-    width: 500px;
+    max-width: 500px;
     margin: 0 auto;
 }
 
@@ -52,7 +52,7 @@
 
 .favorite-threads__list {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     justify-content: space-around;
     align-items: stretch;
 }
@@ -63,6 +63,7 @@
     width: 30%;
     padding: 3px;
     box-sizing: border-box;
+    min-width: 100px;
 }
 
 .favorite-thread__caption {
@@ -82,6 +83,8 @@
 
 .favorite-thread__image {
     max-width: 90%;
+    height: auto;
+    width: auto;
     display: block;
     margin: 0.75em auto;
     max-height: 150px;
