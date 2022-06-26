@@ -54,6 +54,7 @@
     position: relative;
     font-size: 0.7em;
     display: none;
+    min-width: 35px;
 }
 
     #attachment-info button {

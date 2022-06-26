@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
@@ -39,7 +40,7 @@ namespace OakChan.Tests.Unit
                     ApplicationDiscriminator = "1234"
                 });
 
-            var tripProc = new TripcodePostProcessor(httpAccessorMock.Object, optionsMock.Object);
+            var tripProc = new TripcodePostProcessor(httpAccessorMock.Object, optionsMock.Object, Mock.Of<ILogger<TripcodePostProcessor>>());
             var pdo = new PostCreationDto
             {
                 AuthorName = name

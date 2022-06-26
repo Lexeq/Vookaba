@@ -142,7 +142,6 @@ function attachmentLoaded(img) {
     let shrinkRatio = Math.max(img.naturalHeight / 130, img.naturalWidth / 100);
     $('#attachment-info')
         .width(img.naturalWidth / shrinkRatio)
-        .height(img.naturalHeight / shrinkRatio)
         .show();
     $('#attachment-resolution').text(img.naturalWidth + "x" + img.naturalHeight);
     let fileSize = $('#attachment-input').prop('files')[0].size;
