@@ -7,8 +7,9 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/css/normalize.css" />
     <environment include="Development">
-        <link rel="stylesheet" asp-href-include="~/css/*.css" asp-href-exclude="~/css/oak.min.css" />
+        <link rel="stylesheet" asp-href-include="~/css/src/*.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="~/css/oak.min.css" asp-append-version="true" />
@@ -32,7 +33,7 @@
         <script src="~/scripts/src/notifications.js"></script>
         <script src="~/scripts/src/modal.js"></script>
         <script src="~/scripts/src/post-numeration.js"></script>
-        <script src="~/scripts/src/textEditor.js"></script>
+        <script src="~/scripts/src/text-editor.js"></script>
     </environment>
     <environment exclude="Development">
         <script src="~/scripts/papyrus.min.js"></script>

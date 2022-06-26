@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OakChan.Services;
 using OakChan.Services.DTO;
@@ -27,8 +28,13 @@ namespace OakChan.Utils
                    numBytesRequested: count);
         }
 
-        public TripcodePostProcessor(IHttpContextAccessor contextAccessor, IOptions<DataProtectionOptions> protector)
+        public TripcodePostProcessor(IHttpContextAccessor contextAccessor, IOptions<DataProtectionOptions> protector, ILogger<TripcodePostProcessor> logger)
         {
+            if (protector.Value?.ApplicationDiscriminator == null)
+            {
+                logger.LogCritical("ApplicationDiscriminator is null.");
+                throw new ArgumentException(nameof(protector), "ApplicationDiscriminator is not set.");
+            }
             _contextAccessor = contextAccessor;
             _salt = ComputeHash(protector.Value.ApplicationDiscriminator, Array.Empty<byte>(), 32);
         }
