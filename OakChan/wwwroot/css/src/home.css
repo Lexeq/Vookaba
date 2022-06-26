@@ -30,9 +30,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
 #favorites .post_hidden img {
     filter: grayscale(1) blur(8px);
 }
+
 .favorite-threads a {
     text-decoration: none;
 }
