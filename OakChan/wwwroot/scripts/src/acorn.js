@@ -12,13 +12,9 @@
 function imageLoaded(img) {
     img.classList.remove('loading');
     let setNaturalSize = true;
-    let container = img.closest('.post__image-container');
-    if (container.classList.contains('full')) {
-        img.closest('.post').style.maxWidth = 'unset';
-    }
-    else if (container.classList.contains('expanded')) {
+    let post = img.closest('.post');
+    if (post.classList.contains('img-expanded')) {
         let body = document.getElementsByTagName('body')[0];
-        img.closest('.post').style.maxWidth = 'unset';
 
         let w = img.naturalWidth;
         let h = img.naturalHeight;
@@ -54,10 +50,9 @@ function toggleFullSize(btn) {
     else {
         img.classList.add('loading');
     }
-    let container = img.closest('.post__image-container');
-    img.removeAttribute('loading')
-    container.classList.toggle('full');
-    img.src = selectImgSrc(img, container);
+    let post = img.closest('.post');
+    post.classList.toggle('img-full');
+    img.src = selectImgSrc(img, post);
 }
 
 function toggleExpanded(img) {
@@ -67,23 +62,22 @@ function toggleExpanded(img) {
     else {
         img.classList.add('loading');
     }
-    let container = img.parentNode.parentNode;
-    if (container.classList.contains('full')) {
-        container.classList.remove('full');
-        container.classList.remove('expanded')
+    let post = img.closest('.post');
+    if (post.classList.contains('img-full')) {
+        post.classList.remove('img-full');
+        post.classList.remove('img-expanded')
     }
     else {
-        container.classList.toggle('expanded');
+        post.classList.toggle('img-expanded');
     }
-    img.removeAttribute('loading')
-    img.src = selectImgSrc(img, container);
+    img.src = selectImgSrc(img, post);
 }
 
-function selectImgSrc(img, container) {
-    if (container.classList.contains('full')) {
+function selectImgSrc(img, post) {
+    if (post.classList.contains('img-full')) {
         return img.parentNode.href;
     }
-    if (container.classList.contains('expanded')) {
+    if (post.classList.contains('img-expanded')) {
         return img.parentNode.href;
     }
     else {
