@@ -56,7 +56,7 @@
 }
 
 .auth__fieldset {
-    width: 500px;
+    max-width: 500px;
     display: block;
     margin: auto;
     border-color: var(--colors_border);
