@@ -1,0 +1,62 @@
+﻿@model Vookaba.ViewModels.HomePageViewModel
+@{
+    ViewBag.Title = Localizer["Welcome"];
+    Layout = "_BaseLayout";
+}
+@section Footer{
+    <partial name="_Footer" />
+}
+
+<div class="home__auth-panel">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <partial name="_AccountInfo" />
+    }
+    else
+    {
+        <partial name="_AuthPartial" />
+    }
+</div>
+<div class="logo">
+    <img class="logo-img" src="/images/logo.png" />
+</div>
+<div class="welcome text-center">
+    <div>@Localizer["Welcome"]</div>
+</div>
+
+<div class="board-list">
+    <div class="board-list__head">
+        @Localizer["Boards list"]
+    </div>
+    <div class="board-list__list">
+        @{
+            var boards = Model.Boards.ToArray();
+            var columns = 2;
+            var index = 0;
+        }
+        @for (int c = 0; c < columns; c++)
+        {
+            <div class="board-list__column">
+                @for (int r = 0; r < boards.Length / columns + (boards.Length % columns > c ? 1 : 0); r++)
+                {
+                    var board = boards[index++];
+
+                    <div class="board-list__item">
+                        <a href="\@board.Key">@($"/{board.Key}/ - {board.Name}")</a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+<br />
+<div id="favorites">
+    @if (Model.LastCreatedThreads.Any())
+    {
+        <partial name="_TopThreads" model="@Model.LastCreatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently created threads"] } }' />
+    }
+    @if (Model.LastUpdatedThreads.Any())
+    {
+        <partial name="_TopThreads" model="@Model.LastUpdatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently updated threads"] } }' />
+    }
+</div>

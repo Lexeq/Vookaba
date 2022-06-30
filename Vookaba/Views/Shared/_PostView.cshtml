@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Routing
+@using Vookaba.ViewModels
+@using Vookaba.Utils
+@using Vookaba.Common;
+@model PostViewModel
+@inject Vookaba.DAL.IAttachmentsStorage attachments
+@{
+    Guid usid = Guid.Parse(Context.User.FindFirst(ApplicationConstants.ClaimTypes.AuthorToken).Value);
+}
+
+<div class="post-container" id="@($"pc{Model.Number}")">
+    <div id="@($"p{Model.Number}")"
+         class="@string.Join(" ", PostClasses.GetClasses(Model, usid))">
+
+        <div class="post__details">
+            @Html.DisplayFor(x=>x, "PostAuthor")
+            <span class="post__date" data-timestamp="@Model.Date.GetUnixEpochOffset()">@Model.Date.ToString("ddd d'/'MM'/'yy HH':'mm':'ss") UTC</span>
+            <span class="post__number" data-pnum="@Model.Number">
+                <a asp-route="thread" asp-route-board="@Context.GetRouteValue("board")" asp-route-thread="@Model.ThreadId" asp-fragment="@($"p{Model.Number}")">@($"№{Model.Number}")</a>
+            </span>
+            @if (Model.IsOpening || Model.OpMark)
+            {
+                <span class="op-mark">#OP</span>
+            }
+            <span class="post__control-panel">
+                <a data-pnum="@(Model.Number)"
+                   class="post__menu-button"
+                   href="#">▶</a>
+            </span>
+        </div>
+
+        @if (Model.HasImage)
+        {
+            string imgPath = attachments.GetImageLinkByName(Model.Image.Name);
+            string thumbPath = attachments.GetThumbnailLinkByName(Model.Image.Name);
+
+            <div class="post__images">
+                <div id="@($"ic{Model.Image.Name}")" class="post__image-container">
+                    <div class="post__file-info" id="@($"fi{Model.Number}-{Model.Image.Name}")">
+                        <div class="post__file-name">
+                            <a target="_blank" href="@imgPath">@($">{Model.Image.OriginalName}")</a>
+                        </div>
+                        <div class="post__file-size">
+                            <span>@($"{Model.Image.Width}x{Model.Image.Height}")</span>
+                            <span>@($"{Model.Image.Size/1024}{Localizer["KB"].Value}")</span>
+                            <span class="full-size" id=@($"scale{Model.Image.Name}")>1:1</span>
+                        </div>
+                    </div>
+                    <a class="post__file-link" href="@imgPath">
+                        <img id="@($"img{Model.Image.Name}")"
+                         class="post__image"
+                         src="@thumbPath"
+                         width=@Model.Image.ThumbnailWidth
+                         height=@Model.Image.ThumbnailHeight
+                         data-thumb=@thumbPath
+                         loading="lazy" />
+                    </a>
+                </div>
+            </div>
+        }
+
+        <div class="post__message" id="@($"m{Model.Number}")" data-pnum="@($"{Model.Number}")">@Html.Raw(Model.Message)</div>
+
+    </div>
+</div>

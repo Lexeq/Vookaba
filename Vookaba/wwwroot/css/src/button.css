@@ -1,0 +1,22 @@
+﻿.fancy-button {
+    height: 25px;
+    min-width: 80px;
+    background-color: var(--colors_btn);
+    color: var(--colors_btn-alt);
+    border: 2px solid var(--colors_btn-brd);
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+    .fancy-button:hover, .fancy-button:focus {
+        background: var(--colors_btn-alt);
+        cursor: pointer;
+        color: var(--colors_btn);
+    }
+
+    .fancy-button:disabled {
+        color: var(--colors_btn-dis-alt);
+        background: var(--colors_btn-dis);
+        border-color: var(--colors_btn-dis-brd);
+        cursor: default;
+    }

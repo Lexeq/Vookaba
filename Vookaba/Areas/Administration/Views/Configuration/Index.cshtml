@@ -1,0 +1,10 @@
+﻿@using System.Linq.Expressions;
+@model Vookaba.Areas.Administration.ViewModels.AppConfiguratonViewModel
+<form method="post"
+      asp-area="Administration"
+      asp-controller="Configuration"
+      asp-action="Update"
+      class="properties-form">
+    <partial name="_PropertiesEditorTablePartial" model="Model" />
+    <button type="submit" class="fancy-button">Save</button>
+</form>

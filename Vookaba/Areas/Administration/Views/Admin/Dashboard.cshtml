@@ -1,0 +1,25 @@
+﻿@model Vookaba.Areas.Administration.ViewModels.AdminDashboardViemModel
+<div class="dashboard">
+    <h1>@Localizer["{0} administration", Vookaba.Common.ApplicationConstants.Name]</h1>
+    <div class="text-center">
+        <a asp-area="Administration"
+           asp-controller="Configuration" 
+           asp-action="Index">[@Localizer["Edit config"]]</a>
+    </div>
+    <hr />
+    <div class="dashboard-section">
+        <h3>@Localizer["Boards:"]</h3>
+        <partial name="_BoardsListPartial" model="Model.Boards" />
+    </div>
+    <hr />
+    <div class="dashboard-section">
+        <h3>@Localizer["Users:"]</h3>
+        <partial name="_StaffListPartial" model="Model.Staff" />
+        <partial name="_InvitationsPartial" />
+    </div>
+    <hr />
+</div>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/scripts/mod/invitations.js"></script>
+}
