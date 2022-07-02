@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vookaba.Markup", "Vookaba.M
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vookaba.Identity", "Vookaba.Identity\Vookaba.Identity.csproj", "{FA585809-7D6D-4607-90A4-4DBE504B99A6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vookaba.Infrastructure", "Vookaba.Infrastructure\Vookaba.Infrastructure.csproj", "{0BADDF1A-F61C-42EA-87F5-626B9CAC3AF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{FA585809-7D6D-4607-90A4-4DBE504B99A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA585809-7D6D-4607-90A4-4DBE504B99A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA585809-7D6D-4607-90A4-4DBE504B99A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BADDF1A-F61C-42EA-87F5-626B9CAC3AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BADDF1A-F61C-42EA-87F5-626B9CAC3AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BADDF1A-F61C-42EA-87F5-626B9CAC3AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BADDF1A-F61C-42EA-87F5-626B9CAC3AF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

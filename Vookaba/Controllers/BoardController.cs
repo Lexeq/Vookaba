@@ -8,9 +8,11 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Vookaba.Common;
 using Vookaba.Controllers.Base;
-using Vookaba.Services;
+using Vookaba.Services.Abstractions;
 using Vookaba.Services.DTO;
-using Vookaba.ViewModels;
+using Vookaba.ViewModels.Common;
+using Vookaba.ViewModels.Board;
+using Vookaba.ViewModels.Thread;
 using BoardConsts = Vookaba.Common.ApplicationConstants.BoardConstants;
 
 namespace Vookaba.Controllers

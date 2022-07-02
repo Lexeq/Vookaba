@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using Vookaba.Common.Extensions;
 
 namespace Vookaba.Common.Exceptions
 {

@@ -2,9 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using Vookaba.Common.Exceptions;
-using Vookaba.DAL;
 using Vookaba.DAL.Entities;
-using Vookaba.Services;
 using Vookaba.Services.DbServices;
 using Vookaba.Services.DTO;
 using Vookaba.Tests.Integration.Base;
@@ -12,6 +10,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Vookaba.Services.Abstractions;
+using Vookaba.DAL.MediaStorage;
 
 namespace Vookaba.Tests.Integration.Services
 {

@@ -1,6 +1,6 @@
-﻿using Vookaba.Utils;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Vookaba.ViewModels.Common;
 
 namespace Vookaba.Areas.Administration.ViewModels
 {

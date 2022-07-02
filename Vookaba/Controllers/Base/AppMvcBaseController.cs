@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Vookaba.ViewModels;
+using Vookaba.ViewModels.Error;
 using System.Net;
 using System.Security.Claims;
 

@@ -1,10 +1,11 @@
-﻿@using Vookaba.ViewModels
+﻿@using Vookaba.ViewModels.Thread
+@using Vookaba.ViewModels.Board
 @model BoardPageViewModel
 @{
     ViewBag.Title = $"/{Model.Key}/ - {Vookaba.Common.ApplicationConstants.Name}";
 }
 @section Scripts{
-<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
 <hr />
 <h2 class="board-name">@($"/{Model.Key}/ - {Model.Name}")</h2>
@@ -18,7 +19,7 @@
          data-switched-text="@Localizer["Hide form"]">
             @Localizer["Create thread"]
         </div>
-        <partial name="_ThreadCreationFormPartial" model="new ThreadFormViewModel()" />
+        <partial name="../Board/PartialTemplates/_ThreadCreationForm" model="new ThreadFormViewModel()" />
     }
     else
     {
@@ -33,8 +34,8 @@
          class="thread"
          data-bid="@(thread.BoardKey)"
          data-tid="@(thread.ThreadId)">
-            <partial name="_ThreadCaption" model="thread" />
-            <partial name="_PostView" model="thread.OpPost" />
+            <partial name="./PartialTemplates/_ThreadCaption" model="thread" />
+            <partial name="./PartialTemplates/_Post" model="thread.OpPost" />
             <div class="to-thread">
                 @if (thread.PostsOmmited > 0)
                 {
@@ -44,7 +45,7 @@
             </div>
             @foreach (var post in thread.RecentPosts)
             {
-                <partial name="_PostView" model="post" />
+                <partial name="./PartialTemplates/_Post" model="post" />
             }
         </div>
         <hr />
@@ -53,5 +54,5 @@
 
 @if (Model.PagesInfo.TotalPages > 1)
 {
-    <partial name="_Paginator" model="Model.PagesInfo" />
+    <partial name="../Shared/PartialTemplates/_Paginator" model="Model.PagesInfo" />
 }

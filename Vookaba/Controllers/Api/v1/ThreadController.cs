@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vookaba.Common;
-using Vookaba.Services;
 using System.Threading.Tasks;
+using Vookaba.Services.Abstractions;
 
 namespace Vookaba.Controllers.Api.v1
 {

@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Http;
 using Vookaba.Areas.Administration.ViewModels;
 using Vookaba.Common;
 using Vookaba.Services.DTO;
-using Vookaba.ViewModels;
 using System.Linq;
+using Vookaba.ViewModels.Board;
+using Vookaba.ViewModels.Post;
+using Vookaba.ViewModels.Thread;
+using Vookaba.ViewModels.Common;
 
 namespace Vookaba.Mapping
 {

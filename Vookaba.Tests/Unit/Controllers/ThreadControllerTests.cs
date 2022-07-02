@@ -6,11 +6,13 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using Vookaba.Controllers;
-using Vookaba.Services;
 using Vookaba.Services.DTO;
 using Vookaba.Tests.Integration.Base;
-using Vookaba.ViewModels;
 using System.Threading.Tasks;
+using Vookaba.Services.Abstractions;
+using Vookaba.ViewModels.Thread;
+using Vookaba.ViewModels.Error;
+using Vookaba.ViewModels.Post;
 
 namespace Vookaba.Tests.Unit.Controllers
 {

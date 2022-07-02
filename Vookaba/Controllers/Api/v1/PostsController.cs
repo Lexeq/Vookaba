@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Vookaba.Common;
-using Vookaba.Services;
-using Vookaba.ViewModels;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Vookaba.Services.Abstractions;
+using Vookaba.ViewModels.Post;
 
 namespace Vookaba.Controllers.Api.v1
 {

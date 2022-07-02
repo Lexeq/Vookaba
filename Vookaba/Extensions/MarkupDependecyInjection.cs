@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Vookaba.Markup;
-using Vookaba.Services;
+using Vookaba.Services.Abstractions;
 using Vookaba.Utils;
 
 namespace Vookaba.Extensions

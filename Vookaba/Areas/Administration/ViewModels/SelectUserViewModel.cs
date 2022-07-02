@@ -1,6 +1,6 @@
 ﻿using Vookaba.Identity;
-using Vookaba.ViewModels;
 using System.Collections.Generic;
+using Vookaba.ViewModels.Common;
 
 namespace Vookaba.Areas.Administration.ViewModels
 {

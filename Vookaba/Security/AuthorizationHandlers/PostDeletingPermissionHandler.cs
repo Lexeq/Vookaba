@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Vookaba.Common;
-using Vookaba.ViewModels;
+using Vookaba.ViewModels.Post;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;

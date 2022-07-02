@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
 using Vookaba.Common.Exceptions;
-using Vookaba.DAL;
 using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
-using Vookaba.Services;
 using Vookaba.Services.DbServices;
 using Vookaba.Services.DTO;
 using Vookaba.Services.Mapping;
@@ -14,6 +12,8 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Vookaba.Services.Abstractions;
+using Vookaba.DAL.MediaStorage;
 
 namespace Vookaba.Tests.Unit.Services
 {

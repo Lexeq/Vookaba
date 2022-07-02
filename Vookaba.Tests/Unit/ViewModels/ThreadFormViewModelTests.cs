@@ -3,6 +3,7 @@ using Moq;
 using NUnit.Framework;
 using Vookaba.Tests.Unit.Base;
 using Vookaba.ViewModels;
+using Vookaba.ViewModels.Thread;
 
 namespace Vookaba.Tests.Unit.ViewModels
 {

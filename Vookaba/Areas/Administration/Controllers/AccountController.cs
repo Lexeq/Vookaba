@@ -9,9 +9,8 @@ using Vookaba.Areas.Administration.ViewModels;
 using Vookaba.Common;
 using Vookaba.Controllers.Base;
 using Vookaba.Identity;
-using Vookaba.Services;
 using Vookaba.Utils;
-using Vookaba.ViewModels;
+using Vookaba.ViewModels.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +18,8 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Transactions;
+using Vookaba.Services.Abstractions;
+using Vookaba.Common.Extensions;
 
 namespace Vookaba.Areas.Administration.Controllers
 {

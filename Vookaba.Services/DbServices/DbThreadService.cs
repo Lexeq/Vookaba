@@ -3,7 +3,6 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Vookaba.Common.Exceptions;
-using Vookaba.DAL;
 using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
 using Vookaba.DAL.Entities.Base;
@@ -14,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vookaba.Services.Abstractions;
+using Vookaba.DAL.MediaStorage;
 
 namespace Vookaba.Services.DbServices
 {

@@ -9,13 +9,13 @@
     <hr />
     <div class="dashboard-section">
         <h3>@Localizer["Boards:"]</h3>
-        <partial name="_BoardsListPartial" model="Model.Boards" />
+        <partial name="./PartialTemplates/_BoardsList" model="Model.Boards" />
     </div>
     <hr />
     <div class="dashboard-section">
         <h3>@Localizer["Users:"]</h3>
-        <partial name="_StaffListPartial" model="Model.Staff" />
-        <partial name="_InvitationsPartial" />
+        <partial name="./PartialTemplates/_StaffList" model="Model.Staff" />
+        <partial name="./PartialTemplates/_Invitations" />
     </div>
     <hr />
 </div>

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Security.Cryptography;
+using Vookaba.Services.Abstractions;
 
 namespace Vookaba.Services
 {

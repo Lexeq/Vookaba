@@ -8,9 +8,23 @@
     @RenderSection("Styles", false)
 }
 @section Header{
-    <partial name="_NavigationHeaderPartial" />
+    @if (!IsSectionDefined("Header"))
+    {
+        <partial name="./PartialTemplates/_NavigationHeader" />
+    }
+    else
+    {
+        @RenderSection("Header", true);
+    }
 }
 @section Footer{
-    <partial name="_Footer" />
+    @if (!IsSectionDefined("Footer"))
+    {
+        <partial name="_Footer" />
+    }
+    else
+    {
+        @RenderSection("Footer", true);
+    }
 }
 @RenderBody()

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Vookaba.Common.Exceptions;
-using Vookaba.DAL;
 using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
 using Vookaba.DAL.Entities.Base;
@@ -12,6 +11,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Vookaba.Services.Abstractions;
+using Vookaba.DAL.MediaStorage;
 
 namespace Vookaba.Services.DbServices
 {

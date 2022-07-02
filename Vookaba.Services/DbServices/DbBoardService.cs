@@ -8,8 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Vookaba.Common.Exceptions;
 using Vookaba.DAL.Entities;
-using Vookaba.DAL;
 using Microsoft.Extensions.Logging;
+using Vookaba.Services.Abstractions;
+using Vookaba.DAL.MediaStorage;
 
 namespace Vookaba.Services.DbServices
 {

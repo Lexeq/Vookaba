@@ -3,8 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Vookaba.Services;
-using Vookaba.ViewModels;
+using Vookaba.Services.Abstractions;
+using Vookaba.ViewModels.Home;
+using Vookaba.ViewModels.Thread;
 
 namespace Vookaba.Controllers
 {

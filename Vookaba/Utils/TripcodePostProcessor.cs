@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Vookaba.Services;
 using Vookaba.Services.DTO;
 using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Vookaba.Services.Abstractions;
 
 namespace Vookaba.Utils
 {
