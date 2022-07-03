@@ -12,15 +12,15 @@
 }
 
 <div class="error-container">
+@if (files.GetFileInfo(Model.ImagePath).Exists)
+{
+    <div class="error-row">
+        <img class="error-container__image" src="@Model.ImagePath" />
+    </div>
+}
     <div class="error-row error-container__caption">
         <span class="error-container__code">@Model.Code</span>
         <span> @Model.Title</span>
     </div>
     <div class="error-row error-container__description">@Model.Description</div>
-    @if (files.GetFileInfo(Model.ImagePath).Exists)
-    {
-        <div class="error-row">
-            <img class="error-container__image" src="@Model.ImagePath" />
-        </div>
-    }
 </div>
