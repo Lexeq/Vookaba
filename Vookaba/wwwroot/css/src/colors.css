@@ -27,6 +27,8 @@
     --colors_post-opmark: orangered;
     --colors_post-trip: #dd3333;
     --colors_thread-icon: red;
+    --colors_homepage-block-border: darkgoldenrod;
+    --colors_homepage-block-text: lightgoldenrodyellow;
 }
 
 .oppost {

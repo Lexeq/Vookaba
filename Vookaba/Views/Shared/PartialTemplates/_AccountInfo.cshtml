@@ -12,18 +12,18 @@
     };
 }
 
-<div>
+<div class="auth-panel">
     <input id="accountLevel"
            type="hidden"
            value="@accountLevel" />
-    <span class="user-name">@User.Identity.Name</span>
+    <span class="auth-panel__user-name">@User.Identity.Name</span>
     @if (role != null)
     {
         <a asp-area="Administration"
        asp-controller="Admin"
        asp-action="Dashboard">[@Localizer[role]]</a>
     }
-    <a class="auth-action"
+    <a class="auth-panel__action"
        asp-area="Administration"
        asp-controller="Account"
        asp-action="Logout"

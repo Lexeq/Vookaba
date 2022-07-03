@@ -2,12 +2,11 @@
 @model IEnumerable<ThreadPreviewViewModel>
 @inject Vookaba.DAL.MediaStorage.IAttachmentsStorage attachments
 
-<div class="favorite-threads">
-    <div class="favorite-threads__head">
-        <span>@ViewData["Caption"]</span>
+<div class="home__block favorite-threads">
+    <div class="header">
+        @ViewData["Caption"]
     </div>
     <div class="favorite-threads__list">
-
         @foreach (var thread in Model)
         {
             <div class="favorite-thread__item @($"p{thread.OpPost.Number}-{thread.BoardKey}")"

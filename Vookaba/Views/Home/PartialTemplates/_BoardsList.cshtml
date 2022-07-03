@@ -1,0 +1,25 @@
+﻿<div class="home__block board-list">
+    <div class="header">
+        @Localizer["Boards list"]
+    </div>
+    <div class="board-list__list">
+        @{
+            var boards = Model.Boards.ToArray();
+            var columns = 2;
+            var index = 0;
+        }
+        @for (int c = 0; c < columns; c++)
+        {
+            <div class="board-list__column">
+                @for (int r = 0; r < boards.Length / columns + (boards.Length % columns > c ? 1 : 0); r++)
+                {
+                    var board = boards[index++];
+
+                    <div class="board-list__item">
+                        <a href="\@board.Key">@($"/{board.Key}/ - {board.Name}")</a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

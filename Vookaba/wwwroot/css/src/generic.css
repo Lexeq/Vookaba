@@ -61,10 +61,6 @@ hr {
         height: 1em;
     }
 
-.auth-action {
-    font-weight: 500;
-}
-
 .error-text {
     color: var(--colors_error);
 }
@@ -93,3 +89,17 @@ hr {
         .danger-zone form label {
             max-width: 80%;
         }
+
+.auth-panel {
+    text-align: right;
+    margin: 3px 10px;
+    font-size: 0.85em;
+}
+
+.auth-panel__action {
+    font-weight: 500;
+}
+
+.auth-panel__user-name {
+    font-style: italic;
+}
