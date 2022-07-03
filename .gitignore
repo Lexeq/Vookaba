@@ -339,7 +339,7 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 Vookaba/wwwroot/res/img
-/Vookaba/.config/dotnet-tools.json
-/Vookaba/wwwroot/css/oak.min.css
-/Vookaba/wwwroot/scripts/papyrus.min.js
+Vookaba/.config/dotnet-tools.json
+Vookaba/wwwroot/css/vookaba.min.css
+Vookaba/wwwroot/scripts/papyrus.min.js
 Vookaba/appsettings.edited.json
