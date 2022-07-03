@@ -3,7 +3,7 @@
     public static class ApplicationConstants
     {
         public const string Name = "Voochan";
-        public const string Culture = "ru";
+        public const string Culture = "en";
         public const string UserOptionsFileName = "appsettings.edited.json";
 
         public static class Identity
