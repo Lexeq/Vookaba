@@ -338,8 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
-OakChan/wwwroot/res/img
-/OakChan/.config/dotnet-tools.json
-/OakChan/wwwroot/css/oak.min.css
-/OakChan/wwwroot/scripts/papyrus.min.js
-OakChan/appsettings.edited.json
+Vookaba/wwwroot/res/img
+Vookaba/.config/dotnet-tools.json
+Vookaba/wwwroot/css/vookaba.min.css
+Vookaba/wwwroot/scripts/papyrus.min.js
+Vookaba/appsettings.edited.json

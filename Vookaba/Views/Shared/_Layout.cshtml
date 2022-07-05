@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "_BaseLayout";
+}
+@section Scripts{
+    @RenderSection("Scripts", false)
+}
+@section Styles{
+    @RenderSection("Styles", false)
+}
+@section Header{
+    @if (!IsSectionDefined("Header"))
+    {
+        <partial name="./PartialTemplates/_NavigationHeader" />
+    }
+    else
+    {
+        @RenderSection("Header", true);
+    }
+}
+@section Footer{
+    @if (!IsSectionDefined("Footer"))
+    {
+        <partial name="_Footer" />
+    }
+    else
+    {
+        @RenderSection("Footer", true);
+    }
+}
+@RenderBody()

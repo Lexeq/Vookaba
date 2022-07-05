@@ -1,0 +1,75 @@
+﻿.switcher {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: table;
+    margin: 0 auto 5px auto;
+    padding: 1px 10px;
+    border: 1px solid #f1e698;
+}
+
+    .switcher:hover,
+    .switcher:focus {
+        border: 1px solid brown;
+    }
+
+.error-list ul {
+    padding: 0;
+}
+
+.error-list li {
+    list-style: none;
+    color: var(--colors_error);
+    margin: 3px 0 0;
+    font-size: 0.9em;
+}
+
+    .error-list li::before {
+        content: "- ";
+    }
+
+.authform {
+    padding: 0.5rem;
+    margin: 10px 0px;
+}
+
+    .authform span {
+        margin-left: 5px;
+    }
+
+    .authform ul {
+        padding: 0px;
+        list-style-type: none;
+    }
+
+.authform-error {
+    color: var(--colors_error);
+}
+
+.authform .field-validation-error {
+    display: inline-block;
+}
+
+.authform .field-validation-valid {
+    display: none;
+}
+
+.auth__fieldset {
+    max-width: 500px;
+    display: block;
+    margin: auto;
+    border-color: var(--colors_border);
+}
+
+    .auth__fieldset legend {
+        margin: auto;
+    }
+
+.input-row__label {
+    display: block;
+}
+
+.input-row__input {
+    width: 100%;
+}

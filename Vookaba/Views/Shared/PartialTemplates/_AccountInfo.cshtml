@@ -1,0 +1,31 @@
+﻿@using Vookaba.Common
+@using System.Security.Claims
+
+@{
+    var role = User.FindFirstValue(ClaimTypes.Role);
+    var accountLevel = role switch
+    {
+        ApplicationConstants.Roles.Janitor => 1,
+        ApplicationConstants.Roles.Moderator => 3,
+        ApplicationConstants.Roles.Administrator => 5,
+        _ => -1
+    };
+}
+
+<div class="auth-panel">
+    <input id="accountLevel"
+           type="hidden"
+           value="@accountLevel" />
+    <span class="auth-panel__user-name">@User.Identity.Name</span>
+    @if (role != null)
+    {
+        <a asp-area="Administration"
+       asp-controller="Admin"
+       asp-action="Dashboard">[@Localizer[role]]</a>
+    }
+    <a class="auth-panel__action"
+       asp-area="Administration"
+       asp-controller="Account"
+       asp-action="Logout"
+       asp-route-returnUrl="@Context.Request.Path">@Localizer["Logout"]</a>
+</div>

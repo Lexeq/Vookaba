@@ -1,0 +1,40 @@
+﻿@using Vookaba.ViewModels.Thread
+@using Vookaba.ViewModels.Post
+@model ThreadViewModel
+@{
+    ViewBag.Title = Model.Subject;
+}
+@section Scripts{
+<partial name="_ValidationScriptsPartial" />
+}
+<hr />
+<div>
+    @if (!Model.IsReadOnly)
+    {
+        <div class="switcher"
+         tabindex="0"
+         id="switcher"
+         onclick="switchFormVisibility()"
+         data-switched-text="@Localizer["Hide form"]">
+            @Localizer["Write a post"]
+        </div>
+
+        <partial name="./PartialTemplates/_PostCreationForm" model="new PostFormViewModel()" />
+    }
+    else
+    {
+        <h3 class="text-center">@Localizer["Thread is closed."]</h3>
+    }
+</div>
+<div id="@($"thread-{Model.ThreadId}")"
+     class="thread"
+     data-bid="@(Model.BoardKey)"
+     data-tid="@(Model.ThreadId)">
+    <partial name="../Shared/PartialTemplates/_ThreadCaption" model="Model" />
+    <partial name="../Shared/PartialTemplates/_Post" model="Model.OpPost" />
+    @foreach (var post in Model.Replies)
+    {
+        <partial name="./PartialTemplates/_Post" model="post" />
+    }
+</div>
+

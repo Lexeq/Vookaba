@@ -1,0 +1,30 @@
+﻿@model Vookaba.ViewModels.Home.HomePageViewModel
+@{
+    ViewBag.Title = Vookaba.Common.ApplicationConstants.Name + " - " + Localizer["Home page"].Value;
+    Layout = "_Layout";
+}
+
+@section Header {
+    @if (User.Identity.IsAuthenticated)
+    {
+        <partial name="./PartialTemplates/_AccountInfo" />
+    }
+    else
+    {
+        <partial name="./PartialTemplates/_AuthPartial" />
+    }
+}
+
+<partial name="./PartialTemplates/_LogoAndName" />
+<partial name="./PartialTemplates/_BoardsList" />
+<br />
+<div id="favorites">
+    @if (Model.LastCreatedThreads.Any())
+{
+    <partial name="./PartialTemplates/_TopThreads" model="@Model.LastCreatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently created threads"] } }' />
+}
+@if (Model.LastUpdatedThreads.Any())
+{
+    <partial name="./PartialTemplates/_TopThreads" model="@Model.LastUpdatedThreads" view-data='new ViewDataDictionary(ViewData) { { "Caption", Localizer["Recently updated threads"] } }' />
+}
+</div>

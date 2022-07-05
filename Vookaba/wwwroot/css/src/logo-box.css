@@ -1,0 +1,17 @@
+﻿.logo-box{
+    font-size:26px;
+    display:flex;
+    justify-content:center;
+    margin:2em 0;
+}
+
+.logo-box svg{
+    height:2.5em;
+    align-self:center;
+    margin-right:0.5em;
+}
+
+.logo-box h1{
+    font-size:2em;
+    margin: 0 0 0 0.5em;
+}

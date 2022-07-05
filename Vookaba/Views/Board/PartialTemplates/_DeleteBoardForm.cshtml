@@ -1,0 +1,8 @@
+﻿@model string
+<form method="post"
+      asp-controller="Board"
+      asp-route-board="@Model"
+      asp-action="@nameof(Vookaba.Controllers.BoardController.Delete)">
+    <label>@Localizer["Delete this board with all threads, posts and attachments"]</label>
+    <button id="brd-delete" type="submit" class="fancy-button">@Localizer["Delete"]</button>
+</form>

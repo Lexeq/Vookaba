@@ -1,0 +1,12 @@
+﻿@model Vookaba.ViewModels.Post.PostViewModel
+<span class="post__author">
+    <span class="name">
+        @{
+            <text>@(Model.AuthorName ?? Localizer["Anonymous"].Value)</text>
+            if (!string.IsNullOrEmpty(Model.Tripcode))
+            {
+                <text><span class="trip">!@Model.Tripcode</span></text>
+            }
+        }
+    </span>
+</span>

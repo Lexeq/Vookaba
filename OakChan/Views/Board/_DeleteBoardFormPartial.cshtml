@@ -1,8 +1,0 @@
-﻿@model string
-<form method="post"
-      asp-controller="Board"
-      asp-route-board="@Model"
-      asp-action="@nameof(OakChan.Controllers.BoardController.Delete)">
-    <label>@Localizer["Delete this board with all threads, posts and attachments"]</label>
-    <button id="brd-delete" type="submit" class="oakbutton">@Localizer["Delete"]</button>
-</form>

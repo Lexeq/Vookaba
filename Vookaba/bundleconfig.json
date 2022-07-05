@@ -1,0 +1,29 @@
+[
+  {
+    "outputFileName": "wwwroot/css/vookaba.min.css",
+    "inputFiles": [ "wwwroot/css/src/*.css" ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/scripts/papyrus.min.js",
+    "inputFiles": [
+      "wwwroot/scripts/src/acorn.js",
+      "wwwroot/scripts/src/dates.js",
+      "wwwroot/scripts/src/localizer.js",
+      "wwwroot/scripts/src/post-menu.js",
+      "wwwroot/scripts/src/post-ignoring.js",
+      "wwwroot/scripts/src/notifications.js",
+      "wwwroot/scripts/src/modal.js",
+      "wwwroot/scripts/src/post-numeration.js",
+      "wwwroot/scripts/src/text-editor.js",
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": false
+    },
+    "sourceMap": false
+  }
+]

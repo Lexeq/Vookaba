@@ -1,0 +1,31 @@
+﻿@using Vookaba.ViewModels.Thread;
+@model IEnumerable<ThreadPreviewViewModel>
+@inject Vookaba.DAL.MediaStorage.IAttachmentsStorage attachments
+
+<div class="home__block favorite-threads">
+    <div class="header">
+        @ViewData["Caption"]
+    </div>
+    <div class="favorite-threads__list">
+        @foreach (var thread in Model)
+        {
+            <div class="favorite-thread__item @($"p{thread.OpPost.Number}-{thread.BoardKey}")"
+                 data-tid="@thread.ThreadId"
+                 data-bid="@thread.BoardKey">
+                <a asp-route="thread"
+                   asp-route-board="@thread.BoardKey"
+                   asp-route-thread="@thread.ThreadId">
+                    <p class="favorite-thread__caption">@($"/{thread.BoardKey}/")</p>
+                    <div>
+                        <img class="favorite-thread__image"
+                             src="@(attachments.GetThumbnailLinkByName(thread.OpPost.Image.Name))"
+                             alt="@thread.OpPost.Image.OriginalName"
+                             width="@thread.OpPost.Image.ThumbnailWidth"
+                             height="@thread.OpPost.Image.ThumbnailHeight"/>
+                        <div class="favorite-thread__message">@Html.Raw(thread.OpPost.Message)</div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

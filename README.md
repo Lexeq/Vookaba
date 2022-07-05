@@ -1,5 +1,5 @@
-# OakChan
-At the moment, OakChan is at an early stage of development. 
+# Vookaba
+At the moment, Vookaba is at an early stage of development. 
 
 ## Requirements
 * [PostgreSQL](https://www.postgresql.org/)
@@ -11,7 +11,8 @@ At the moment, OakChan is at an early stage of development.
 - Images posting
 - Moderators and janitors
 - Post references (>>###)
-- Post formatting [WIP]
+- Post formatting
+- Tripcodes
 - Further more
 ## Try it!
 You can try it on http://185.242.84.5
