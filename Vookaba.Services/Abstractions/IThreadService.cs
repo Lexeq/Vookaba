@@ -1,8 +1,4 @@
-﻿#nullable enable
-using Vookaba.Services.DTO;
-using System.Threading.Tasks;
-
-namespace Vookaba.Services.Abstractions
+﻿namespace Vookaba.Services.Abstractions
 {
     public interface IThreadService
     {
@@ -36,8 +32,8 @@ namespace Vookaba.Services.Abstractions
         /// </summary>
         /// <param name="boardKey">ID доски.</param>
         /// <param name="threadId">ID треда.</param>
-        /// <returns>Объект с ифнормацией о треде</returns>
-        public Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId);
+        /// <returns>Объект с ифнормацией о треде или null, если тред не существует.</returns>
+        public Task<ThreadInfoDto?> GetThreadInfoAsync(string boardKey, int threadId);
 
         /// <summary>
         /// Управляет закреплением треда.

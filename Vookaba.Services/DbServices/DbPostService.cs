@@ -6,11 +6,7 @@ using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
 using Vookaba.DAL.Entities.Base;
 using Vookaba.Services.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Vookaba.Services.Abstractions;
 using Vookaba.DAL.MediaStorage;
 
@@ -34,7 +30,7 @@ namespace Vookaba.Services.DbServices
             this.logger = logger;
         }
 
-        public async Task<PostDto> GetByNumberAsync(string board, int number)
+        public async Task<PostDto?> GetByNumberAsync(string board, int number)
         {
             var post = await context.Posts
                 .Include(p => p.Attachments)
@@ -63,8 +59,13 @@ namespace Vookaba.Services.DbServices
                 })
                 .FirstOrDefaultAsync();
 
+            if(badPost == null)
+            {
+                throw new ArgumentException($"Post with id {id} does not exist.");
+            }
+
             //Expressions is fun (until you get runtime error)
-            Expression selector = null;
+            Expression selector = null!;
             var postParameter = Expression.Parameter(typeof(Post), "p");
 
             // select by ip

@@ -2,9 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Vookaba.DAL.Database;
 using Vookaba.Services.DTO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Vookaba.Services.Abstractions;
 
 namespace Vookaba.Services.DbServices

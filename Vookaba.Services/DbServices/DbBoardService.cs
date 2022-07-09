@@ -2,10 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Vookaba.DAL.Database;
 using Vookaba.Services.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Vookaba.Common.Exceptions;
 using Vookaba.DAL.Entities;
 using Microsoft.Extensions.Logging;
@@ -32,7 +28,7 @@ namespace Vookaba.Services.DbServices
             this.logger = logger;
         }
 
-        public async Task<BoardDto> GetBoardAsync(string boardKey)
+        public async Task<BoardDto?> GetBoardAsync(string boardKey)
         {
             ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
@@ -52,8 +48,7 @@ namespace Vookaba.Services.DbServices
             if (count <= 0) throw new ArgumentException("Count must be greater than 0.", nameof(count));
 
             var totalCount = context.Threads.Count(t => t.BoardKey == boardKey);
-            var result = new PartialList<ThreadPreviewDto> { TotalCount = totalCount };
-            List<Thread> threadsOnPage = null;
+            List<Thread> threadsOnPage = null!;
             if (totalCount > 0)
             {
 
@@ -76,7 +71,9 @@ namespace Vookaba.Services.DbServices
 
                 threadsOnPage.ForEach(t => t.Posts = posts[t.Id]);
             }
-            result.CurrentItems = mapper.Map<List<ThreadPreviewDto>>(threadsOnPage);
+            var result = new PartialList<ThreadPreviewDto>(
+                totalCount,
+                mapper.Map<List<ThreadPreviewDto>>(threadsOnPage));
             return result;
         }
 
@@ -122,12 +119,16 @@ namespace Vookaba.Services.DbServices
                 //update key
                 if (board.Key != null && board.Key != key)
                 {
-                    var cnt = await context.Database.ExecuteSqlInterpolatedAsync($@"UPDATE ""Boards"" b SET ""Key"" = {board.Key} WHERE b.""Key"" = {key}");
+                    await context.Database.ExecuteSqlInterpolatedAsync($@"UPDATE ""Boards"" b SET ""Key"" = {board.Key} WHERE b.""Key"" = {key}");
                     key = board.Key;
                 }
 
                 //update other properties
                 var boardEntity = context.Boards.Find(key);
+                if (boardEntity == null)
+                {
+                    throw new ArgumentException("Board does not exist.");
+                }
                 var x = context.Attach(boardEntity);
                 mapper.Map(board, boardEntity);
                 await context.SaveChangesAsync();
@@ -148,7 +149,7 @@ namespace Vookaba.Services.DbServices
             var board = await context.Boards.FindAsync(boardKey);
             if (board == null)
             {
-                throw new ArgumentException($"Board with key '{board.Key}' do not exist.");
+                throw new ArgumentException($"Board with key '{boardKey}' does not exist.");
             }
 
             var attachments = await context.Boards

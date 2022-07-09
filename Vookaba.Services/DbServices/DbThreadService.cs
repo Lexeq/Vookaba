@@ -7,12 +7,7 @@ using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
 using Vookaba.DAL.Entities.Base;
 using Vookaba.Services.DTO;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Vookaba.Services.Abstractions;
 using Vookaba.DAL.MediaStorage;
 
@@ -31,7 +26,7 @@ namespace Vookaba.Services.DbServices
             var overflowStr = "...";
 
             var builder = new StringBuilder(subjMax);
-            for (int i = 0; i < message.Length; i++)
+            for (int i = 0; i < message!.Length; i++) //OP post must contains message, so it's can't be null.
             {
                 if (message[i] != '<')
                 {
@@ -69,7 +64,7 @@ namespace Vookaba.Services.DbServices
             this.mapper = mapper;
         }
 
-        public Task<ThreadDto> GetThreadAsync(string boardKey, int threadId)
+        public Task<ThreadDto?> GetThreadAsync(string boardKey, int threadId)
         {
             ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
@@ -81,7 +76,7 @@ namespace Vookaba.Services.DbServices
                 .FirstOrDefaultAsync();
         }
 
-        public Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId)
+        public Task<ThreadInfoDto?> GetThreadInfoAsync(string boardKey, int threadId)
         {
             ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 

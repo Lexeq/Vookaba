@@ -1,10 +1,15 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 namespace Vookaba.Services.DTO
 {
     public class PartialList<T> : IEnumerable<T>
     {
+        public PartialList(int totalCount, IList<T> currentItems)
+        {
+            TotalCount = totalCount;
+            CurrentItems = currentItems;
+        }
+
         public int TotalCount { get; set; }
 
         public IList<T> CurrentItems { get; set; }

@@ -1,22 +1,23 @@
-﻿using System.IO;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using Vookaba.Services.Abstractions;
 
 namespace Vookaba.Services
 {
-    public  class HashService : IHashService
+    public class HashService : IHashService
     {
-        private const string AlgorithmName = "SHA1";
-
+        private HashAlgorithm CreateHasher()
+        {
+            return SHA1.Create();
+        }
         public byte[] ComputeHash(Stream stream)
         {
-            using var hasher = SHA1.Create(AlgorithmName);
+            using var hasher = CreateHasher();
             return hasher.ComputeHash(stream);
         }
 
         public byte[] ComputeHash(byte[] data)
         {
-            using var hasher = SHA1.Create(AlgorithmName);
+            using var hasher = CreateHasher();
             return hasher.ComputeHash(data);
         }
     }

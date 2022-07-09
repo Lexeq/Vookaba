@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
 using Vookaba.DAL.Entities;
-using Vookaba.Services.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Vookaba.Services.Mapping
 {

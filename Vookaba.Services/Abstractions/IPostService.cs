@@ -1,8 +1,4 @@
-﻿using Vookaba.Services.DTO;
-using System;
-using System.Threading.Tasks;
-
-namespace Vookaba.Services.Abstractions
+﻿namespace Vookaba.Services.Abstractions
 {
     public interface IPostService
     {
@@ -12,7 +8,7 @@ namespace Vookaba.Services.Abstractions
         /// <param name="board">The board the post belongs to.</param>
         /// <param name="number">Post number.</param>
         /// <returns><c>PostDro</c> object.</returns>
-        public Task<PostDto> GetByNumberAsync(string board, int number);
+        public Task<PostDto?> GetByNumberAsync(string board, int number);
 
 
         /// <summary>
