@@ -17,7 +17,6 @@ namespace Vookaba.Tests.Integration.Services
 {
     public class BoardsServiceTests : ServiceTestsBase
     {
-        private Mock<ThrowHelper> _throwHelperMock;
         private Mock<IHashService> _hashMock;
         private Mock<IAttachmentsStorage> _storage;
         private Mock<ILogger<DbBoardService>> _logger;
@@ -30,8 +29,6 @@ namespace Vookaba.Tests.Integration.Services
 
         private void ConfigureMocks()
         {
-            _throwHelperMock = new Mock<ThrowHelper>();
-
             _hashMock = new Mock<IHashService>();
             _hashMock.Setup(h => h.ComputeHash((byte[])null)).Returns(new byte[] { 100 });
             _hashMock.Setup(h => h.ComputeHash((Stream)null)).Returns(new byte[] { 100 });
@@ -45,7 +42,6 @@ namespace Vookaba.Tests.Integration.Services
             return new DbBoardService(GetDbContext(),
                                       ServiceDtoMapper,
                                       _storage.Object,
-                                      _throwHelperMock.Object,
                                       _logger.Object);
         }
 

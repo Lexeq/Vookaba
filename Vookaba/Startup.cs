@@ -73,7 +73,6 @@ namespace Vookaba
             services.AddScoped<IModLogService, DbModLogService>();
             services.AddScoped<ITopThreadsService, TopThreadsService>();
             services.AddSingleton<IHashService>(new HashService());
-            services.AddSingleton<ThrowHelper>();
             services.AddSingleton<ModLogDescriber>();
             services.AddSingleton<IPostProcessor, TripcodePostProcessor>();
 

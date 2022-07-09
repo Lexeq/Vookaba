@@ -19,20 +19,8 @@ namespace Vookaba.Tests.Integration.Services
 {
     public class PostServiceTests : ServiceTestsBase
     {
-        private Mock<ThrowHelper> _throwHelperMock;
         private Mock<IAttachmentsStorage> _storage;
         private Mock<ILogger<DbPostService>> _logger;
-
-        [OneTimeSetUp]
-        public void Setup()
-        {
-            ConfigureMocks();
-        }
-
-        private void ConfigureMocks()
-        {
-            _throwHelperMock = new Mock<ThrowHelper>();
-        }
 
         private DbPostService CreatePostService()
         {
@@ -42,7 +30,6 @@ namespace Vookaba.Tests.Integration.Services
             return new DbPostService(GetDbContext(),
                                       _storage.Object,
                                       ServiceDtoMapper,
-                                      _throwHelperMock.Object,
                                       _logger.Object);
         }
 

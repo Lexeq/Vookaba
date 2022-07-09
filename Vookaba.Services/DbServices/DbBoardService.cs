@@ -19,25 +19,22 @@ namespace Vookaba.Services.DbServices
         private readonly VookabaDbContext context;
         private readonly IMapper mapper;
         private readonly IAttachmentsStorage storage;
-        private readonly ThrowHelper throwHelper;
         private readonly ILogger<DbBoardService> logger;
 
         public DbBoardService(VookabaDbContext context,
                               IMapper mapper,
                               IAttachmentsStorage storage,
-                              ThrowHelper throwHelper,
                               ILogger<DbBoardService> logger)
         {
             this.context = context;
             this.mapper = mapper;
             this.storage = storage;
-            this.throwHelper = throwHelper;
             this.logger = logger;
         }
 
         public async Task<BoardDto> GetBoardAsync(string boardKey)
         {
-            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
+            ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
             var board = await context.Boards
                 .AsNoTracking()
@@ -94,7 +91,7 @@ namespace Vookaba.Services.DbServices
 
         public async Task CreateBoardAsync(BoardDto board)
         {
-            throwHelper.ThrowIfNull(board, nameof(board));
+            ThrowHelper.ThrowIfNull(board, nameof(board));
 
             var boardEntity = mapper.Map<Board>(board);
             try
@@ -116,8 +113,8 @@ namespace Vookaba.Services.DbServices
 
         public async Task UpdateBoardAsync(string key, BoardDto board)
         {
-            throwHelper.ThrowIfNullOrWhiteSpace(key, nameof(key));
-            throwHelper.ThrowIfNull(board, nameof(board));
+            ThrowHelper.ThrowIfNullOrWhiteSpace(key, nameof(key));
+            ThrowHelper.ThrowIfNull(board, nameof(board));
 
             using var transaction = await context.Database.BeginTransactionAsync();
             try
@@ -146,7 +143,7 @@ namespace Vookaba.Services.DbServices
 
         public async Task DeleteBoardAsync(string boardKey)
         {
-            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
+            ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
             var board = await context.Boards.FindAsync(boardKey);
             if (board == null)

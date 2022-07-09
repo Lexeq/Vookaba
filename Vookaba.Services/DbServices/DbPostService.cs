@@ -21,19 +21,16 @@ namespace Vookaba.Services.DbServices
         private readonly VookabaDbContext context;
         private readonly IAttachmentsStorage attachmentStorage;
         private readonly IMapper mapper;
-        private readonly ThrowHelper throwHelper;
         private readonly ILogger<DbPostService> logger;
 
         public DbPostService(VookabaDbContext context,
             IAttachmentsStorage attachments,
             IMapper mapper,
-            ThrowHelper throwHelper,
             ILogger<DbPostService> logger)
         {
             this.context = context;
             this.attachmentStorage = attachments;
             this.mapper = mapper;
-            this.throwHelper = throwHelper;
             this.logger = logger;
         }
 
@@ -52,8 +49,8 @@ namespace Vookaba.Services.DbServices
 
         public async Task DeleteManyAsync(int id, Mode mode, SearchArea area)
         {
-            throwHelper.ThrowIfEnumIsNotCorrect(mode);
-            throwHelper.ThrowIfEnumIsNotCorrect(area);
+            ThrowHelper.ThrowIfEnumIsNotCorrect(mode);
+            ThrowHelper.ThrowIfEnumIsNotCorrect(area);
 
             var badPost = await context.Posts
                 .Where(p => p.Id == id)
