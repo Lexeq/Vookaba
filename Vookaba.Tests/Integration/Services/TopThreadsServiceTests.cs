@@ -159,7 +159,7 @@ namespace Vookaba.Tests.Integration.Services
         #endregion
 
         #region For All
-        [TestCaseSource(typeof(DataSources), nameof(DataSources.Foo), new object[] { 3 })]
+        [TestCaseSource(typeof(DataSources), nameof(DataSources.Cases), new object[] { 3 })]
         public async Task EmptyThread(MethodCaller method)
         {
             var thread = new Thread { Board = SeedData.DefaultBoard };
@@ -172,7 +172,7 @@ namespace Vookaba.Tests.Integration.Services
             Assert.AreEqual(0, result.Count);
         }
 
-        [TestCaseSource(typeof(DataSources), nameof(DataSources.Foo), new object[] { 3 })]
+        [TestCaseSource(typeof(DataSources), nameof(DataSources.Cases), new object[] { 3 })]
         public async Task EmptyBoard(MethodCaller method)
         {
             SeedData.AddBoards(SeedData.DefaultBoard);
@@ -191,7 +191,7 @@ namespace Vookaba.Tests.Integration.Services
 
         class DataSources
         {
-            public static IEnumerable<MethodCaller> Foo(int limit)
+            public static IEnumerable<MethodCaller> Cases(int limit)
             {
                 yield return serv => serv.GetLastRepliedThreadsAsync(limit);
                 yield return serv => serv.GetLastCreatedThreadsAsync(limit);
