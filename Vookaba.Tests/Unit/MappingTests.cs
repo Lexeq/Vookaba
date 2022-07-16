@@ -10,7 +10,7 @@ namespace Vookaba.Tests.Unit
         [Test]
         public void ValidateServiceConfigurations()
         {
-            IMapper mapper = new MapperConfiguration(cfg => cfg.AddProfile(new ServicesMapProfile())).CreateMapper();
+            IMapper mapper = new MapperConfiguration(cfg => cfg.AddProfile<ServicesMapProfile>()).CreateMapper();
 
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
@@ -18,7 +18,7 @@ namespace Vookaba.Tests.Unit
         [Test]
         public void ValidateViewModelsMappingConfigurations()
         {
-            IMapper mapper = new MapperConfiguration(cfg => cfg.AddProfile(new ViewModelsMapProfile())).CreateMapper();
+            IMapper mapper = new MapperConfiguration(cfg => cfg.AddProfile<ViewModelsMapProfile>()).CreateMapper();
 
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
