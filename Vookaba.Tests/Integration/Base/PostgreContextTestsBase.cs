@@ -8,6 +8,7 @@ using Vookaba.Common;
 using Vookaba.DAL.Database;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace Vookaba.Tests.Integration.Base
 {
@@ -93,7 +94,8 @@ namespace Vookaba.Tests.Integration.Base
             var httpContext = new DefaultHttpContext();
             httpContext.Connection.RemoteIpAddress = System.Net.IPAddress.Loopback;
             httpContext.Request.Headers["User-Agent"] = nameof(PostgreContextTestsBase);
-            httpContext.User.Identities.First().AddClaim(new System.Security.Claims.Claim(ApplicationConstants.ClaimTypes.AuthorToken, "11111111-1111-1111-1111-111111111111"));
+            httpContext.User.Identities.First().AddClaim(new Claim(ApplicationConstants.ClaimTypes.AuthorToken, "11111111-1111-1111-1111-111111111111"));
+            httpContext.User.Identities.First().AddClaim(new Claim(ClaimTypes.NameIdentifier, "1"));
             var httpAM = new Mock<IHttpContextAccessor>(MockBehavior.Strict);
             httpAM.Setup(m => m.HttpContext).Returns(httpContext);
             return new VookabaDbContext(_dbContextOptions, httpAM.Object);
@@ -108,6 +110,9 @@ namespace Vookaba.Tests.Integration.Base
             context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""AuthorTokens"" RESTART IDENTITY CASCADE");
             context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""Attachment"" RESTART IDENTITY CASCADE");
             context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""Posts"" RESTART IDENTITY CASCADE");
+            context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""Bans"" RESTART IDENTITY CASCADE");
+            context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""AspNetUsers"" RESTART IDENTITY CASCADE");
+            context.Database.ExecuteSqlRaw(@"TRUNCATE TABLE ""ModActions"" RESTART IDENTITY CASCADE");
         }
     }
 }

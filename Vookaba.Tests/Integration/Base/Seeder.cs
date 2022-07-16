@@ -31,6 +31,8 @@ namespace Vookaba.Tests.Integration.Base
             if (HasEnteties(Data.Threads)) db.Threads.AddRange(Data.Threads);
             if (HasEnteties(Data.Posts)) db.Posts.AddRange(Data.Posts);
             if (HasEnteties(Data.Images)) db.Images.AddRange(Data.Images);
+            if (HasEnteties(Data.Users)) db.Users.AddRange(Data.Users);
+            if (HasEnteties(Data.Bans)) db.Bans.AddRange(Data.Bans);
 
             db.SaveChanges();
             Seeded = true;

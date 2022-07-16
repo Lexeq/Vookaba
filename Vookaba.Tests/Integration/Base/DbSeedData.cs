@@ -17,12 +17,16 @@ namespace Vookaba.Tests.Integration.Base
         private readonly List<Board> _boards = new();
         private readonly List<Image> _images = new();
         private readonly List<Post> _posts = new();
+        private readonly List<ApplicationUser> _users = new();
+        private readonly List<Ban> _bans = new();
 
         internal IEnumerable<AuthorToken> Tokens => _tokens;
         internal IEnumerable<Thread> Threads => _threads;
         internal IEnumerable<Board> Boards => _boards;
         internal IEnumerable<Image> Images => _images;
         internal IEnumerable<Post> Posts => _posts;
+        internal IEnumerable<ApplicationUser> Users => _users;
+        internal IEnumerable<Ban> Bans => _bans;
 
         internal AuthorToken DefaultToken { get; }
             = new AuthorToken
@@ -75,6 +79,14 @@ namespace Vookaba.Tests.Integration.Base
             if (posts != null)
                 AddPosts(posts);
 
+            var bans = jObj["bans"]?.ToObject<Ban[]>(serializer);
+            if (bans != null)
+                AddBans(bans);
+
+            var users = jObj["users"]?.ToObject<ApplicationUser[]>(serializer);
+            if (users != null)
+                AddUsers(users);
+
             return this;
         }
 
@@ -105,6 +117,18 @@ namespace Vookaba.Tests.Integration.Base
         public DbSeedData AddImages(params Image[] images)
         {
             _images.AddRange(images);
+            return this;
+        }
+
+        public DbSeedData AddBans(params Ban[] bans)
+        {
+            _bans.AddRange(bans);
+            return this;
+        }
+
+        public DbSeedData AddUsers(params ApplicationUser[] users)
+        {
+            _users.AddRange(users);
             return this;
         }
 

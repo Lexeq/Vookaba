@@ -64,6 +64,20 @@ namespace Vookaba.Services.Mapping
             CreateMap<Thread, ThreadInfoDto>()
                 .ForMember(dto => dto.ThreadId, opt => opt.MapFrom(t => t.Id))
                 .ForMember(dto => dto.Author, opt => opt.MapFrom(t => t.Posts.First(x => x.IsOP).AuthorToken));
+
+            CreateMap<BanCreationDto, Ban>()
+                .ForMember(b => b.Id, opt => opt.Ignore())
+                .ForMember(b => b.Created, opt => opt.Ignore())
+                .ForMember(b => b.UserId, opt => opt.Ignore())
+                .ForMember(b => b.Creator, opt => opt.Ignore())
+                .ForMember(b => b.BannedAuthor, opt => opt.Ignore())
+                .ForMember(b => b.Board, opt => opt.Ignore())
+                .ForMember(b => b.BoardKey, opt => opt.MapFrom(x => x.Board))
+                .ForMember(b => b.IsCanceled, opt => opt.Ignore());
+
+            CreateMap<Ban, BanInfoDto>();
+
+            CreateMap<Ban, BanDto>();
         }
     }
 }

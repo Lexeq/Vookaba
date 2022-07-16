@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using Vookaba.Common;
 using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
-using Vookaba.Services.DTO;
 using Vookaba.Services.Abstractions;
+using Vookaba.Services.Logging;
 
 namespace Vookaba.Services.DbServices
 {
@@ -33,19 +33,21 @@ namespace Vookaba.Services.DbServices
 
         public async Task LogAsync(ApplicationEvent eventId, string entityId, string? note)
         {
-            context.ModActions.Add(new ModAction
+            var mlog = new ModAction
             {
                 EventId = eventId,
                 EntityId = entityId,
                 Note = note
-            });
+            };
+            context.ModActions.Add(mlog);
             try
             {
                 await context.SaveChangesAsync();
+                logger.ModLogAdded(mlog.Id);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Create modlog failed.");
+                logger.ModLogCreatingFailed(ex);
             }
         }
     }
