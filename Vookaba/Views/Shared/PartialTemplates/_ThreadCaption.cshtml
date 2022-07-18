@@ -1,10 +1,10 @@
 ﻿@model Vookaba.ViewModels.Thread.ThreadViewModelBase
 @if (Model.IsPinned)
 {
-    <partial name="_Pin" />
+    <partial name="./Icons/_Pin" />
 }
 @if (Model.IsReadOnly)
 {
-    <partial name="_Lock" />
+    <partial name="./Icons/_Lock" />
 }
 <span class="thread__subject">@Model.Subject</span>
