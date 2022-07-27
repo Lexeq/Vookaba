@@ -7,10 +7,6 @@
 
 @inject IFileProvider files
 
-@section Styles{
-    <link rel="stylesheet" href="~/css/generic.css" />
-}
-
 <div class="error-container">
 @if (files.GetFileInfo(Model.ImagePath).Exists)
 {

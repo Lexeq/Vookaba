@@ -8,6 +8,7 @@ using Vookaba.ViewModels;
 
 namespace Vookaba.Controllers
 {
+    [AllowAnonymous]
     public class ErrorController : AppMvcBaseController
     {
         private readonly ILogger<ErrorController> logger;
@@ -24,7 +25,7 @@ namespace Vookaba.Controllers
             if (IsRequestFromReExecuteMiddleware)
             {
                 var original = HttpContext.Features.Get<IStatusCodeReExecuteFeature>().OriginalPath;
-                return original.StartsWith("/api/v", System.StringComparison.OrdinalIgnoreCase) ? StatusCode(statusCode) : ErrorView(statusCode);
+                return original.StartsWith("/api/v", System.StringComparison.OrdinalIgnoreCase) ? Problem(statusCode: statusCode) : ErrorView(statusCode);
             }
             else
             {
@@ -40,7 +41,8 @@ namespace Vookaba.Controllers
             }
             var exceptionFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
             logger.LogError(exceptionFeature.Error, $"An error has occured. Path: {exceptionFeature.Path}. Query: {HttpContext.Request.QueryString}.");
-            return ErrorView(HttpContext.Response.StatusCode);
+            var fromApi = exceptionFeature.Path.StartsWith("/api/v", System.StringComparison.OrdinalIgnoreCase);
+            return fromApi ? Problem(statusCode: StatusCodes.Status500InternalServerError) : ErrorView(HttpContext.Response.StatusCode);
         }
 
         private IActionResult ErrorView(int statusCode) =>
