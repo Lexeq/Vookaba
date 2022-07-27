@@ -26,6 +26,11 @@ using Vookaba.Services.Abstractions;
 using Vookaba.Services.DbServices;
 using Vookaba.Services.Mapping;
 using Vookaba.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Vookaba.Security.AuthorizationHandlers;
+using Microsoft.AspNetCore.Authorization.Policy;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Vookaba.Security;
 
 namespace Vookaba
 {
@@ -52,10 +57,11 @@ namespace Vookaba
             //TODO: clean up this mess
             #region DB
             services.AddDbContext<VookabaDbContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("Postgre"), x =>
+                options.UseNpgsql("Host=localhost;Port=5432;Database=BigDataOak2;Username=oak;Password=oakpassword", x =>
                 x.MigrationsAssembly("Vookaba.DAL"))
 #if DEBUG
                 .UseLoggerFactory(EfLoggerFactory)
+                .EnableSensitiveDataLogging(true)
 #endif
                 );
 
@@ -72,6 +78,7 @@ namespace Vookaba
             services.AddScoped<IStaffAggregationService, DbStaffAggregationService>();
             services.AddScoped<IModLogService, DbModLogService>();
             services.AddScoped<ITopThreadsService, TopThreadsService>();
+            services.AddScoped<IBanService, DbBanService>();
             services.AddSingleton<IHashService>(new HashService());
             services.AddSingleton<ModLogDescriber>();
             services.AddSingleton<IPostProcessor, TripcodePostProcessor>();
@@ -130,7 +137,7 @@ namespace Vookaba
 
             services.AddDataProtection(x =>
             {
-                x.ApplicationDiscriminator = Configuration[nameof(x.ApplicationDiscriminator)];
+                x.ApplicationDiscriminator = "37f7095fa7d8419db8248814abf50326b1207665e75c456cabf8cdf051c912a1";// Configuration[nameof(x.ApplicationDiscriminator)];
             });
 
             services.ConfigureApplicationCookie(options =>
