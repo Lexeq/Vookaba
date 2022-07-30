@@ -31,5 +31,6 @@
         //misc. 60_xxx
         ModLogCreated = 60_001,
         ModLogCreatingFailed = 60_002,
+        ApplicationProlem = 60_100
     }
 }

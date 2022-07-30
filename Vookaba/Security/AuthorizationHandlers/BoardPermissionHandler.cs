@@ -21,23 +21,18 @@ namespace Vookaba.Security.AuthorizationHandlers
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, BoardPermissionRequirement requirement)
         {
-            var board = accessor.HttpContext.Request.RouteValues["board"]?.ToString();
-            if(board == null)
+            var board = accessor.HttpContext.Request.RouteValues["board"]?.ToString() ?? accessor.HttpContext.Request.Query["board"];
+
+            if (board != null && context.User.HasBoardPermission(board))
             {
-                board = accessor.HttpContext.Request.Query["board"];
-            }
-            if (board != null)
-            {
-                if (context.User.HasBoardPermission(board))
-                {
-                    context.Succeed(requirement);
-                    return Task.CompletedTask;
-                }
+                context.Succeed(requirement);
+                return Task.CompletedTask;
             }
             else
             {
-                logger.LogInformation("Route value for board was not provided.");
+                logger.NoBoardValue();
             }
+
             context.Fail();
             return Task.CompletedTask;
         }
