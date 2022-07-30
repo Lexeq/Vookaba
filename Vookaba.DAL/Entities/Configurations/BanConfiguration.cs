@@ -19,6 +19,10 @@ namespace Vookaba.DAL.Entities.Configurations
                 .HasForeignKey(x => x.BoardKey)
                 .IsRequired(false);
 
+            builder.HasOne<Post>()
+                .WithMany()
+                .HasForeignKey(b => b.PostId);
+
             builder.HasOne(b => b.BannedAuthor)
                 .WithMany()
                 .HasForeignKey(b => b.BannedAothorToken)

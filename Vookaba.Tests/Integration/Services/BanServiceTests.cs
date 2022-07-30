@@ -27,17 +27,22 @@ namespace Vookaba.Tests.Integration.Services
         [TestCase("142.25.98.145", 32)]
         public async Task CreateBan(string ipString, int subnet)
         {
-            SeedData.AddDefaults().AddUsers(new Identity.ApplicationUser
+            SeedData.AddDefaults()
+                .AddUsers(new Identity.ApplicationUser
             {
                 Id = 1,
                 AuthorTokenId = new Guid("11111111-1111-1111-1111-111111111111")
-            });
+            })
+                .AddThreads(new Thread { Id = 1, BoardKey = SeedData.DefaultBoard.Key })
+                .AddPosts(new DefaultPost { Id = 1, ThreadId = 1 });
+
             var newBan = new BanCreationDto
             {
                 BannedNetwork = (IPAddress.Parse("130.12.0.11"), 26),
                 Board = "b",
                 Expired = DateTime.UtcNow.AddDays(100),
-                Reason = "test_ban"
+                Reason = "test_ban",
+                PostId = 1
             };
 
             var service = GetBanService();
@@ -53,14 +58,19 @@ namespace Vookaba.Tests.Integration.Services
         [TestCaseSource(typeof(CaseSource), nameof(CaseSource.Cases))]
         public async Task FindBan(BanCase data)
         {
-            SeedData.AddDefaults().AddTokens(new Identity.AuthorToken
-            {
-                Token = new Guid("22222222-2222-2222-2222-222222222222")
-            }).AddUsers(new Identity.ApplicationUser
-            {
-                Id = 1,
-                AuthorTokenId = new Guid("11111111-1111-1111-1111-111111111111")
-            }).AddBans(data.Ban);
+            SeedData.AddDefaults()
+                .AddTokens(new Identity.AuthorToken
+                {
+                    Token = new Guid("22222222-2222-2222-2222-222222222222")
+                })
+                .AddUsers(new Identity.ApplicationUser
+                {
+                    Id = 1,
+                    AuthorTokenId = new Guid("11111111-1111-1111-1111-111111111111")
+                })
+                .AddThreads(new Thread { Id = 1, BoardKey = SeedData.DefaultBoard.Key })
+                .AddPosts(new DefaultPost { Id = 1, ThreadId = 1 })
+                .AddBans(data.Ban);
 
             var service = GetBanService();
 
@@ -84,6 +94,7 @@ namespace Vookaba.Tests.Integration.Services
                 {
                     Ban = new Ban
                     {
+                        PostId = 1,
                         BannedNetwork = (IPAddress.Parse("10.10.10.0"), 24),
                         Reason = "test bans",
                         Created = DateTime.UtcNow.Subtract(TimeSpan.FromDays(100)),
@@ -99,6 +110,7 @@ namespace Vookaba.Tests.Integration.Services
                 {
                     Ban = new Ban
                     {
+                        PostId = 1,
                         BannedNetwork = (IPAddress.Parse("10.10.10.0"), 28),
                         Reason = "test bans",
                         Created = DateTime.UtcNow.Subtract(TimeSpan.FromDays(100)),
@@ -114,6 +126,7 @@ namespace Vookaba.Tests.Integration.Services
                 {
                     Ban = new Ban
                     {
+                        PostId = 1,
                         BannedNetwork = null,
                         Reason = "ban",
                         BannedAothorToken = bannedToken,
@@ -130,6 +143,7 @@ namespace Vookaba.Tests.Integration.Services
                 {
                     Ban = new Ban
                     {
+                        PostId = 1,
                         BannedNetwork = (IPAddress.Parse("10.0.0.0"), 8),
                         Reason = "ban",
                         BannedAothorToken = bannedToken,
@@ -146,6 +160,7 @@ namespace Vookaba.Tests.Integration.Services
                 {
                     Ban = new Ban
                     {
+                        PostId = 1,
                         BannedNetwork = (IPAddress.Parse("10.0.0.0"), 8),
                         Reason = "ban",
                         BannedAothorToken = bannedToken,
@@ -163,6 +178,7 @@ namespace Vookaba.Tests.Integration.Services
                 {
                     Ban = new Ban
                     {
+                        PostId = 1,
                         Reason = "ban",
                         Created = DateTime.UtcNow.AddDays(-100),
                         Expired = DateTime.UtcNow.AddDays(10),

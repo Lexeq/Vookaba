@@ -31,5 +31,7 @@ namespace Vookaba.DAL.Entities
         public string? BoardKey { get; set; }
 
         public bool IsCanceled { get; set; }
+
+        public int PostId { get; set; }
     }
 }

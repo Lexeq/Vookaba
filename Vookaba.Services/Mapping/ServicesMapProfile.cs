@@ -73,7 +73,8 @@ namespace Vookaba.Services.Mapping
                 .ForMember(b => b.BannedAuthor, opt => opt.Ignore())
                 .ForMember(b => b.Board, opt => opt.Ignore())
                 .ForMember(b => b.BoardKey, opt => opt.MapFrom(x => x.Board))
-                .ForMember(b => b.IsCanceled, opt => opt.Ignore());
+                .ForMember(b => b.IsCanceled, opt => opt.Ignore())
+                .ForMember(b => b.PostId, opt => opt.MapFrom(x => x.PostId));
 
             CreateMap<Ban, BanInfoDto>();
 
