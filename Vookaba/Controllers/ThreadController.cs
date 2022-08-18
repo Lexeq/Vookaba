@@ -9,6 +9,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Vookaba.Common;
 using Vookaba.Controllers.Base;
+using Vookaba.Security;
 using Vookaba.Services.Abstractions;
 using Vookaba.Services.DTO;
 using Vookaba.ViewModels.Post;
@@ -56,7 +57,7 @@ namespace Vookaba.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = ApplicationConstants.Policies.CanPost)]
+        [Authorize(Policy = ApplicationConstants.Policies.CanPost), TypeFilter(typeof(BannedFilter))]
         [Route("{board:alpha}/createThread", Name = "createThread")]
         public async Task<IActionResult> Create(string board, ThreadFormViewModel opPost)
         {
@@ -82,7 +83,7 @@ namespace Vookaba.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = ApplicationConstants.Policies.CanPost)]
+        [Authorize(Policy = ApplicationConstants.Policies.CanPost), TypeFilter(typeof(BannedFilter))]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPost(string board, int thread, PostFormViewModel postFormVM)
         {
