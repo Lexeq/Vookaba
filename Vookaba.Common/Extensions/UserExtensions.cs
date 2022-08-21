@@ -1,5 +1,6 @@
 ﻿using Vookaba.Common;
 using System.Security.Claims;
+using System.Linq;
 
 namespace Vookaba.Utils
 {
@@ -19,6 +20,11 @@ namespace Vookaba.Utils
                 }
             }
             return false;
+        }
+
+        public static bool IsRegistred(this ClaimsPrincipal principal)
+        {
+            return principal.Identity.IsAuthenticated && principal.Identities.Any(x => x.HasClaim(c => c.Type == ClaimTypes.NameIdentifier));
         }
     }
 }
