@@ -4,84 +4,46 @@
     if ($('#attachment-input').val()) {
         loadImagePreview($('#attachment-input').prop('files'));
     }
-    $('.post__file-link img').on('load', (x) => imageLoaded(x.target));
-    $('.full-size').on('click', (x) => toggleFullSize(x.target));
-    $('.post__file-link').on('click', (x) => { x.preventDefault(); toggleExpanded(x.target); });
+    $('.full-size').on('click', (x) => {
+        let img = x.target.closest('.post__image-container').querySelector('img');
+        toFullSize(img);
+    });
+    $('.post__file-link').on('click', (x) => { x.preventDefault(); expandImg(x.target); });
 })
 
-function imageLoaded(img) {
-    img.classList.remove('loading');
-    let setNaturalSize = true;
+function toFullSize(img) {
+    let post = img.closest('.post');
+    post.classList.add('img-expanded');
+    let fullImgSrc = img.parentNode.href;
+    if (img.src != fullImgSrc) {
+        img.src = '';
+        img.src = fullImgSrc;
+    }
+    img.style = `width: ${img.dataset.width}px; height: ${img.dataset.height}px;`;
+}
+
+function expandImg(img) {
     let post = img.closest('.post');
     if (post.classList.contains('img-expanded')) {
-        let body = document.getElementsByTagName('body')[0];
-
-        let w = img.naturalWidth;
-        let h = img.naturalHeight;
-        let bw = body.clientWidth * 0.9;
-        let bh = window.innerHeight * 0.9;
-
-        if (w > bw || h > bh) {
-
-            let rw = bw / w;
-            let rh = bh / h;
-            let shrinkRatio = Math.min(rw, rh);
-
-            img.width = img.naturalWidth * shrinkRatio;
-            img.height = img.naturalHeight * shrinkRatio;
-            setNaturalSize = false;
-        }
+        post.classList.remove('img-expanded');
+        img.style = '';
+        img.src = img.dataset.thumb;
     }
     else {
-        img.closest('.post').style.maxWidth = '';
-    }
-    if (setNaturalSize) {
-        img.width = img.naturalWidth;
-        img.height = img.naturalHeight;
-    }
-}
+        let maxWidth = window.innerWidth * 0.9;
+        let maxHeight = window.innerHeight * 0.9;
 
-function toggleFullSize(btn) {
-    let id = btn.id.substring(5);
-    let img = document.getElementById('img' + id);
-    if (img.classList.contains('loading')) {
-        return;
-    }
-    else {
-        img.classList.add('loading');
-    }
-    let post = img.closest('.post');
-    post.classList.toggle('img-full');
-    img.src = selectImgSrc(img, post);
-}
+        let w = img.dataset.width;
+        let h = img.dataset.height;
 
-function toggleExpanded(img) {
-    if (img.classList.contains('loading')) {
-        return;
-    }
-    else {
-        img.classList.add('loading');
-    }
-    let post = img.closest('.post');
-    if (post.classList.contains('img-full')) {
-        post.classList.remove('img-full');
-        post.classList.remove('img-expanded')
-    }
-    else {
-        post.classList.toggle('img-expanded');
-    }
-    img.src = selectImgSrc(img, post);
-}
+        let rw = w / maxWidth;
+        let rh = h / maxHeight;
+        let shrinkRatio = Math.max(rw, rh);
 
-function selectImgSrc(img, post) {
-    if (post.classList.contains('img-full')) {
-        return img.parentNode.href;
-    }
-    if (post.classList.contains('img-expanded')) {
-        return img.parentNode.href;
-    }
-    else {
-        return img.dataset.thumb;
+        img.style = `width: ${w / shrinkRatio}px; height: ${h / shrinkRatio}px;`;
+        post.classList.add('img-expanded');
+        img.src = '';
+        img.src = img.parentNode.href;
     }
 }
 

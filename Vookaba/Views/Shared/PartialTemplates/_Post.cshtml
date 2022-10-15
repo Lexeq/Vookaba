@@ -36,23 +36,26 @@
             string thumbPath = attachments.GetThumbnailLinkByName(Model.Image.Name);
 
             <div class="post__images">
-                <div id="@($"ic{Model.Image.Name}")" class="post__image-container">
-                    <div class="post__file-info" id="@($"fi{Model.Number}-{Model.Image.Name}")">
+                <div class="post__image-container">
+                    <div class="post__file-info">
                         <div class="post__file-name">
                             <a target="_blank" href="@imgPath">@($">{Model.Image.OriginalName}")</a>
                         </div>
                         <div class="post__file-size">
                             <span>@($"{Model.Image.Width}x{Model.Image.Height}")</span>
-                            <span>@($"{Model.Image.Size/1024}{Localizer["KB"].Value}")</span>
-                            <span class="full-size" id=@($"scale{Model.Image.Name}")>1:1</span>
+                            <span>@($"{Model.Image.Size / 1024}{Localizer["KB"].Value}")</span>
+                            <span class="full-size">1:1</span>
                         </div>
                     </div>
                     <a class="post__file-link" href="@imgPath">
-                        <img id="@($"img{Model.Image.Name}")"
+                        <img id="@($"{Model.Image.Name}")"
                          class="post__image"
                          src="@thumbPath"
+                         alt="@Model.Image.OriginalName"
                          width=@Model.Image.ThumbnailWidth
                          height=@Model.Image.ThumbnailHeight
+                         data-width=@Model.Image.Width
+                         data-height=@Model.Image.Height
                          data-thumb=@thumbPath
                          loading="lazy" />
                     </a>
