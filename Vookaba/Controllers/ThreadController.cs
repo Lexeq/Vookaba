@@ -42,18 +42,21 @@ namespace Vookaba.Controllers
         {
             var isAdmin = UserRole == ApplicationConstants.Roles.Administrator;
             var boardDto = await boards.GetBoardAsync(board);
-            if (boardDto?.IsDisabled == false || isAdmin)
+            if (boardDto != null)
             {
-                var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
-                if (threadDto != null)
+                if (!boardDto.IsDisabled || isAdmin)
                 {
-                    var vm = mapper.Map<ThreadViewModel>(threadDto);
-                    vm.IsReadOnly |= boardDto.IsReadOnly;
-                    return View(vm);
+                    var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
+                    if (threadDto != null)
+                    {
+                        var vm = mapper.Map<ThreadViewModel>(threadDto);
+                        vm.IsReadOnly |= boardDto.IsReadOnly;
+                        return View(vm);
+                    }
                 }
             }
 
-            return Error(404, localizer["Not found"], localizer["Thread not found."]);
+            return Error(404, localizer["Not found"], boardDto is null ? localizer["Board {0} does not exist.", board] : localizer["Thread not found."]);
         }
 
         [HttpPost]
