@@ -28,7 +28,6 @@ namespace Vookaba.Controllers.Api.v1
         }
 
         [HttpDelete]
-        [Route("delete")]
         public async Task<IActionResult> Delete([FromBody] PostsDeletionOptions vm)
         {
             var authResult = await authorization.AuthorizeAsync(User, vm, ApplicationConstants.Policies.CanDeletePosts);

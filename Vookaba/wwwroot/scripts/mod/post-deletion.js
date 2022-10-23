@@ -9,7 +9,7 @@ function deletePosts(board, number, reason, area, mode) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000)
 
-    const uri = '/api/v1/posts/delete';
+    const uri = '/api/v1/posts';
     let antiforgery = $("input[name='__RequestVerificationToken']").val();
     let options = { board, number, reason, area };
     if (mode != 0) { options.mode = mode; }
