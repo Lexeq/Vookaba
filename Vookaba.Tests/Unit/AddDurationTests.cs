@@ -9,7 +9,8 @@ namespace Vookaba.Tests.Unit
         [TestCaseSource(nameof(Cases))]
         public void AddTest(DateTime original, string input, DateTime expected)
         {
-            var result = original.AddFromString(input);
+            var isSccessfull = original.TryAddFromString(input ,out var result);
+            Assert.IsTrue(isSccessfull);
             Assert.AreEqual(expected, result);
         }
 

@@ -15,10 +15,11 @@ namespace Vookaba.Common.Extensions
             ["m"] = (dt, val) => dt.AddMinutes(val),
         };
 
-        public static DateTime AddFromString(this DateTime dateTime, string range)
+        public static bool TryAddFromString(this DateTime dateTime, string range, out DateTime result)
         {
             var state = State.Begin;
             var num = 0;
+            result = dateTime;
 
             for (int i = 0; i < range.Length;)
             {
@@ -32,7 +33,7 @@ namespace Vookaba.Common.Extensions
                         }
                         if (!char.IsDigit(range[i]))
                         {
-                            throw new FormatException($"Digit was expected at position {i} but was {range[i]}.");
+                            return false;
                         }
                         state = State.Number;
                         break;
@@ -52,21 +53,21 @@ namespace Vookaba.Common.Extensions
                         var literal = range[i].ToString();
                         if (acts.ContainsKey(literal))
                         {
-                            dateTime = acts[literal].Invoke(dateTime, num);
+                            result = acts[literal].Invoke(result, num);
                             i++;
                             num = 0;
                             state = State.Begin;
                         }
                         else
                         {
-                            throw new FormatException($"Unknown literal '{range[i]}' at position {i}.");
+                            return false;
                         }
                         break;
                     default:
                         throw new ApplicationException("Invalid state.");
                 }
             }
-            return dateTime;
+            return true;
         }
 
         public static long GetUnixEpochOffset(this DateTime dateTime)
