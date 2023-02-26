@@ -64,16 +64,16 @@ namespace Vookaba.Services.DbServices
             this.mapper = mapper;
         }
 
-        public Task<ThreadDto?> GetThreadAsync(string boardKey, int threadId)
+        public async Task<ThreadDto?> GetThreadAsync(string boardKey, int threadId)
         {
             ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
-            return context.Threads.AsNoTracking()
-                .Where(t => t.BoardKey == boardKey && t.Id == threadId)
-                .Include(t => t.Posts.OrderBy(p => p.Number))
-                .ThenInclude(p => p.Attachments)
-                .ProjectTo<ThreadDto>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            return mapper.Map<ThreadDto>(
+                await context.Threads.AsNoTracking()
+                    .Where(t => t.BoardKey == boardKey && t.Id == threadId)
+                    .Include(t => t.Posts.OrderBy(p => p.Number))
+                    .ThenInclude(p => p.Attachments)
+                    .FirstOrDefaultAsync());
         }
 
         public Task<ThreadInfoDto?> GetThreadInfoAsync(string boardKey, int threadId)
