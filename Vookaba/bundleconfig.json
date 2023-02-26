@@ -18,7 +18,7 @@
       "wwwroot/scripts/src/notifications.js",
       "wwwroot/scripts/src/modal.js",
       "wwwroot/scripts/src/post-numeration.js",
-      "wwwroot/scripts/src/text-editor.js",
+      "wwwroot/scripts/src/text-editor.js"
     ],
     "minify": {
       "enabled": false,

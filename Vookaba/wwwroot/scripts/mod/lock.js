@@ -1,6 +1,6 @@
 ﻿$(document).ready(() => {
     let level = $('#accountLevel').val();
-    if (level >= ModeratorLevel {
+    if (level >= ModeratorLevel) {
         window.PostMenu.addItem(
             getLocalizedString('lock_thread'),
             info => lockThread(info.board, info.thread, true),
