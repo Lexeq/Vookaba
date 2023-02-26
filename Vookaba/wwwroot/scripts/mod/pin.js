@@ -1,6 +1,6 @@
 ﻿$(document).ready(() => {
     let level = $('#accountLevel').val();
-    if (level >= 3) { //moderators and admin
+    if (level >= ModeratorLevel) {
         window.PostMenu.addItem(
             getLocalizedString('pin_thread'),
             info => pinThread(info.board, info.thread, true),
