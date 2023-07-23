@@ -21,7 +21,9 @@ namespace Vookaba.DAL.Entities.Configurations
 
             builder.HasOne<Post>()
                 .WithMany()
-                .HasForeignKey(b => b.PostId);
+                .HasForeignKey(b => b.PostId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasOne(b => b.BannedAuthor)
                 .WithMany()

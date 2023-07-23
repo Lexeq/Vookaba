@@ -32,6 +32,6 @@ namespace Vookaba.DAL.Entities
 
         public bool IsCanceled { get; set; }
 
-        public int PostId { get; set; }
+        public int? PostId { get; set; }
     }
 }
