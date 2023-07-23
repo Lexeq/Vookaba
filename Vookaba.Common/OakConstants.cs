@@ -61,6 +61,7 @@
             public const string HasStaffRole = "StaffRole";
             public const string HasBoardPermission = "BoardPermissionPolicy";
             public const string CanEditThreads = "ThreadEditPolicy";
+            public const string CanBanUsers = "CanBanUsersPolicy";
         }
     }
 }
