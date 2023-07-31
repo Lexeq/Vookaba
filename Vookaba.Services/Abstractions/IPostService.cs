@@ -33,7 +33,7 @@
         /// <summary>
         /// Search in same thread.
         /// </summary>
-        Thread = 1,
+        Thread = 2,
         /// <summary>
         /// Search in same board.
         /// </summary>

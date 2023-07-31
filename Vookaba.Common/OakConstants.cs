@@ -5,6 +5,7 @@
         public const string Name = "Voochan";
         public const string Culture = "en";
         public const string UserOptionsFileName = "appsettings.edited.json";
+        public const string AllBoardsMark = "*";
 
         public static class Identity
         {

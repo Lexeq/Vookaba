@@ -14,9 +14,12 @@ namespace Vookaba.Utils
             }
             else if (principal.IsInRole(ApplicationConstants.Roles.Janitor) || principal.IsInRole(ApplicationConstants.Roles.Moderator))
             {
-                if (principal.HasClaim(ApplicationConstants.ClaimTypes.BoardPermission, board))
+                foreach (Claim claim in principal.Claims.Where(x => x.Type == ApplicationConstants.ClaimTypes.BoardPermission))
                 {
-                    return true;
+                    if (claim.Value == board || claim.Value == ApplicationConstants.AllBoardsMark)
+                    {
+                        return true;
+                    }
                 }
             }
             return false;
