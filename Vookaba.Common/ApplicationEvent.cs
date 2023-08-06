@@ -22,7 +22,15 @@
 
         //posts events 40_xxx
         PostDelete = 40_001,
-        PostBulkDelete = 40_002
+        PostBulkDelete = 40_002,
 
+        //bans events 45_xxx
+        BanCreated = 45_001,
+        BanRemoved = 45_002,
+
+        //misc. 60_xxx
+        ModLogCreated = 60_001,
+        ModLogCreatingFailed = 60_002,
+        ApplicationProlem = 60_100
     }
 }

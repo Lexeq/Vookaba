@@ -18,7 +18,7 @@ namespace Vookaba.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("ProductVersion", "7.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -128,6 +128,58 @@ namespace Vookaba.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Vookaba.DAL.Entities.Ban", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid?>("BannedAothorToken")
+                        .HasColumnType("uuid");
+
+                    b.Property<ValueTuple<IPAddress, int>?>("BannedNetwork")
+                        .HasColumnType("cidr");
+
+                    b.Property<string>("BoardKey")
+                        .HasColumnType("character varying(10)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Expired")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BannedAothorToken");
+
+                    b.HasIndex("BoardKey");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("IsCanceled", "Expired", "BoardKey", "BannedNetwork", "BannedAothorToken");
+
+                    b.ToTable("Bans");
+                });
+
             modelBuilder.Entity("Vookaba.DAL.Entities.Base.Attachment", b =>
                 {
                     b.Property<int>("Id")
@@ -171,6 +223,8 @@ namespace Vookaba.DAL.Migrations
                     b.ToTable("Attachment");
 
                     b.HasDiscriminator<int>("AttachmentType");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Vookaba.DAL.Entities.Board", b =>
@@ -307,9 +361,8 @@ namespace Vookaba.DAL.Migrations
 
                     b.HasIndex("AuthorToken");
 
-                    b.HasIndex("IsOP", "ThreadId");
-
-                    NpgsqlIndexBuilderExtensions.HasSortOrder(b.HasIndex("IsOP", "ThreadId"), new[] { SortOrder.Descending, SortOrder.Ascending });
+                    b.HasIndex("IsOP", "ThreadId")
+                        .IsDescending(true, false);
 
                     b.HasIndex("ThreadId", "Number");
 
@@ -363,13 +416,11 @@ namespace Vookaba.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoardKey", "IsPinned", "Created");
+                    b.HasIndex("BoardKey", "IsPinned", "Created")
+                        .IsDescending(false, true, true);
 
-                    NpgsqlIndexBuilderExtensions.HasSortOrder(b.HasIndex("BoardKey", "IsPinned", "Created"), new[] { SortOrder.Ascending, SortOrder.Descending, SortOrder.Descending });
-
-                    b.HasIndex("BoardKey", "IsPinned", "LastBump");
-
-                    NpgsqlIndexBuilderExtensions.HasSortOrder(b.HasIndex("BoardKey", "IsPinned", "LastBump"), new[] { SortOrder.Ascending, SortOrder.Descending, SortOrder.Descending });
+                    b.HasIndex("BoardKey", "IsPinned", "LastBump")
+                        .IsDescending(false, true, true);
 
                     b.ToTable("Threads");
                 });
@@ -601,6 +652,34 @@ namespace Vookaba.DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Vookaba.DAL.Entities.Ban", b =>
+                {
+                    b.HasOne("Vookaba.Identity.AuthorToken", "BannedAuthor")
+                        .WithMany()
+                        .HasForeignKey("BannedAothorToken");
+
+                    b.HasOne("Vookaba.DAL.Entities.Board", "Board")
+                        .WithMany()
+                        .HasForeignKey("BoardKey");
+
+                    b.HasOne("Vookaba.DAL.Entities.Post", null)
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Vookaba.Identity.ApplicationUser", "Creator")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BannedAuthor");
+
+                    b.Navigation("Board");
+
+                    b.Navigation("Creator");
                 });
 
             modelBuilder.Entity("Vookaba.DAL.Entities.Base.Attachment", b =>

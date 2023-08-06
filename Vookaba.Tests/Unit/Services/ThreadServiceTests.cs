@@ -55,8 +55,7 @@ namespace Vookaba.Tests.Unit.Services
                 Mock.Of<IAttachmentsStorage>(),
                 Mock.Of<IHashService>(),
                 Enumerable.Empty<IPostProcessor>(),
-                Mapper,
-                Mock.Of<ThrowHelper>());
+                Mapper);
 
             await service.CreateThreadAsync("b", new ThreadCreationDto
             {

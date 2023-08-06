@@ -7,7 +7,7 @@ namespace Vookaba.Attributes
     public class VookabaValidationAttributeAdapterProvider : IValidationAttributeAdapterProvider
     {
         private readonly ValidationAttributeAdapterProvider defaultProvider = new();
-        public IAttributeAdapter? GetAttributeAdapter(ValidationAttribute attribute, IStringLocalizer stringLocalizer)
+        public IAttributeAdapter? GetAttributeAdapter(ValidationAttribute attribute, IStringLocalizer? stringLocalizer)
         {
             return attribute switch
             {

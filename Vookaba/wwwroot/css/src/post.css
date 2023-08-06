@@ -16,15 +16,21 @@
         filter: grayscale(100%);
     }
 
-    .post.img-full,
     .post.img-expanded {
         max-width: unset;
     }
 
-    .post.img-full .post__images,
-    .post.img-expanded .post__images{
-        float: unset;
-    }
+        .post.img-expanded .post__images {
+            float: unset;
+        }
+
+        .post.img-expanded .post__image-container,
+        .post.img-expanded .post__image {
+            max-width: unset;
+            max-height: unset;
+            width: unset;
+            height: unset;
+        }
 
 .op-mark {
     color: var(--colors_post-opmark);
@@ -87,20 +93,6 @@
     display: inline-block;
     transition-duration: 0.15s;
     max-width: 200px;
-}
-
-.img-full .post__image-container,
-.img-expanded .post__image-container {
-    max-width: unset;
-}
-
-.post__image-container img.loading {
-    opacity: 0.5;
-}
-
-.img-full .post__image {
-    max-width: unset;
-    max-height: unset;
 }
 
 .post__image {

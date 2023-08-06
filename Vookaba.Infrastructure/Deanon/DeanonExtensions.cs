@@ -30,6 +30,11 @@ namespace Vookaba.Infrastructure.Deanon
                     o.AccessDeniedPath = "/";
                     o.Cookie.SameSite = SameSiteMode.Strict;
                     o.SlidingExpiration = true;
+                    o.Events.OnRedirectToAccessDenied = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                        return Task.CompletedTask;
+                    };
                 });
 
             return services;

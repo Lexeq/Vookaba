@@ -2,9 +2,9 @@
 {
     public class BoardDto
     {
-        public string Key { get; set; }
+        public string Key { get; set; } = null!;
 
-        public string Name { get; set; }
+        public string Name { get; set; } =  null!;
 
         public bool IsHidden { get; set; }
 

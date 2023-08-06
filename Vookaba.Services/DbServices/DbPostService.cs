@@ -6,11 +6,7 @@ using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
 using Vookaba.DAL.Entities.Base;
 using Vookaba.Services.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Vookaba.Services.Abstractions;
 using Vookaba.DAL.MediaStorage;
 
@@ -21,23 +17,20 @@ namespace Vookaba.Services.DbServices
         private readonly VookabaDbContext context;
         private readonly IAttachmentsStorage attachmentStorage;
         private readonly IMapper mapper;
-        private readonly ThrowHelper throwHelper;
         private readonly ILogger<DbPostService> logger;
 
         public DbPostService(VookabaDbContext context,
             IAttachmentsStorage attachments,
             IMapper mapper,
-            ThrowHelper throwHelper,
             ILogger<DbPostService> logger)
         {
             this.context = context;
             this.attachmentStorage = attachments;
             this.mapper = mapper;
-            this.throwHelper = throwHelper;
             this.logger = logger;
         }
 
-        public async Task<PostDto> GetByNumberAsync(string board, int number)
+        public async Task<PostDto?> GetByNumberAsync(string board, int number)
         {
             var post = await context.Posts
                 .Include(p => p.Attachments)
@@ -52,8 +45,8 @@ namespace Vookaba.Services.DbServices
 
         public async Task DeleteManyAsync(int id, Mode mode, SearchArea area)
         {
-            throwHelper.ThrowIfEnumIsNotCorrect(mode);
-            throwHelper.ThrowIfEnumIsNotCorrect(area);
+            ThrowHelper.ThrowIfEnumIsNotCorrect(mode);
+            ThrowHelper.ThrowIfEnumIsNotCorrect(area);
 
             var badPost = await context.Posts
                 .Where(p => p.Id == id)
@@ -66,8 +59,13 @@ namespace Vookaba.Services.DbServices
                 })
                 .FirstOrDefaultAsync();
 
+            if(badPost == null)
+            {
+                throw new ArgumentException($"Post with id {id} does not exist.");
+            }
+
             //Expressions is fun (until you get runtime error)
-            Expression selector = null;
+            Expression selector = null!;
             var postParameter = Expression.Parameter(typeof(Post), "p");
 
             // select by ip

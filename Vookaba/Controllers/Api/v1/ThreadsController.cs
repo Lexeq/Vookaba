@@ -51,7 +51,8 @@ namespace Vookaba.Controllers.Api.v1
             if (!authResult.Succeeded)
             {
                 return Problem(statusCode: StatusCodes.Status403Forbidden,
-                               title: "Permission denied.");
+                               title: "Permission denied.",
+                               detail: $"You do not have permission to edit this threads.");
             }
             var t = await threads.GetThreadInfoAsync(board, threadId);
             if (t == null)
@@ -70,7 +71,8 @@ namespace Vookaba.Controllers.Api.v1
             if (!authResult.Succeeded)
             {
                 return Problem(statusCode: StatusCodes.Status403Forbidden,
-                               title: "Permission denied.");
+                               title: "Permission denied.",
+                               detail: $"You do not have permission to edit this thread.");
             }
             var t = await threads.GetThreadInfoAsync(board, threadId);
             if (t == null)

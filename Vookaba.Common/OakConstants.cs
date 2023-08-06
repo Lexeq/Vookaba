@@ -5,6 +5,7 @@
         public const string Name = "Voochan";
         public const string Culture = "en";
         public const string UserOptionsFileName = "appsettings.edited.json";
+        public const string AllBoardsMark = "*";
 
         public static class Identity
         {
@@ -61,6 +62,7 @@
             public const string HasStaffRole = "StaffRole";
             public const string HasBoardPermission = "BoardPermissionPolicy";
             public const string CanEditThreads = "ThreadEditPolicy";
+            public const string CanBanUsers = "CanBanUsersPolicy";
         }
     }
 }

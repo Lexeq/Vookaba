@@ -7,12 +7,7 @@ using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
 using Vookaba.DAL.Entities.Base;
 using Vookaba.Services.DTO;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Vookaba.Services.Abstractions;
 using Vookaba.DAL.MediaStorage;
 
@@ -31,7 +26,7 @@ namespace Vookaba.Services.DbServices
             var overflowStr = "...";
 
             var builder = new StringBuilder(subjMax);
-            for (int i = 0; i < message.Length; i++)
+            for (int i = 0; i < message!.Length; i++) //OP post must contains message, so it's can't be null.
             {
                 if (message[i] != '<')
                 {
@@ -55,38 +50,35 @@ namespace Vookaba.Services.DbServices
         private readonly IHashService hashService;
         private readonly IEnumerable<IPostProcessor> processors;
         private readonly IMapper mapper;
-        private readonly ThrowHelper throwHelper;
 
         public DbThreadService(VookabaDbContext context,
                                IAttachmentsStorage attachmentsStorage,
                                IHashService hashService,
                                IEnumerable<IPostProcessor> processors,
-                               IMapper mapper,
-                               ThrowHelper throwHelper)
+                               IMapper mapper)
         {
             this.context = context;
             this.attachmentsStorage = attachmentsStorage;
             this.hashService = hashService;
             this.processors = processors;
             this.mapper = mapper;
-            this.throwHelper = throwHelper;
         }
 
-        public Task<ThreadDto> GetThreadAsync(string boardKey, int threadId)
+        public async Task<ThreadDto?> GetThreadAsync(string boardKey, int threadId)
         {
-            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
+            ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
-            return context.Threads.AsNoTracking()
-                .Where(t => t.BoardKey == boardKey && t.Id == threadId)
-                .Include(t => t.Posts.OrderBy(p => p.Number))
-                .ThenInclude(p => p.Attachments)
-                .ProjectTo<ThreadDto>(mapper.ConfigurationProvider)
-                .FirstOrDefaultAsync();
+            return mapper.Map<ThreadDto>(
+                await context.Threads.AsNoTracking()
+                    .Where(t => t.BoardKey == boardKey && t.Id == threadId)
+                    .Include(t => t.Posts.OrderBy(p => p.Number))
+                    .ThenInclude(p => p.Attachments)
+                    .FirstOrDefaultAsync());
         }
 
-        public Task<ThreadInfoDto> GetThreadInfoAsync(string boardKey, int threadId)
+        public Task<ThreadInfoDto?> GetThreadInfoAsync(string boardKey, int threadId)
         {
-            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
+            ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
 
             return context.Threads
                 .Where(t => t.BoardKey == boardKey && t.Id == threadId)
@@ -96,8 +88,8 @@ namespace Vookaba.Services.DbServices
 
         public async Task<ThreadDto> CreateThreadAsync(string boardKey, ThreadCreationDto threadDto)
         {
-            throwHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
-            throwHelper.ThrowIfNull(threadDto, nameof(threadDto));
+            ThrowHelper.ThrowIfNullOrWhiteSpace(boardKey, nameof(boardKey));
+            ThrowHelper.ThrowIfNull(threadDto, nameof(threadDto));
 
             var post = await CreatePostEntityAsync(threadDto.OpPost);
             var thread = new Thread { BoardKey = boardKey, Subject = GetThreadSubjectFromMesage(threadDto) };
@@ -121,7 +113,7 @@ namespace Vookaba.Services.DbServices
 
         public async Task<PostDto> AddPostToThreadAsync(int threadId, PostCreationDto postData)
         {
-            throwHelper.ThrowIfNull(postData, nameof(postData));
+            ThrowHelper.ThrowIfNull(postData, nameof(postData));
 
             var post = await CreatePostEntityAsync(postData);
             post.ThreadId = threadId;
@@ -134,7 +126,7 @@ namespace Vookaba.Services.DbServices
 
         private async Task<Post> CreatePostEntityAsync(PostCreationDto postDto)
         {
-            throwHelper.ThrowIfNull(postDto, nameof(postDto));
+            ThrowHelper.ThrowIfNull(postDto, nameof(postDto));
 
             foreach (var proc in processors)
             {

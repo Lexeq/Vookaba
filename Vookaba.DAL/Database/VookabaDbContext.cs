@@ -34,6 +34,8 @@ namespace Vookaba.DAL.Database
 
         public virtual DbSet<ModAction> ModActions { get; set; }
 
+        public virtual DbSet<Ban> Bans { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

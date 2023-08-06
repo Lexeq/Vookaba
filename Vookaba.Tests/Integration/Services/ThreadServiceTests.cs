@@ -19,7 +19,6 @@ namespace Vookaba.Tests.Integration.Services
 {
     public class ThreadServiceTests : ServiceTestsBase
     {
-        private Mock<ThrowHelper> _throwHelperMock;
         private Mock<IHashService> _hashMock;
         private Mock<IAttachmentsStorage> storageMock;
 
@@ -36,14 +35,12 @@ namespace Vookaba.Tests.Integration.Services
                 storageMock.Object,
                 _hashMock.Object,
                 new[] { new FakePostProcessor() },
-                ServiceDtoMapper,
-                 _throwHelperMock.Object);
+                ServiceDtoMapper);
         }
 
         private void ConfigureMocks()
         {
             _hashMock = new Mock<IHashService>();
-            _throwHelperMock = new Mock<ThrowHelper>();
             _hashMock.Setup(h => h.ComputeHash((byte[])null)).Returns(new byte[] { 100 });
             _hashMock.Setup(h => h.ComputeHash((Stream)null)).Returns(new byte[] { 100 });
             storageMock = new Mock<IAttachmentsStorage>();

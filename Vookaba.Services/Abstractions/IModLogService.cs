@@ -1,8 +1,4 @@
-﻿#nullable enable
-using Vookaba.Common;
-using Vookaba.Services.DTO;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Vookaba.Common;
 
 namespace Vookaba.Services.Abstractions
 {

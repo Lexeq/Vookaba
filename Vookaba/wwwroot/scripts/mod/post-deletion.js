@@ -5,16 +5,14 @@
         data => showDeletingModal(data.board, data.number, level))
 })
 
-function deletePosts(board, number, reason, area, mode) {
+function deletePosts(options) {
+    console.info(JSON.stringify(options));
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 5000)
-
-    const uri = '/api/v1/posts/delete';
+    const uri = '/api/v1/posts';
     let antiforgery = $("input[name='__RequestVerificationToken']").val();
-    let options = { board, number, reason, area };
-    if (mode != 0) { options.mode = mode; }
     return fetch(uri, {
-        signal: timeoutId.signal,
+        signal: controller.signal,
         method: "DELETE",
         headers: {
             "Accept": "application/json",
@@ -25,165 +23,164 @@ function deletePosts(board, number, reason, area, mode) {
     });
 }
 
-//level:    0 - single
-//          1 - in thread
-//          2 - acrss the board
-//          3 - across all boards
-function showDeletingModal(board, num, level) {
-    let content = $('<div>')
-        .css('min-width', '250px')
-        .attr('id', 'del-opts');
-
-    if (level > 0) {
-        content.append(createRadioRow('rd', 'rbdel', getLocalizedString('delSinglePost'), true)
-            .attr('data-noopt', 1));
-    }
-    if (level > 1) {
-        content.append(createRadioRow('rdt', 'rbdel', getLocalizedString('delInThread')));
-    }
-    if (level > 2) {
-        content.append(createRadioRow('rdc', 'rbdel', getLocalizedString('delInCategory')));
-    }
-    if (level > 3) {
-        content.append(createRadioRow('rda', 'rbdel', getLocalizedString('delAll')));
-    }
-
+function showDeletingModal(board, number, level) {
+    let content = $('<form id="delForm">')
+        .css('min-width', '250px');
 
     content.append([
-        $('<label>')
-            .addClass('input-row__label')
-            .append(getLocalizedString('reason'))
-            .attr('for', 'del-reason'),
-        $('<input>')
-            .attr('id', 'del-reason')
-            .attr('autocomplete', 'off')
-            .addClass('input-row__input'),
-        $('<label>')
-            .attr('id', 'del-error')
-            .addClass('error-text')
-            .css('display', 'none'),
-        createModeSelector()
+        $(`<input type="hidden" name="board" value="${board}">`),
+        $(`<input type="hidden" name="number" value="${number}">`),
+        $('<label class="input-row__label" for="tb-reason">')
+            .append(getLocalizedString('reason')),
+        $('<input id="tb-reason" name="reason" autocomplete="off" class="input-row__input">'),
+        createDeletionOptionsContent(level)
     ]);
+    if (level >= ModeratorLevel) {
+        content.append(
+            $('<div>').append(createCheckbox('cbAddBan', 'cbAddBan', getLocalizedString('Ban for this post'))),
+            createBanOptionsContent(level));
 
-    content.on('click', 'input:radio[name=rbdel]', radioClick);
-
-    showModal(content, () => {
-        $('#del-error').css('display', 'none');
-        let reason = $('#del-reason').val();
-        if (reason?.length < 1) {
-            $('#del-error')
-                .css('display', 'block')
-                .text(getLocalizedString('reasonRequired'));
-            return Promise.resolve(false);
-        }
-        let checked = $('input[name=rbdel]:checked', '#del-opts').val();
-
-        let area = null;
-        switch (checked) {
-            case 'rd':
-                area = 0;
-                break;
-            case 'rdt':
-                area = 1;
-                break;
-            case 'rdc':
-                area = 2;
-                break;
-            case 'rda':
-                area = 3;
-                break;
-            default:
-                throw 'bad area';
-        }
-
-        let mode = 0;
-        if (area != 0) {
-            if ($('#byIp').prop('checked')) {
-                mode += 1;
-            }
-            if ($('#byId').prop('checked')) {
-                mode += 2;
-            }
-            if (mode == 0) {
-                $('#del-error')
-                    .css('display', 'block')
-                    .text(getLocalizedString('modeRequired'));
-                return Promise.resolve(false);
-            }
-        }
-
-        return deletePosts(board, num, reason, area, mode)
-            .then(response => {
-                if (response.status >= 200 && response.status < 300) {
-                    return response;
-                } else {
-                    let error = new Error(response.statusText);
-                    error.response = response;
-                    throw error
-                }
-            })
-            .then(response => {
-                if (area == 0 && !$('#p' + num).hasClass('oppost')) {
-                    $('#pc' + num).remove();
-                    showNotification(getLocalizedString('postDeleted'));
-                }
-                else {
-                    location.reload();
-                }
-            })
-            .catch(er => {
-                showNotification(er, true);
-                console.error(er);
-            })
+        let ipRow = $('<div>').append(createCheckbox('byIp', "ipMode", getLocalizedString('delByIp'), 2));
+        content.append(ipRow);
+    }
+    content.append([
+        $('<label id="fromErrors" class="error-text">')
+            .css('display', 'none'),
+    ]);
+    content.on('click', '#cbAddBan', (a) => {
+        let b = $('#banOpts');
+        b.css('display', a.target.checked ? 'block' : 'none');
     });
-    $('#del-reason').focus();
+
+    showModal(content, okCallback);
+    content.find('input:not(:hidden)')[0].focus()
 }
 
-function radioClick(rb) {
-    if ($(this).parent().data('noopt')) {
-        $('#umode').css('display', 'none');
+function createDeletionOptionsContent(accountLevel) {
+    let delOpts;
+    if (accountLevel >= JanitorLevel && accountLevel < ModeratorLevel) {
+        delOpts = $('<input type=hidden name=area value=1>')
     }
-    else {
-        let um = $('#umode');
-        um.css('display', '');
-        um.insertAfter($(this).next());
+    if (accountLevel >= ModeratorLevel) {
+        delOpts = $('<fieldset>');
+        delOpts.append($('<legend>').append(getLocalizedString('postDelOpts')));
+        delOpts.append(createRadioRow('rd', 'area', getLocalizedString('delSinglePost'), 1, true));
+        delOpts.append(createRadioRow('rdt', 'area', getLocalizedString('delInThread'), 2));
+        delOpts.append(createRadioRow('rdc', 'area', getLocalizedString('delInCategory'), 3));
     }
+    if (accountLevel >= AdminLevel) {
+        delOpts.append(createRadioRow('rda', 'area', getLocalizedString('delAll'), 4));
+    }
+
+    return delOpts;
 }
 
-function createModeSelector() {
-    let mode = $('<div>').attr('id', 'umode');
-    mode.append(createCheckbox('byId', getLocalizedString('delById'), true))
-        .append(createCheckbox('byIp', getLocalizedString('delByIp')))
-        .css('display', 'none');
+function createBanOptionsContent(level) {
+    let banOpts = $('<fieldset id="banOpts" style="display: none;">');
+    banOpts.append($('<legend>').append(getLocalizedString('postBanOpts')));
 
-    return mode;
+    banOpts.append([
+        $('<label class="input-row__label" for="ban-dur">')
+            .append(getLocalizedString('postBanDuration')),
+        $('<input id="ban-dur" name="banDuration" autocomplete="off" class="input-row__input" placeholder="1y2d3h4m">')]);
+
+    if (level >= AdminLevel) {
+        banOpts.append(createCheckbox('cbAllbrd', 'allBoards', getLocalizedString('All boards')));
+    }
+    return banOpts;
 }
 
-function createRadioRow(id, name, text, checked) {
+function createRadioRow(id, name, text, value, checked) {
     return $('<div>')
-        .append(createRadio(id, name, text, checked));
+        .append(createRadio(id, name, text, value, checked));
 }
 
-function createRadio(id, name, text, checked) {
+function createRadio(id, name, text, value, checked) {
     return [
         $("<input>")
             .attr('type', 'radio')
             .attr('id', id)
             .attr('name', name)
-            .attr('value', id)
+            .attr('value', value)
             .attr('checked', checked),
         $('<label>')
             .attr('for', id)
             .append(text)];
 }
 
-function createCheckbox(id, text, checked) {
+function createCheckbox(id, name, text, value, checked) {
     return [
         $("<input>")
             .attr('type', 'checkbox')
             .attr('id', id)
+            .attr('name', name)
+            .attr('value', value)
             .attr('checked', checked),
         $('<label>')
             .attr('for', id)
             .append(text)];
+}
+
+function okCallback() {
+    $('#fromErrors').css('display', 'none');
+    let delForm = new FormData($('#delForm')[0]);
+    let reason = delForm.get('reason');
+    if (reason?.length < 1) {
+        $('#fromErrors')
+            .css('display', 'block')
+            .text(getLocalizedString('reasonRequired'));
+        return Promise.resolve(false);
+    }
+
+    let area = parseInt(delForm.get('area'));
+
+    if (!area || area < 1 || area > 4) {
+        throw `bad area (${area})`;
+    }
+
+    let options = {
+        reason: reason,
+        board: delForm.get('board'),
+        number: parseInt(delForm.get('number')),
+        area: area,
+        ipMode: delForm.get('ipMode') ? true : false
+    };
+
+    if (delForm.get('cbAddBan') == 'on') {
+        let duration = delForm.get('banDuration');
+        if (duration?.length < 2) {
+            $('#fromErrors')
+                .css('display', 'block')
+                .text(getLocalizedString('banDurationRequired'));
+            return Promise.resolve(false);
+        }
+        let banOptions = {
+            duration: duration,
+            allBoards: delForm.get('allBoards') ? true : false
+        };
+
+        options.ban = banOptions;
+    }
+
+    return deletePosts(options)
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                throw new Error(response.statusText);
+            }
+        })
+        .then(_ => {
+            if (area == 1 && !$('#p' + options.number).hasClass('oppost')) {
+                $('#pc' + options.number).remove();
+                showNotification(getLocalizedString('postDeleted'));
+            }
+            else {
+                location.reload();
+            }
+        })
+        .catch(er => {
+            showNotification(er, true);
+            console.error(er);
+        })
 }

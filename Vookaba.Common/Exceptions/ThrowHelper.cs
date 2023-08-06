@@ -4,14 +4,14 @@ using Vookaba.Common.Extensions;
 
 namespace Vookaba.Common.Exceptions
 {
-    public class ThrowHelper
+    public static class ThrowHelper
     {
-        public string ThrowIfNullOrWhiteSpace(string value, string name)
+        public static string ThrowIfNullOrWhiteSpace(string value, string name)
         {
             return ThrowIfNullOrWhiteSpace(value, name, $"{name} must not be an empty string.");
         }
 
-        public string ThrowIfNullOrWhiteSpace(string value, string name, string exceptionMessage)
+        public static string ThrowIfNullOrWhiteSpace(string value, string name, string exceptionMessage)
         {
             if (value == null)
             {
@@ -24,12 +24,12 @@ namespace Vookaba.Common.Exceptions
             return value;
         }
 
-        public T ThrowIfNull<T>(T obj, string name) where T : class
+        public static T ThrowIfNull<T>(T obj, string name) where T : class
         {
             return ThrowIfNull(obj, name, null);
         }
 
-        public T ThrowIfNull<T>(T obj, string name, string exceptionMessage) where T : class
+        public static T ThrowIfNull<T>(T obj, string name, string exceptionMessage) where T : class
         {
             if (obj == null)
             {
@@ -45,7 +45,7 @@ namespace Vookaba.Common.Exceptions
             return obj;
         }
 
-        public T ThrowIfEnumIsNotCorrect<T>(T value) where T : struct, Enum
+        public static T ThrowIfEnumIsNotCorrect<T>(T value) where T : struct, Enum
         {
             if (typeof(T).IsDefined(typeof(FlagsAttribute)))
             {

@@ -3,7 +3,7 @@ At the moment, Vookaba is at an early stage of development.
 
 ## Requirements
 * [PostgreSQL](https://www.postgresql.org/)
-* [.Net 6](https://dotnet.microsoft.com/)
+* [.Net 7](https://dotnet.microsoft.com/)
 ## Features
 - Anonymous posting
 - Public and hidden boards
@@ -15,4 +15,4 @@ At the moment, Vookaba is at an early stage of development.
 - Tripcodes
 - Further more
 ## Try it!
-You can try it on http://185.94.166.93
+You can try it on https://voochan.freemyip.com/

@@ -3,11 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Vookaba.DAL.Database;
 using Vookaba.DAL.Entities;
 using Vookaba.Services.DTO;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using Vookaba.Services.Abstractions;
 
 namespace Vookaba.Services.DbServices

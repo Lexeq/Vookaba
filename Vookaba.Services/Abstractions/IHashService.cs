@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Vookaba.Services.Abstractions
+﻿namespace Vookaba.Services.Abstractions
 {
     public interface IHashService
     {

@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Vookaba.Common;
 using Vookaba.Security.AuthorizationHandlers;
@@ -13,6 +13,10 @@ namespace Vookaba.Security.DependecyInjection
         {
             services.AddAuthorization(options =>
             {
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(IdentityConstants.ApplicationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build();
+
                 options.AddPolicy(
                     name: PoliciesNames.CanInviteUsers,
                     policy =>
@@ -50,7 +54,7 @@ namespace Vookaba.Security.DependecyInjection
 
                 options.AddPolicy(PoliciesNames.CanPost, policy =>
                 {
-                    policy.AddRequirements(new PostingPermissionRequirement());
+                    policy.AddRequirements(new PostingEnabledRequirement());
                 });
 
                 options.AddPolicy(PoliciesNames.CanEditThreads, policy =>
@@ -58,11 +62,17 @@ namespace Vookaba.Security.DependecyInjection
                     policy.RequireRole(ApplicationConstants.Roles.Administrator, ApplicationConstants.Roles.Moderator);
                     policy.Combine(options.GetPolicy(PoliciesNames.HasBoardPermission));
                 });
+
+                options.AddPolicy(PoliciesNames.CanBanUsers, policy =>
+                {
+                    policy.AddRequirements(new BanPermissionRequirement());
+                });
             });
 
             services.AddScoped<IAuthorizationHandler, BoardPermissionHandler>();
             services.AddScoped<IAuthorizationHandler, PostDeletingPermissionHandler>();
-            services.AddSingleton<IAuthorizationHandler, PostingPermissionHandler>();
+            services.AddSingleton<IAuthorizationHandler, PostingEnabledHandler>();
+            services.AddSingleton<IAuthorizationHandler, BanPermissionHandler>();
             services.AddScoped<AppCookieEvents>();
 
             return services;

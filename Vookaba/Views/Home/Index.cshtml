@@ -1,11 +1,12 @@
-﻿@model Vookaba.ViewModels.Home.HomePageViewModel
+﻿@using Vookaba.Utils
+@model Vookaba.ViewModels.Home.HomePageViewModel
 @{
     ViewBag.Title = Vookaba.Common.ApplicationConstants.Name + " - " + Localizer["Home page"].Value;
     Layout = "_Layout";
 }
 
 @section Header {
-    @if (User.Identity.IsAuthenticated)
+    @if (User.IsRegistred())
     {
         <partial name="./PartialTemplates/_AccountInfo" />
     }

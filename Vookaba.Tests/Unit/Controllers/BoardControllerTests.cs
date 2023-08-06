@@ -45,11 +45,7 @@ namespace Vookaba.Tests.Unit.Controllers
                 .ReturnsAsync(new BoardDto { Key = key, Name = name });
             boardServiceMock
                 .Setup(x => x.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(new PartialList<ThreadPreviewDto>
-                {
-                    TotalCount = 0,
-                    CurrentItems = new List<ThreadPreviewDto>()
-                });
+                .ReturnsAsync(new PartialList<ThreadPreviewDto>(0, new List<ThreadPreviewDto>()));
             var controller = CreateContorller(boardServiceMock.Object);
 
             var id = await controller.Index(key) as ViewResult;
@@ -90,7 +86,7 @@ namespace Vookaba.Tests.Unit.Controllers
                 .Setup(x => x.GetBoardAsync(It.IsAny<string>()))
                 .ReturnsAsync(new BoardDto { Key = "b", Name = "Random" });
             boardServiceMock.Setup(x => x.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(new PartialList<ThreadPreviewDto> { TotalCount = 0, CurrentItems = new List<ThreadPreviewDto>() });
+                .ReturnsAsync(new PartialList<ThreadPreviewDto>(0, new List<ThreadPreviewDto>()));
             var controller = CreateContorller(boardServiceMock.Object);
 
             var result = await controller.Index("b", page) as ViewResult;
@@ -109,7 +105,7 @@ namespace Vookaba.Tests.Unit.Controllers
             boardServiceMock.Setup(x => x.GetBoardAsync("b"))
              .ReturnsAsync(new BoardDto { Key = "b", Name = "Random" });
             boardServiceMock.Setup(x => x.GetThreadPreviewsAsync(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(new PartialList<ThreadPreviewDto> { TotalCount = source, CurrentItems = Array.Empty<ThreadPreviewDto>() });
+                .ReturnsAsync(new PartialList<ThreadPreviewDto>(source, Array.Empty<ThreadPreviewDto>()));
             var controller = CreateContorller(boardServiceMock.Object);
 
             var viewResult = await controller.Index("b", 1) as ViewResult;

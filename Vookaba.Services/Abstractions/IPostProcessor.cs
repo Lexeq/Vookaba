@@ -1,7 +1,4 @@
-﻿using Vookaba.Services.DTO;
-using System.Threading.Tasks;
-
-namespace Vookaba.Services.Abstractions
+﻿namespace Vookaba.Services.Abstractions
 {
     public interface IPostProcessor
     {

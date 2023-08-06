@@ -9,6 +9,7 @@ using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
 using Vookaba.Common;
 using Vookaba.Controllers.Base;
+using Vookaba.Security;
 using Vookaba.Services.Abstractions;
 using Vookaba.Services.DTO;
 using Vookaba.ViewModels.Post;
@@ -41,22 +42,25 @@ namespace Vookaba.Controllers
         {
             var isAdmin = UserRole == ApplicationConstants.Roles.Administrator;
             var boardDto = await boards.GetBoardAsync(board);
-            if (boardDto?.IsDisabled == false || isAdmin)
+            if (boardDto != null)
             {
-                var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
-                if (threadDto != null)
+                if (!boardDto.IsDisabled || isAdmin)
                 {
-                    var vm = mapper.Map<ThreadViewModel>(threadDto);
-                    vm.IsReadOnly |= boardDto.IsReadOnly;
-                    return View(vm);
+                    var threadDto = await threads.GetThreadAsync(boardDto.Key, thread);
+                    if (threadDto != null)
+                    {
+                        var vm = mapper.Map<ThreadViewModel>(threadDto);
+                        vm.IsReadOnly |= boardDto.IsReadOnly;
+                        return View(vm);
+                    }
                 }
             }
 
-            return Error(404, localizer["Not found"], localizer["Thread not found."]);
+            return Error(404, localizer["Not found"], boardDto is null ? localizer["Board {0} does not exist.", board] : localizer["Thread not found."]);
         }
 
         [HttpPost]
-        [Authorize(Policy = ApplicationConstants.Policies.CanPost)]
+        [Authorize(Policy = ApplicationConstants.Policies.CanPost), TypeFilter(typeof(BannedFilter))]
         [Route("{board:alpha}/createThread", Name = "createThread")]
         public async Task<IActionResult> Create(string board, ThreadFormViewModel opPost)
         {
@@ -82,7 +86,7 @@ namespace Vookaba.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = ApplicationConstants.Policies.CanPost)]
+        [Authorize(Policy = ApplicationConstants.Policies.CanPost), TypeFilter(typeof(BannedFilter))]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddPost(string board, int thread, PostFormViewModel postFormVM)
         {
