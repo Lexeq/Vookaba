@@ -24,7 +24,7 @@ function lockThread(board, thread, lock) {
     const timeoutId = setTimeout(() => controller.abort(), 5000)
     const uri = `/api/v1/threads/${lock ? 'lock' : 'unlock'}?board=${board}&thread=${thread}`;
     return fetch(uri, {
-        signal: timeoutId.signal,
+        signal: controller.signal,
         method: "POST"
     })
         .then(response => {

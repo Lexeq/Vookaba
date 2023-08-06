@@ -24,7 +24,7 @@ function pinThread(board, thread, pin) {
     const timeoutId = setTimeout(() => controller.abort(), 5000)
     const uri = `/api/v1/threads/${pin ? 'pin' : 'unpin'}?board=${board}&thread=${thread}`;
     return fetch(uri, {
-        signal: timeoutId.signal,
+        signal: controller.signal,
         method: "POST"
     })
         .then(response => {
