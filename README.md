@@ -15,4 +15,4 @@ At the moment, Vookaba is at an early stage of development.
 - Tripcodes
 - Further more
 ## Try it!
-You can try it on http://185.242.84.5
+You can try it on http://185.94.166.93
