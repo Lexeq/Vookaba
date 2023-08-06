@@ -19,5 +19,9 @@
     unpin_thread: "Unpin",
     lock_thread: "Lock",
     unlock_thread: "Unlock",
-    brdDeleteConfirmMessage: "Are you sure you want to delete this board?"
+    brdDeleteConfirmMessage: "Are you sure you want to delete this board?",
+    postDelOpts: "Deletion options",
+    postBanOpts: "Ban options",
+    postBanDuration: "Ban duration",
+    banDurationRequired: "Duration is required"
 }
