@@ -57,7 +57,7 @@ namespace Vookaba
             //TODO: clean up this mess
             #region DB
             services.AddDbContext<VookabaDbContext>(options =>
-                options.UseNpgsql("Host=localhost;Port=5432;Database=BigDataOak2;Username=oak;Password=oakpassword", x =>
+                options.UseNpgsql(Configuration.GetConnectionString("Postgre"), x =>
                 x.MigrationsAssembly("Vookaba.DAL"))
 #if DEBUG
                 .UseLoggerFactory(EfLoggerFactory)
@@ -137,7 +137,7 @@ namespace Vookaba
 
             services.AddDataProtection(x =>
             {
-                x.ApplicationDiscriminator = "37f7095fa7d8419db8248814abf50326b1207665e75c456cabf8cdf051c912a1";// Configuration[nameof(x.ApplicationDiscriminator)];
+                x.ApplicationDiscriminator = Configuration[nameof(x.ApplicationDiscriminator)];
             });
 
             services.ConfigureApplicationCookie(options =>
